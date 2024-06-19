@@ -1,22 +1,18 @@
 import React from 'react';
-import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {SafeAreaView} from 'react-native';
+import {PaperProvider} from 'react-native-paper';
+import AppNavigator from './navigation/navigator';
+import {useAppTheme} from './themes/theme';
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const theme = useAppTheme();
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-    </SafeAreaView>
+    <PaperProvider theme={theme}>
+      <SafeAreaView style={{flex: 1}}>
+        <AppNavigator />
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
 

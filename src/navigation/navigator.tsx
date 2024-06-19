@@ -1,20 +1,30 @@
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {Home} from '../screens';
+import {HomeStack, SearchStack} from './stacks';
 
-type RootStackParamList = {
-  home: undefined;
+type RootTabParamList = {
+  homeTab: undefined;
+  searchTab: undefined;
 };
 
-const {Navigator, Screen} = createStackNavigator<RootStackParamList>();
+const Tab = createMaterialBottomTabNavigator<RootTabParamList>();
 
 const AppNavigator = (): JSX.Element => {
   return (
     <NavigationContainer>
-      <Navigator>
-        <Screen name="home" component={Home} />
-      </Navigator>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="homeTab"
+          component={HomeStack}
+          // options={{
+          //   tabBarIcon: ({focused, color}) => (
+          //     <Icon name="bell" color={color} size={25} />
+          //   ),
+          // }}
+        />
+        <Tab.Screen name="searchTab" component={SearchStack} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 };

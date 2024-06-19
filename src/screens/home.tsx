@@ -1,10 +1,16 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
+import {Text, useTheme} from 'react-native-paper';
 
 const Home = (): JSX.Element => {
+  const theme = useTheme();
   return (
-    <View>
-      <Text>Home</Text>
+    <View style={{flex: 1, backgroundColor: theme.colors.background}}>
+      <Text
+        variant="displayLarge"
+        style={{backgroundColor: theme.colors.primary}}>
+        Home
+      </Text>
     </View>
   );
 };
