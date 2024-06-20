@@ -1,29 +1,41 @@
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {StyleSheet, ViewStyle} from 'react-native';
+import {Avatar, useTheme} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {HomeStack, SearchStack} from './stacks';
 
 type RootTabParamList = {
   homeTab: undefined;
   searchTab: undefined;
+  reelTab: undefined;
+  chatTab: undefined;
+  profileTab: undefined;
 };
 
 const Tab = createMaterialBottomTabNavigator<RootTabParamList>();
 
 const AppNavigator = (): JSX.Element => {
+  const theme = useTheme();
+
   return (
     <NavigationContainer>
-      <Tab.Navigator labeled={false}>
+      <Tab.Navigator
+        labeled={false}
+        keyboardHidesNavigationBar
+        activeIndicatorStyle={[styles.activeIndicator]}
+        activeColor={theme.colors.primary}
+        barStyle={[styles.barStyle]}>
         <Tab.Screen
           name="homeTab"
           component={HomeStack}
           options={{
             tabBarIcon: ({focused, color}) => (
               <Icon
-                name={focused ? 'home-circle' : 'home-circle-outline'}
+                name={focused ? 'home-sharp' : 'home-outline'}
                 color={color}
-                size={30}
+                size={25}
               />
             ),
           }}
@@ -34,10 +46,45 @@ const AppNavigator = (): JSX.Element => {
           options={{
             tabBarIcon: ({focused, color}) => (
               <Icon
-                name={focused ? 'food-drumstick' : 'food-drumstick-outline'}
+                name={focused ? 'search' : 'search-outline'}
                 color={color}
                 size={25}
               />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="reelTab"
+          component={SearchStack}
+          options={{
+            tabBarIcon: ({focused, color}) => (
+              <Icon
+                name={focused ? 'film' : 'film-outline'}
+                color={color}
+                size={25}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="chatTab"
+          component={SearchStack}
+          options={{
+            tabBarIcon: ({focused, color}) => (
+              <Icon
+                name={focused ? 'chatbubbles-sharp' : 'chatbubbles-outline'}
+                color={color}
+                size={25}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="profileTab"
+          component={SearchStack}
+          options={{
+            tabBarIcon: ({focused, color}) => (
+              <Avatar.Icon size={35} icon="folder" color={color} />
             ),
           }}
         />
@@ -47,3 +94,21 @@ const AppNavigator = (): JSX.Element => {
 };
 
 export default AppNavigator;
+
+interface Style {
+  barStyle: ViewStyle;
+  activeIndicator: ViewStyle;
+}
+
+const styles: Style = StyleSheet.create<Style>({
+  barStyle: {
+    borderTopWidth: 0,
+    elevation: 5,
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+  },
+  activeIndicator: {
+    padding: 6,
+  },
+});
