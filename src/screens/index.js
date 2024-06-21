@@ -1,3 +1,4 @@
 import Home from './home';
+import PostDetail from './postDetail';
 
-export {Home};
+export {Home, PostDetail};

@@ -1,11 +1,15 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {FlatList, Image, StyleSheet, View, ViewStyle} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import FoodCard from '../components/FoodCard';
+import {FoodCard} from '../components';
 import {textConfig} from '../configs';
+import {HomeStackParamList} from '../navigation/stacks/home';
 
-const Home = (): JSX.Element => {
+type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
+
+const Home = ({navigation}: HomeProps): JSX.Element => {
   const theme = useTheme();
   return (
     <View
@@ -16,7 +20,7 @@ const Home = (): JSX.Element => {
             source={require('../assets/logo.png')}
             style={{width: 50, height: 50}}
           />
-          <Text variant="titleLarge">{textConfig.app_Title}</Text>
+          <Text variant="headlineSmall">{textConfig.app_Title}</Text>
         </View>
         <Icon
           name={'notifications-outline'}
@@ -30,7 +34,13 @@ const Home = (): JSX.Element => {
       </View>
       <FlatList
         data={new Array(4).fill(null)}
-        renderItem={({item}) => <FoodCard />}
+        renderItem={({item}) => (
+          <FoodCard
+            onPress={() => {
+              navigation.navigate('postDetail');
+            }}
+          />
+        )}
         keyExtractor={(item, index) => item?.id || index}
       />
     </View>

@@ -4,6 +4,7 @@ import React from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
 import {Avatar, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {dummyImg} from '../components/FoodCard';
 import {HomeStack, SearchStack} from './stacks';
 
 type RootTabParamList = {
@@ -26,7 +27,10 @@ const AppNavigator = (): JSX.Element => {
         keyboardHidesNavigationBar
         activeIndicatorStyle={[styles.activeIndicator]}
         activeColor={theme.colors.primary}
-        barStyle={[styles.barStyle]}>
+        barStyle={[
+          styles.barStyle,
+          {backgroundColor: theme.colors.background},
+        ]}>
         <Tab.Screen
           name="homeTab"
           component={HomeStack}
@@ -84,7 +88,7 @@ const AppNavigator = (): JSX.Element => {
           component={SearchStack}
           options={{
             tabBarIcon: ({focused, color}) => (
-              <Avatar.Icon size={35} icon="folder" color={color} />
+              <Avatar.Image size={40} source={{uri: dummyImg}} />
             ),
           }}
         />
@@ -109,6 +113,7 @@ const styles: Style = StyleSheet.create<Style>({
     shadowRadius: 10,
   },
   activeIndicator: {
-    padding: 6,
+    width: 40,
+    height: 40,
   },
 });
