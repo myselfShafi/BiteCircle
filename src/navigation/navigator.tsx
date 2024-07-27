@@ -2,9 +2,10 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
-import {Avatar, useTheme} from 'react-native-paper';
+import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
+import {useAppTheme} from '../themes/theme';
 import {HomeStack, SearchStack} from './stacks';
 
 type RootTabParamList = {
@@ -18,19 +19,14 @@ type RootTabParamList = {
 const Tab = createMaterialBottomTabNavigator<RootTabParamList>();
 
 const AppNavigator = (): JSX.Element => {
-  const theme = useTheme();
+  const appTheme = useAppTheme();
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={appTheme}>
       <Tab.Navigator
         labeled={false}
         keyboardHidesNavigationBar
-        activeIndicatorStyle={[styles.activeIndicator]}
-        activeColor={theme.colors.primary}
-        barStyle={[
-          styles.barStyle,
-          {backgroundColor: theme.colors.background},
-        ]}>
+        activeIndicatorStyle={[styles.activeIndicator]}>
         <Tab.Screen
           name="homeTab"
           component={HomeStack}

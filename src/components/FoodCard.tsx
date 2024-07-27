@@ -11,10 +11,15 @@ import {
 } from 'react-native-paper';
 import {getTruncText} from '../utils';
 
+type FoodCardProps = {
+  mode?: 'outlined' | 'elevated' | 'contained' | undefined;
+  props?: PressableProps;
+};
+
 export const dummyImg =
   'https://img.freepik.com/free-photo/androgynous-avatar-non-binary-queer-person_23-2151100226.jpg?t=st=1718881367~exp=1718884967~hmac=eae0014733b68da80852a536180ff451c7ddceda3c08f01539848bb9b13f5e76&w=740';
 
-const FoodCard = (props: PressableProps) => {
+const FoodCard = ({mode = 'elevated', ...prop}: FoodCardProps): JSX.Element => {
   const theme = useTheme();
   const [liked, setLiked] = useState(false);
   const [bookmark, setBookmark] = useState(false);
@@ -24,8 +29,8 @@ const FoodCard = (props: PressableProps) => {
   );
 
   return (
-    <Pressable {...props}>
-      <Card style={styles.container}>
+    <Pressable {...prop}>
+      <Card style={styles.container} mode={mode}>
         <Card.Title
           titleStyle={styles.title}
           title="John Doe"
@@ -33,7 +38,7 @@ const FoodCard = (props: PressableProps) => {
           left={props => <Avatar.Image {...props} source={{uri: dummyImg}} />}
           right={props => (
             <View style={styles.icons} {...props}>
-              <IconButton icon="share-variant-outline" size={20} />
+              <IconButton icon="share-outline" size={24} />
               <IconButton icon="dots-vertical" size={24} />
             </View>
           )}

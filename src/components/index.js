@@ -1,4 +1,5 @@
 import FoodCard from './FoodCard';
+import CommentBox from './commentBox';
 import InputBox from './inputBlock';
 
-export {FoodCard, InputBox};
+export {CommentBox, FoodCard, InputBox};

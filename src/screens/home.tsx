@@ -12,8 +12,7 @@ type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
 const Home = ({navigation}: HomeProps): JSX.Element => {
   const theme = useTheme();
   return (
-    <View
-      style={[styles.container, {backgroundColor: theme.colors.background}]}>
+    <View style={[styles.container]}>
       <View style={styles.appbar}>
         <View style={styles.logo}>
           <Image
