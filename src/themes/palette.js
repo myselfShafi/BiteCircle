@@ -1,4 +1,7 @@
+import {MD3DarkTheme, MD3LightTheme} from 'react-native-paper';
+
 export const lightPalette = {
+  ...MD3LightTheme.colors,
   primary: 'rgb(176, 46, 0)',
   onPrimary: 'rgb(255, 255, 255)',
   primaryContainer: 'rgb(255, 219, 209)',
@@ -29,7 +32,7 @@ export const lightPalette = {
   inverseOnSurface: 'rgb(251, 238, 235)',
   inversePrimary: 'rgb(255, 181, 160)',
   elevation: {
-    level0: 'transparent',
+    level0: 'rgb(245, 222, 216)',
     level1: 'rgb(251, 241, 242)',
     level2: 'rgb(249, 235, 235)',
     level3: 'rgb(246, 229, 227)',
@@ -42,6 +45,7 @@ export const lightPalette = {
 };
 
 export const darkPalette = {
+  ...MD3DarkTheme.colors,
   primary: 'rgb(255, 181, 160)',
   onPrimary: 'rgb(96, 21, 0)',
   primaryContainer: 'rgb(135, 33, 0)',
@@ -72,7 +76,7 @@ export const darkPalette = {
   inverseOnSurface: 'rgb(54, 47, 45)',
   inversePrimary: 'rgb(176, 46, 0)',
   elevation: {
-    level0: 'transparent',
+    level0: 'rgb(83, 67, 63)',
     level1: 'rgb(43, 34, 31)',
     level2: 'rgb(50, 38, 35)',
     level3: 'rgb(57, 43, 39)',

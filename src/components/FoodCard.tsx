@@ -11,9 +11,8 @@ import {
 } from 'react-native-paper';
 import {getTruncText} from '../utils';
 
-type FoodCardProps = {
+type FoodCardProps = PressableProps & {
   mode?: 'outlined' | 'elevated' | 'contained' | undefined;
-  props?: PressableProps;
 };
 
 export const dummyImg =

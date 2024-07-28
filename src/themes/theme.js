@@ -1,4 +1,5 @@
 // theme.js
+import merge from 'deepmerge';
 import {useColorScheme} from 'react-native';
 import {
   MD3DarkTheme,
@@ -11,7 +12,7 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
-import merge from 'deepmerge';
+import {useMemo} from 'react';
 
 const customLightTheme = {...MD3LightTheme, colors: lightPalette};
 const customDarkTheme = {...MD3DarkTheme, colors: darkPalette};
@@ -25,10 +26,12 @@ const CombinedDefaultTheme = merge(LightTheme, customLightTheme);
 const CombinedDarkTheme = merge(DarkTheme, customDarkTheme);
 
 export const useAppTheme = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || 'light';
 
-  const theme =
-    colorScheme === 'dark' ? CombinedDarkTheme : CombinedDefaultTheme;
+  const theme = useMemo(
+    () => (colorScheme === 'dark' ? CombinedDarkTheme : CombinedDefaultTheme),
+    [colorScheme],
+  );
 
   return theme;
 };

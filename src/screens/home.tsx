@@ -1,16 +1,17 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {FlatList, Image, StyleSheet, View, ViewStyle} from 'react-native';
-import {Text, useTheme} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {FoodCard} from '../components';
 import {textConfig} from '../configs';
 import {HomeStackParamList} from '../navigation/stacks/home';
+import {useAppTheme} from '../themes/theme';
 
 type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
 
 const Home = ({navigation}: HomeProps): JSX.Element => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   return (
     <View style={[styles.container]}>
       <View style={styles.appbar}>
@@ -25,10 +26,7 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
           name={'notifications-outline'}
           color={theme.colors.primary}
           size={25}
-          style={[
-            styles.bell,
-            {backgroundColor: theme.colors.primaryContainer},
-          ]}
+          style={[styles.bell, {backgroundColor: theme.colors.card}]}
         />
       </View>
       <FlatList
