@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Pressable, PressableProps, StyleSheet, View} from 'react-native';
+import {
+  ImageStyle,
+  Pressable,
+  PressableProps,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {
   Avatar,
   Button,
@@ -90,7 +98,15 @@ const FoodCard = ({mode = 'elevated', ...prop}: FoodCardProps): JSX.Element => {
 
 export default FoodCard;
 
-const styles = StyleSheet.create({
+interface Style {
+  container: ViewStyle;
+  title: TextStyle;
+  cover: ImageStyle;
+  icons: ViewStyle;
+  action: ViewStyle;
+}
+
+const styles: Style = StyleSheet.create<Style>({
   container: {
     borderRadius: 0,
   },
