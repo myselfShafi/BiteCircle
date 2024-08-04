@@ -32,7 +32,7 @@ interface Style {
 
 const styles: Style = StyleSheet.create<Style>({
   wrapper: {
-    borderRadius: 70,
+    borderRadius: 65,
     padding: 2,
     borderWidth: 3,
     marginHorizontal: 10,

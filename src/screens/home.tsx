@@ -8,8 +8,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {FoodCard, Reels} from '../components';
+import {FoodCard, Reels, Shimmer} from '../components';
 import {HomeStackParamList} from '../navigation/stacks/home';
 import {useAppTheme} from '../themes/theme';
 
@@ -44,6 +45,7 @@ type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
 
 const Home = ({navigation}: HomeProps): JSX.Element => {
   const theme = useAppTheme();
+
   return (
     <View style={[styles.container]}>
       <View style={styles.appbar}>
@@ -59,9 +61,13 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
         <FlatList
           horizontal
           data={sampleReels}
+          ListHeaderComponent={<Avatar.Icon size={55} icon="plus" />}
+          ListHeaderComponentStyle={styles.reelContainer}
           renderItem={({item}) => <Reels data={item} />}
           keyExtractor={item => item?.id.toString()}
           showsHorizontalScrollIndicator={false}
+          ListFooterComponent={<Shimmer style={styles.reelsShimmer} />}
+          ListFooterComponentStyle={styles.reelContainer}
         />
       </View>
       <FlatList
@@ -87,6 +93,8 @@ interface Style {
   logo: ImageStyle;
   bell: ViewStyle;
   reelWrapper: ViewStyle;
+  reelContainer: ViewStyle;
+  reelsShimmer: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -109,4 +117,10 @@ const styles: Style = StyleSheet.create<Style>({
     borderRadius: 10,
   },
   reelWrapper: {paddingVertical: 15},
+  reelContainer: {justifyContent: 'center', marginLeft: 10},
+  reelsShimmer: {
+    width: 75,
+    height: 75,
+    borderRadius: 75,
+  },
 });
