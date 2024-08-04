@@ -75,7 +75,7 @@ const PostDetail = (): JSX.Element => {
       <FlatList
         ListHeaderComponent={
           <>
-            <FoodCard mode="contained" />
+            <FoodCard />
             <View style={styles.wrapper}>
               <InputBox placeholder="Send your comment..." />
             </View>

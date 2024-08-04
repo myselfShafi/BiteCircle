@@ -80,6 +80,16 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
           />
         )}
         keyExtractor={(item, index) => item?.id || index}
+        showsVerticalScrollIndicator={false}
+        ListFooterComponent={
+          <View style={styles.foodCardShimmerWrapper}>
+            <Shimmer style={styles.avatar} />
+            <View>
+              <Shimmer style={styles.title} delay={1000} />
+              <Shimmer style={styles.subtitle} delay={1000} />
+            </View>
+          </View>
+        }
       />
     </View>
   );
@@ -95,6 +105,10 @@ interface Style {
   reelWrapper: ViewStyle;
   reelContainer: ViewStyle;
   reelsShimmer: ViewStyle;
+  foodCardShimmerWrapper: ViewStyle;
+  avatar: ViewStyle;
+  title: ViewStyle;
+  subtitle: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -122,5 +136,24 @@ const styles: Style = StyleSheet.create<Style>({
     width: 75,
     height: 75,
     borderRadius: 75,
+  },
+  foodCardShimmerWrapper: {
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 10,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+  },
+  title: {
+    height: 10,
+    marginBottom: 10,
+  },
+  subtitle: {
+    height: 10,
+    width: '75%',
   },
 });

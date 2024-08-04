@@ -26,7 +26,10 @@ type FoodCardProps = PressableProps & {
 export const dummyImg =
   'https://img.freepik.com/free-photo/androgynous-avatar-non-binary-queer-person_23-2151100226.jpg?t=st=1718881367~exp=1718884967~hmac=eae0014733b68da80852a536180ff451c7ddceda3c08f01539848bb9b13f5e76&w=740';
 
-const FoodCard = ({mode = 'elevated', ...prop}: FoodCardProps): JSX.Element => {
+const FoodCard = ({
+  mode = 'contained',
+  ...prop
+}: FoodCardProps): JSX.Element => {
   const theme = useTheme();
   const [liked, setLiked] = useState(false);
   const [bookmark, setBookmark] = useState(false);
@@ -37,7 +40,12 @@ const FoodCard = ({mode = 'elevated', ...prop}: FoodCardProps): JSX.Element => {
 
   return (
     <Pressable {...prop}>
-      <Card style={styles.container} mode={mode}>
+      <Card
+        style={[
+          styles.container,
+          {backgroundColor: theme.colors.elevation.level1},
+        ]}
+        mode={mode}>
         <Card.Title
           titleStyle={styles.title}
           title="John Doe"
