@@ -57,19 +57,6 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
           style={[styles.bell, {backgroundColor: theme.colors.card}]}
         />
       </View>
-      <View style={styles.reelWrapper}>
-        <FlatList
-          horizontal
-          data={sampleReels}
-          ListHeaderComponent={<Avatar.Icon size={55} icon="plus" />}
-          ListHeaderComponentStyle={styles.reelContainer}
-          renderItem={({item}) => <Reels data={item} />}
-          keyExtractor={item => item?.id.toString()}
-          showsHorizontalScrollIndicator={false}
-          ListFooterComponent={<Shimmer style={styles.reelsShimmer} />}
-          ListFooterComponentStyle={styles.reelContainer}
-        />
-      </View>
       <FlatList
         data={Array(4).fill(null)}
         renderItem={({item}) => (
@@ -88,6 +75,21 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
               <Shimmer style={styles.title} delay={1000} />
               <Shimmer style={styles.subtitle} delay={1000} />
             </View>
+          </View>
+        }
+        ListHeaderComponent={
+          <View style={styles.reelWrapper}>
+            <FlatList
+              horizontal
+              data={sampleReels}
+              ListHeaderComponent={<Avatar.Icon size={55} icon="plus" />}
+              ListHeaderComponentStyle={styles.reelContainer}
+              renderItem={({item}) => <Reels data={item} />}
+              keyExtractor={item => item?.id.toString()}
+              showsHorizontalScrollIndicator={false}
+              ListFooterComponent={<Shimmer style={styles.reelsShimmer} />}
+              ListFooterComponentStyle={styles.reelContainer}
+            />
           </View>
         }
       />
