@@ -6,7 +6,7 @@ import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
 import {useAppTheme} from '../themes/theme';
-import {HomeStack, SearchStack} from './stacks';
+import {HomeStack, ReelStack, SearchStack} from './stacks';
 
 type RootTabParamList = {
   homeTab: undefined;
@@ -55,7 +55,7 @@ const AppNavigator = (): JSX.Element => {
         />
         <Tab.Screen
           name="reelTab"
-          component={SearchStack}
+          component={ReelStack}
           options={{
             tabBarIcon: ({focused, color}) => (
               <Icon

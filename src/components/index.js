@@ -1,5 +1,5 @@
 import FoodCard from './FoodCard';
-import Reels from './Reels';
+import ProfileReels from './ProfileReels';
 import Suggestion from './Suggestion';
 import TrendingItem from './TrendingItem';
 import CommentBox from './commentBox';
@@ -14,7 +14,7 @@ export {
   FoodCard,
   IconBtn,
   InputBox,
-  Reels,
+  ProfileReels,
   Shimmer,
   Suggestion,
   TrendingItem,

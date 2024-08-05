@@ -1,4 +1,5 @@
 import HomeStack from './home';
+import ReelStack from './Reels';
 import SearchStack from './search';
 
-export {HomeStack, SearchStack};
+export {HomeStack, ReelStack, SearchStack};

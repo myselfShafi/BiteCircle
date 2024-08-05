@@ -8,7 +8,7 @@ type ReelPropType = {
   data: ReelData;
 };
 
-const Reels = ({data}: ReelPropType): JSX.Element => {
+const ProfileReels = ({data}: ReelPropType): JSX.Element => {
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +37,7 @@ const Reels = ({data}: ReelPropType): JSX.Element => {
   );
 };
 
-export default Reels;
+export default ProfileReels;
 
 interface Style {
   wrapper: ViewStyle;

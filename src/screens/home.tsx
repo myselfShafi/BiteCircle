@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {Avatar} from 'react-native-paper';
-import {FoodCard, IconBtn, Reels, Shimmer} from '../components';
+import {FoodCard, IconBtn, ProfileReels, Shimmer} from '../components';
 import {HomeStackParamList} from '../navigation/stacks/home';
 
 const sampleReels = [
@@ -79,7 +79,7 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
               data={sampleReels}
               ListHeaderComponent={<Avatar.Icon size={55} icon="plus" />}
               ListHeaderComponentStyle={styles.reelContainer}
-              renderItem={({item}) => <Reels data={item} />}
+              renderItem={({item}) => <ProfileReels data={item} />}
               keyExtractor={item => item?.id.toString()}
               showsHorizontalScrollIndicator={false}
               ListFooterComponent={<Shimmer style={styles.reelsShimmer} />}
