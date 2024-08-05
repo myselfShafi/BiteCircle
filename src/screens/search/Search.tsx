@@ -74,6 +74,21 @@ const sampleTrending = [
     url: 'https://images.unsplash.com/photo-1504674900247-dac964293360',
     category: 'healthy',
   },
+  {
+    id: 'image13',
+    url: 'https://images.unsplash.com/photo-1504674900247-dac964293360',
+    category: 'healthy',
+  },
+  {
+    id: 'image14',
+    url: 'https://images.unsplash.com/photo-1504674900247-dac964293360',
+    category: 'healthy',
+  },
+  {
+    id: 'image15',
+    url: 'https://images.unsplash.com/photo-1504674900247-dac964293360',
+    category: 'healthy',
+  },
 ];
 
 const Search = (): JSX.Element => {

@@ -45,7 +45,11 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
   return (
     <View style={[styles.container]}>
       <View style={styles.appbar}>
-        <Image source={require('../assets/logo.png')} style={styles.logo} />
+        <Image
+          source={require('../assets/logo.png')}
+          alt="app logo"
+          style={styles.logo}
+        />
         <IconBtn name={'notifications-outline'} size={24} />
       </View>
       <FlatList

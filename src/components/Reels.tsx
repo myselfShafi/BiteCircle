@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {Fragment, useState} from 'react';
 import {Image, ImageStyle, StyleSheet, View, ViewStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {ReelData} from '../configs/types';
+import Shimmer from './common/Shimmer';
 
 type ReelPropType = {
   data: ReelData;
@@ -9,17 +10,30 @@ type ReelPropType = {
 
 const Reels = ({data}: ReelPropType): JSX.Element => {
   const theme = useTheme();
+  const [loading, setLoading] = useState(true);
 
   return (
-    <View
-      style={[styles.wrapper, {borderColor: theme.colors.onPrimaryContainer}]}>
-      <Image
-        style={styles.img}
-        source={{
-          uri: data.image,
-        }}
+    <Fragment>
+      <View
+        style={[
+          styles.wrapper,
+          {borderColor: theme.colors.onPrimaryContainer},
+          loading && {display: 'none'},
+        ]}>
+        <Image
+          style={styles.img}
+          alt={data.image}
+          source={{
+            uri: data.image,
+          }}
+          onLoadEnd={() => setLoading(false)}
+        />
+      </View>
+      <Shimmer
+        style={[styles.shimmer, !loading && {display: 'none'}]}
+        visible={!loading}
       />
-    </View>
+    </Fragment>
   );
 };
 
@@ -28,6 +42,7 @@ export default Reels;
 interface Style {
   wrapper: ViewStyle;
   img: ImageStyle;
+  shimmer: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -42,5 +57,11 @@ const styles: Style = StyleSheet.create<Style>({
     width: 65,
     height: 65,
     objectFit: 'cover',
+  },
+  shimmer: {
+    width: 75,
+    height: 75,
+    borderRadius: 75,
+    marginHorizontal: 10,
   },
 });
