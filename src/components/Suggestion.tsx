@@ -12,7 +12,9 @@ const Suggestion = (): JSX.Element => {
           uri: 'https://images.unsplash.com/photo-1594583388647-364ea6532257',
         }}
       />
-      <Text variant="labelLarge">John Doe</Text>
+      <Text variant="labelLarge" numberOfLines={1} ellipsizeMode="tail">
+        John Doe
+      </Text>
       <CustomButton size="small" children={'Follow'} />
     </Surface>
   );
@@ -31,5 +33,6 @@ const styles: Style = StyleSheet.create<Style>({
     paddingHorizontal: 18,
     borderRadius: 10,
     rowGap: 5,
+    maxWidth: 115,
   },
 });

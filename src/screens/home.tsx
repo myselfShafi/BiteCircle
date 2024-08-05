@@ -9,10 +9,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import {Avatar} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {FoodCard, Reels, Shimmer} from '../components';
+import {FoodCard, IconBtn, Reels, Shimmer} from '../components';
 import {HomeStackParamList} from '../navigation/stacks/home';
-import {useAppTheme} from '../themes/theme';
 
 const sampleReels = [
   {
@@ -44,18 +42,11 @@ const sampleReels = [
 type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
 
 const Home = ({navigation}: HomeProps): JSX.Element => {
-  const theme = useAppTheme();
-
   return (
     <View style={[styles.container]}>
       <View style={styles.appbar}>
         <Image source={require('../assets/logo.png')} style={styles.logo} />
-        <Icon
-          name={'notifications-outline'}
-          color={theme.colors.primary}
-          size={25}
-          style={[styles.bell, {backgroundColor: theme.colors.card}]}
-        />
+        <IconBtn name={'notifications-outline'} size={24} />
       </View>
       <FlatList
         data={Array(4).fill(null)}
@@ -103,7 +94,6 @@ interface Style {
   container: ViewStyle;
   appbar: ViewStyle;
   logo: ImageStyle;
-  bell: ViewStyle;
   reelWrapper: ViewStyle;
   reelContainer: ViewStyle;
   reelsShimmer: ViewStyle;
@@ -128,12 +118,8 @@ const styles: Style = StyleSheet.create<Style>({
     alignItems: 'center',
     gap: 5,
   },
-  bell: {
-    padding: 6,
-    borderRadius: 10,
-  },
   reelWrapper: {paddingVertical: 15},
-  reelContainer: {justifyContent: 'center', marginLeft: 10},
+  reelContainer: {justifyContent: 'center', marginHorizontal: 10},
   reelsShimmer: {
     width: 75,
     height: 75,
