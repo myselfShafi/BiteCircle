@@ -1,15 +1,8 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
-import {
-  FlatList,
-  Image,
-  ImageStyle,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
-import {FoodCard, IconBtn, ProfileReels, Shimmer} from '../components';
+import {FoodCard, MainAppBar, Shimmer, Story} from '../components';
 import {HomeStackParamList} from '../navigation/stacks/home';
 
 const sampleReels = [
@@ -44,14 +37,7 @@ type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
 const Home = ({navigation}: HomeProps): JSX.Element => {
   return (
     <View style={[styles.container]}>
-      <View style={styles.appbar}>
-        <Image
-          source={require('../assets/logo.png')}
-          alt="app logo"
-          style={styles.logo}
-        />
-        <IconBtn name={'notifications-outline'} size={24} />
-      </View>
+      <MainAppBar icon={'notifications-outline'} />
       <FlatList
         data={Array(4).fill(null)}
         renderItem={({item}) => (
@@ -79,7 +65,7 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
               data={sampleReels}
               ListHeaderComponent={<Avatar.Icon size={55} icon="plus" />}
               ListHeaderComponentStyle={styles.reelContainer}
-              renderItem={({item}) => <ProfileReels data={item} />}
+              renderItem={({item}) => <Story data={item} />}
               keyExtractor={item => item?.id.toString()}
               showsHorizontalScrollIndicator={false}
               ListFooterComponent={<Shimmer style={styles.reelsShimmer} />}
@@ -96,8 +82,6 @@ export default Home;
 
 interface Style {
   container: ViewStyle;
-  appbar: ViewStyle;
-  logo: ImageStyle;
   reelWrapper: ViewStyle;
   reelContainer: ViewStyle;
   reelsShimmer: ViewStyle;
@@ -109,19 +93,6 @@ interface Style {
 
 const styles: Style = StyleSheet.create<Style>({
   container: {flex: 1},
-  appbar: {
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 200,
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-  },
   reelWrapper: {paddingVertical: 15},
   reelContainer: {justifyContent: 'center', marginHorizontal: 10},
   reelsShimmer: {

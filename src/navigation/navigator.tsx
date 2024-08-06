@@ -1,6 +1,6 @@
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -21,12 +21,18 @@ const Tab = createMaterialBottomTabNavigator<RootTabParamList>();
 const AppNavigator = (): JSX.Element => {
   const appTheme = useAppTheme();
 
+  const [activeTab, setActiveTab] = useState('homeTab');
+
   return (
     <NavigationContainer theme={appTheme}>
       <Tab.Navigator
         labeled={false}
         keyboardHidesNavigationBar
-        activeIndicatorStyle={[styles.activeIndicator]}>
+        activeIndicatorStyle={[styles.activeIndicator]}
+        barStyle={activeTab === 'reelTab' && styles.barStyle}
+        screenListeners={({route}) => ({
+          tabPress: () => setActiveTab(route.name),
+        })}>
         <Tab.Screen
           name="homeTab"
           component={HomeStack}
@@ -102,11 +108,8 @@ interface Style {
 
 const styles: Style = StyleSheet.create<Style>({
   barStyle: {
-    borderTopWidth: 0,
-    elevation: 5,
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
+    backgroundColor: 'transparent',
+    position: 'absolute',
   },
   activeIndicator: {
     width: 40,

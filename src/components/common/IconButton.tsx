@@ -1,15 +1,21 @@
 import React from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
-import {IconButton} from 'react-native-paper';
+import {IconButton, IconButtonProps} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {useAppTheme} from '../../themes/theme';
 
-type IconBtnProps = {
+type IconBtnProps = Partial<IconButtonProps> & {
   name: string;
-  size: number;
+  size?: number;
+  bgColor?: any;
 };
 
-const IconBtn = ({name, size = 24}: IconBtnProps): JSX.Element => {
+const IconBtn = ({
+  name,
+  size = 24,
+  bgColor,
+  ...props
+}: IconBtnProps): JSX.Element => {
   const theme = useAppTheme();
 
   return (
@@ -18,7 +24,8 @@ const IconBtn = ({name, size = 24}: IconBtnProps): JSX.Element => {
         <IonIcon name={name} size={size} color={theme.colors.primary} />
       )}
       size={size + 5}
-      style={[styles.icon, {backgroundColor: theme.colors.card}]}
+      style={[styles.icon, {backgroundColor: bgColor ?? theme.colors.card}]}
+      {...props}
     />
   );
 };

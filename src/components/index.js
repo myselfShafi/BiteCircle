@@ -1,8 +1,10 @@
 import FoodCard from './FoodCard';
-import ProfileReels from './ProfileReels';
+import MediaReel from './MediaReel';
+import Story from './Story';
 import Suggestion from './Suggestion';
 import TrendingItem from './TrendingItem';
 import CommentBox from './commentBox';
+import MainAppBar from './common/AppBar';
 import CustomButton from './common/Button';
 import IconBtn from './common/IconButton';
 import Shimmer from './common/Shimmer';
@@ -14,8 +16,10 @@ export {
   FoodCard,
   IconBtn,
   InputBox,
-  ProfileReels,
+  MainAppBar,
+  MediaReel,
   Shimmer,
+  Story,
   Suggestion,
   TrendingItem,
 };

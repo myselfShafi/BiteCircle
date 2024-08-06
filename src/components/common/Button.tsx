@@ -30,6 +30,7 @@ const CustomButton = ({
         size && styles[size],
         {backgroundColor: theme.colors.secondaryContainer},
       ]}
+      activeOpacity={0.7}
       {...props}>
       <Text
         variant={variant}
@@ -51,12 +52,12 @@ interface Style {
 }
 
 const styles: Style = StyleSheet.create<Style>({
-  small: {padding: 5},
-  medium: {padding: 10},
-  large: {padding: 15},
+  small: {paddingVertical: 5, paddingHorizontal: 15},
+  medium: {paddingVertical: 10, paddingHorizontal: 20},
+  large: {paddingVertical: 15, paddingHorizontal: 25},
   button: {
     borderRadius: 10,
-    width: '100%',
+    width: 'auto',
   },
   text: {
     fontWeight: 800,

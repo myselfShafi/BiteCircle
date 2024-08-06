@@ -4484,6 +4484,11 @@ react-native-vector-icons@*, react-native-vector-icons@^10.1.0, "react-native-ve
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
+react-native-video@^6.4.3:
+  version "6.4.3"
+  resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.4.3.tgz"
+  integrity sha512-KDuIz/JsD3mYT1Ma2oDBE3GIEHRO3a9GzMAEV8pKMtIh29j7X2DLr2L9oD4Kv94ggYag/+RuZpOtftxnDHDoXA==
+
 react-native@*, react-native@0.74.2:
   version "0.74.2"
   dependencies:
