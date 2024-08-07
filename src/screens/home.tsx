@@ -1,8 +1,9 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import {FoodCard, MainAppBar, Shimmer, Story} from '../components';
+import {StoryData} from '../configs/types';
 import {HomeStackParamList} from '../navigation/stacks/home';
 
 const sampleReels = [
@@ -35,6 +36,14 @@ const sampleReels = [
 type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
 
 const Home = ({navigation}: HomeProps): JSX.Element => {
+  const [storyFetch, setStoryFetch] = useState(false);
+  const [cardFetch, setCardFetch] = useState(false);
+
+  const story = useCallback(
+    ({item}: {item: StoryData}) => <Story data={item} />,
+    [sampleReels],
+  );
+
   return (
     <View style={[styles.container]}>
       <MainAppBar icon={'notifications-outline'} />
@@ -50,14 +59,20 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
         keyExtractor={(item, index) => item?.id || index}
         showsVerticalScrollIndicator={false}
         ListFooterComponent={
-          <View style={styles.foodCardShimmerWrapper}>
-            <Shimmer style={styles.avatar} />
-            <View>
-              <Shimmer style={styles.title} delay={1000} />
-              <Shimmer style={styles.subtitle} delay={1000} />
+          cardFetch ? (
+            <View style={styles.foodCardShimmerWrapper}>
+              <Shimmer style={styles.avatar} />
+              <View>
+                <Shimmer style={styles.title} delay={1000} />
+                <Shimmer style={styles.subtitle} delay={1000} />
+              </View>
             </View>
-          </View>
+          ) : null
         }
+        onEndReached={() => {
+          setCardFetch(true); //set this false once new data fetched
+        }}
+        onEndReachedThreshold={1}
         ListHeaderComponent={
           <View style={styles.reelWrapper}>
             <FlatList
@@ -65,11 +80,17 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
               data={sampleReels}
               ListHeaderComponent={<Avatar.Icon size={55} icon="plus" />}
               ListHeaderComponentStyle={styles.reelContainer}
-              renderItem={({item}) => <Story data={item} />}
+              renderItem={story}
               keyExtractor={item => item?.id.toString()}
               showsHorizontalScrollIndicator={false}
-              ListFooterComponent={<Shimmer style={styles.reelsShimmer} />}
+              ListFooterComponent={
+                storyFetch ? <Shimmer style={styles.reelsShimmer} /> : null
+              }
               ListFooterComponentStyle={styles.reelContainer}
+              onEndReached={() => {
+                setStoryFetch(true); //set this false once new data fetched
+              }}
+              onEndReachedThreshold={0.4}
             />
           </View>
         }

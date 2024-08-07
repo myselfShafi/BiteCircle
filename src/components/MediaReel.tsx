@@ -1,4 +1,5 @@
-import React, {useMemo, useRef, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import React, {memo, useMemo, useRef, useState} from 'react';
 import {
   ImageStyle,
   StyleSheet,
@@ -15,12 +16,17 @@ import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utils/constants';
 import MainAppBar from './common/AppBar';
 import CustomButton from './common/Button';
 
-const MediaReel = ({data}: {data: ReelsData}) => {
+type MediaReelProps = {data: ReelsData; currentIndex: number; index: number};
+
+const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
   const theme = useTheme();
   const [muted, setMuted] = useState(false);
+  const focused = useIsFocused();
 
   const [bookmark, setBookmark] = useState(false);
   const [liked, setLiked] = useState(false);
+
+  const preloadCount = Math.abs(currentIndex + 1) >= index;
 
   const reactions = useMemo(
     () => [
@@ -52,7 +58,6 @@ const MediaReel = ({data}: {data: ReelsData}) => {
   );
 
   const videoRef = useRef<VideoRef>(null);
-  const background = require('../assets/videos/demo-2.mp4');
 
   const onBuffer = (buffer: any) => {
     console.log('buffring', buffer);
@@ -71,16 +76,19 @@ const MediaReel = ({data}: {data: ReelsData}) => {
         />
       </View>
       <TouchableOpacity style={styles.wrapper} activeOpacity={0.9}>
-        <Video
-          source={background}
-          ref={videoRef}
-          onBuffer={onBuffer}
-          onError={onError}
-          style={styles.video}
-          repeat={true}
-          resizeMode="cover"
-          muted={muted}
-        />
+        {preloadCount && (
+          <Video
+            source={preloadCount ? data.src : undefined}
+            ref={videoRef}
+            onBuffer={onBuffer}
+            onError={onError}
+            style={styles.video}
+            repeat={true}
+            resizeMode="cover"
+            muted={muted}
+            paused={currentIndex !== index || !focused}
+          />
+        )}
       </TouchableOpacity>
       <View
         style={[
@@ -130,7 +138,18 @@ const MediaReel = ({data}: {data: ReelsData}) => {
   );
 };
 
-export default MediaReel;
+const arePropsEqual = (
+  prevProps: MediaReelProps,
+  nextProps: MediaReelProps,
+) => {
+  return (
+    prevProps.data.id === nextProps.data.id &&
+    (prevProps.currentIndex === prevProps.index) ===
+      (nextProps.currentIndex === nextProps.index)
+  );
+};
+
+export default memo(MediaReel, arePropsEqual);
 
 interface Style {
   container: ViewStyle;

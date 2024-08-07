@@ -33,6 +33,7 @@ const TrendingItem = ({data, ...props}: TrendingItemProps): JSX.Element => {
           alt={data.category}
           source={{
             uri: data.url,
+            cache: 'force-cache',
           }}
           onLoadEnd={() => setLoading(false)}
         />

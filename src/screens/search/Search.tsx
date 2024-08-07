@@ -11,7 +11,6 @@ import {Searchbar, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {IconBtn, Suggestion, TrendingItem} from '../../components';
 import {textConfig} from '../../configs';
-import {useAppTheme} from '../../themes/theme';
 
 const sampleTrending = [
   {
@@ -93,7 +92,7 @@ const sampleTrending = [
 
 const Search = (): JSX.Element => {
   const [search, setSearch] = useState('');
-  const theme = useAppTheme();
+
   return (
     <View>
       <View style={styles.searchWrapper}>

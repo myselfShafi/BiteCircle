@@ -8,6 +8,7 @@ import MainAppBar from './common/AppBar';
 import CustomButton from './common/Button';
 import IconBtn from './common/IconButton';
 import Shimmer from './common/Shimmer';
+import Spinner from './common/Spinner';
 import InputBox from './inputBlock';
 
 export {
@@ -19,6 +20,7 @@ export {
   MainAppBar,
   MediaReel,
   Shimmer,
+  Spinner,
   Story,
   Suggestion,
   TrendingItem,
