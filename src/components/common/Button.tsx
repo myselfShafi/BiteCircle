@@ -1,12 +1,12 @@
 import {
   StyleSheet,
   TextProps,
-  TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native';
-import {TextProps as PaperTextProps, Text, useTheme} from 'react-native-paper';
+import {TextProps as PaperTextProps, useTheme} from 'react-native-paper';
+import BoldText from './BoldText';
 
 type customButtonProps = TouchableOpacityProps & {
   size: 'small' | 'medium' | 'large' | undefined;
@@ -32,11 +32,11 @@ const CustomButton = ({
       ]}
       activeOpacity={0.7}
       {...props}>
-      <Text
+      <BoldText
         variant={variant}
-        style={[styles.text, {color: theme.colors.onSecondaryContainer}]}>
+        style={{color: theme.colors.onSecondaryContainer}}>
         {children}
-      </Text>
+      </BoldText>
     </TouchableOpacity>
   );
 };
@@ -48,7 +48,6 @@ interface Style {
   medium: ViewStyle;
   large: ViewStyle;
   button: ViewStyle;
-  text: TextStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -58,9 +57,5 @@ const styles: Style = StyleSheet.create<Style>({
   button: {
     borderRadius: 10,
     width: 'auto',
-  },
-  text: {
-    fontWeight: 800,
-    textAlign: 'center',
   },
 });

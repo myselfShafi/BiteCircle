@@ -14,6 +14,7 @@ import Video, {VideoRef} from 'react-native-video';
 import {ReelsData} from '../configs/types';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utils/constants';
 import MainAppBar from './common/AppBar';
+import BoldText from './common/BoldText';
 import CustomButton from './common/Button';
 
 type MediaReelProps = {data: ReelsData; currentIndex: number; index: number};
@@ -103,9 +104,7 @@ const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
             }}
             size={45}
           />
-          <Text variant="titleMedium" style={styles.title}>
-            {data.name}
-          </Text>
+          <BoldText variant="titleMedium">{data.name}</BoldText>
           <CustomButton size="small" children={'Follow'} />
         </View>
         <Text
@@ -159,7 +158,6 @@ interface Style {
   contentContainer: ViewStyle;
   topContainer: ViewStyle;
   bottomContainer: ViewStyle;
-  title: TextStyle;
   comment: TextStyle;
   user: ViewStyle;
   reaction: ViewStyle;
@@ -203,7 +201,6 @@ const styles: Style = StyleSheet.create<Style>({
     margin: 10,
     borderRadius: 10,
   },
-  title: {fontWeight: 900},
   comment: {
     paddingHorizontal: 10,
     paddingTop: 10,

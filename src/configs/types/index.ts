@@ -26,3 +26,11 @@ export interface ReelsData {
   name: string;
   comment: string;
 }
+
+export interface ChatListData {
+  id: number;
+  username: string;
+  avatar: string;
+  lastMessage: string;
+  timestamp: string;
+}

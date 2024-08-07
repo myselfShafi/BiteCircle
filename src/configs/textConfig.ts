@@ -4,6 +4,7 @@ interface textConfigType {
   suggestion: string;
   allSuggestion: string;
   trending: string;
+  chat: string;
 }
 
 export const textConfig: textConfigType = {
@@ -12,4 +13,5 @@ export const textConfig: textConfigType = {
   suggestion: 'Suggestions',
   allSuggestion: 'See All',
   trending: 'Trending',
+  chat: 'Chats',
 };

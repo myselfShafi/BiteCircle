@@ -6,7 +6,7 @@ import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
 import {useAppTheme} from '../themes/theme';
-import {HomeStack, ReelStack, SearchStack} from './stacks';
+import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 type RootTabParamList = {
   homeTab: undefined;
@@ -74,7 +74,7 @@ const AppNavigator = (): JSX.Element => {
         />
         <Tab.Screen
           name="chatTab"
-          component={SearchStack}
+          component={ChatStack}
           options={{
             tabBarIcon: ({focused, color}) => (
               <Icon
