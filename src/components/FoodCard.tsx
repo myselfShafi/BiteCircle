@@ -30,8 +30,8 @@ const FoodCard = ({
   ...prop
 }: FoodCardProps): JSX.Element => {
   const theme = useTheme();
-  const [liked, setLiked] = useState(false);
-  const [bookmark, setBookmark] = useState(false);
+  const [liked, setLiked] = useState<boolean>(false);
+  const [bookmark, setBookmark] = useState<boolean>(false);
 
   const content =
     'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium enim omnis provident quaerat, nobis dicta ut maiores nesciunt, voluptatem ab totam id voluptates, nemo atque porro laborum temporibus iste accusamus?';

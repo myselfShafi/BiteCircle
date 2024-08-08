@@ -1,10 +1,10 @@
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
-import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {FlatList, Keyboard, StyleSheet, View, ViewStyle} from 'react-native';
 import {Appbar, Avatar, Text, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {BoldText, Bubble} from '../../components';
+import {BoldText, Bubble, InputBox} from '../../components';
 import {textConfig} from '../../configs';
 import {ChatData} from '../../configs/types';
 import {StackParamList} from '../../navigation/navigator';
@@ -75,16 +75,49 @@ const sampleChat: ChatData[] = [
 ];
 
 const Conversation = ({navigation}: ConversationProps): JSX.Element => {
+  const theme = useTheme();
   const {params} = useRoute<ConversationRouteProp>();
   const {avatar, lastMessage, status, timestamp, username} = params.data;
-  const theme = useTheme();
+
+  const flatListRef = useRef<FlatList<ChatData>>(null);
+
+  const [chatData, setChatData] = useState<ChatData[]>(sampleChat);
+  const [sendChat, setSendChat] = useState<string>('');
+
+  const sentTime = new Date().toISOString();
+
+  const onChangeText = (text: string) => setSendChat(text);
+  const handleSend = () => {
+    if (sendChat !== '') {
+      setChatData(prev => [
+        ...prev,
+        {
+          id: sentTime,
+          sender: false,
+          status: 1,
+          message: sendChat,
+          timestamp: sentTime,
+        },
+      ]);
+      Keyboard.dismiss();
+      setSendChat('');
+    }
+  };
+
+  useEffect(() => {
+    const scrollEnd = setTimeout(() => {
+      flatListRef.current?.scrollToEnd({animated: false});
+    }, 100);
+    return () => clearTimeout(scrollEnd);
+  }, [chatData]);
 
   return (
     <View>
       <FlatList
-        data={sampleChat}
+        ref={flatListRef}
+        data={chatData}
         renderItem={({item}) => <Bubble data={item} />}
-        keyExtractor={(item, index) => index.toString()} //temp
+        keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.container}
         ListHeaderComponent={
@@ -128,8 +161,16 @@ const Conversation = ({navigation}: ConversationProps): JSX.Element => {
           </Appbar.Header>
         }
         stickyHeaderIndices={[0]}
+        ListFooterComponent={<View style={styles.footer} />}
       />
-      <Text>asfsaf</Text>
+      <View style={styles.input}>
+        <InputBox
+          placeholder="Type your message.."
+          value={sendChat}
+          onChangeText={onChangeText}
+          handleSend={handleSend}
+        />
+      </View>
     </View>
   );
 };
@@ -141,6 +182,8 @@ interface Style {
   profile: ViewStyle;
   container: ViewStyle;
   status: ViewStyle;
+  input: ViewStyle;
+  footer: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -157,5 +200,15 @@ const styles: Style = StyleSheet.create<Style>({
   },
   status: {
     columnGap: 4,
+  },
+  input: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 10,
+  },
+  footer: {
+    paddingBottom: 80,
   },
 });

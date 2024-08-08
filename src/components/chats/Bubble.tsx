@@ -88,6 +88,7 @@ const styles: Style = StyleSheet.create<Style>({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    columnGap: 10,
   },
   status: {
     flexDirection: 'row',

@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
-import {TextInput, useTheme} from 'react-native-paper';
+import {TextInput, TextInputProps, useTheme} from 'react-native-paper';
 
-const InputBox = ({...props}): JSX.Element => {
+type InputBoxProps = TextInputProps & {
+  handleSend?: () => void;
+};
+
+const InputBox = ({handleSend, ...props}: InputBoxProps): JSX.Element => {
   const theme = useTheme();
-  const [comment, setComment] = useState('');
 
   return (
     <TextInput
-      {...props}
-      value={comment}
-      onChangeText={text => setComment(text)}
       underlineStyle={styles.underline}
       style={styles.container}
       left={
@@ -25,9 +25,10 @@ const InputBox = ({...props}): JSX.Element => {
           icon={'send-circle-outline'}
           size={30}
           color={theme.colors.secondary}
-          onPress={() => console.log('sent')}
+          onPress={handleSend}
         />
       }
+      {...props}
     />
   );
 };
