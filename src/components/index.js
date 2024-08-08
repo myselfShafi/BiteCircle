@@ -3,6 +3,7 @@ import MediaReel from './MediaReel';
 import Story from './Story';
 import Suggestion from './Suggestion';
 import TrendingItem from './TrendingItem';
+import Bubble from './chats/Bubble';
 import List from './chats/List';
 import CommentBox from './commentBox';
 import MainAppBar from './common/AppBar';
@@ -15,6 +16,7 @@ import InputBox from './inputBlock';
 
 export {
   BoldText,
+  Bubble,
   CommentBox,
   CustomButton,
   FoodCard,

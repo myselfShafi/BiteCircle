@@ -1,9 +1,11 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
 import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {BoldText, IconBtn, List} from '../../components';
 import {textConfig} from '../../configs';
 import {ChatListData} from '../../configs/types';
+import {ChatStackParamList} from '../../navigation/stacks/Chats';
 
 const sampleChats: ChatListData[] = [
   {
@@ -13,6 +15,7 @@ const sampleChats: ChatListData[] = [
     lastMessage: 'Hey, how are you?',
     timestamp: '9:15 PM',
     status: true,
+    unread: 3,
   },
   {
     id: 2,
@@ -21,6 +24,7 @@ const sampleChats: ChatListData[] = [
     lastMessage: 'See you tomorrow!',
     timestamp: '8:45 PM',
     status: true,
+    unread: 1,
   },
   {
     id: 3,
@@ -80,6 +84,7 @@ const sampleChats: ChatListData[] = [
       "What's up? I haven't heard from you in a while. Just checking in to see how things are going.",
     timestamp: 'Thu',
     status: false,
+    unread: 4,
   },
   {
     id: 10,
@@ -107,13 +112,20 @@ const sampleChats: ChatListData[] = [
   },
 ];
 
-const Chatlist = (): JSX.Element => {
+type ChatlistProps = NativeStackScreenProps<ChatStackParamList, 'chats'>;
+
+const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
   const theme = useTheme();
+
+  const navigate = (data: ChatListData) => {
+    // temp passing whole data, pass user id to fetch chat
+    navigation.navigate('conversation', {data});
+  };
   return (
     <View>
       <FlatList
         data={sampleChats}
-        renderItem={({item}) => <List data={item} />}
+        renderItem={({item}) => <List data={item} onPress={navigate} />}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.container}
@@ -126,7 +138,7 @@ const Chatlist = (): JSX.Element => {
             ]}>
             <View style={styles.flexRow}>
               <BoldText variant="headlineLarge">{textConfig.chat}</BoldText>
-              <BoldText variant="bodyLarge">(12 unread)</BoldText>
+              <BoldText variant="bodyLarge">(3 unread)</BoldText>
             </View>
             <View style={styles.flexRow}>
               <IconBtn

@@ -17,7 +17,6 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import {getTruncText} from '../utils';
 
 type FoodCardProps = PressableProps & {
   mode?: 'outlined' | 'elevated' | 'contained' | undefined;
@@ -34,9 +33,8 @@ const FoodCard = ({
   const [liked, setLiked] = useState(false);
   const [bookmark, setBookmark] = useState(false);
 
-  const content = getTruncText(
-    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium enim omnis provident quaerat, nobis dicta ut maiores nesciunt, voluptatem ab totam id voluptates, nemo atque porro laborum temporibus iste accusamus?',
-  );
+  const content =
+    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium enim omnis provident quaerat, nobis dicta ut maiores nesciunt, voluptatem ab totam id voluptates, nemo atque porro laborum temporibus iste accusamus?';
 
   return (
     <Pressable {...prop}>
@@ -94,10 +92,10 @@ const FoodCard = ({
           />
         </Card.Actions>
         <Card.Content>
-          <Text>
-            <Text variant="bodyLarge">{content}</Text>
-            <Text style={{color: theme.colors.primary}}>read more</Text>
+          <Text variant="bodyLarge" numberOfLines={2}>
+            {content}
           </Text>
+          <Button mode="text">read more</Button>
         </Card.Content>
       </Card>
     </Pressable>

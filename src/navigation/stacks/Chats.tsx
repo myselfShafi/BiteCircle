@@ -1,12 +1,16 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import Chatlist from '../../screens/chats/Chatlist';
+import {ChatListData} from '../../configs/types';
+import {Chatlist, Conversation} from '../../screens';
 
-type RootStackParamList = {
+export type ChatStackParamList = {
   chats: undefined;
+  conversation: {
+    data: ChatListData; // temp passing whole static data. Pass user id to fetch chat
+  };
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<ChatStackParamList>();
 
 const ChatStack = (): JSX.Element => {
   return (
@@ -14,6 +18,11 @@ const ChatStack = (): JSX.Element => {
       <Stack.Screen
         name="chats"
         component={Chatlist}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="conversation"
+        component={Conversation}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -10,11 +10,17 @@ import {Avatar, Badge, Surface, Text, useTheme} from 'react-native-paper';
 import {ChatListData} from '../../configs/types';
 import BoldText from '../common/BoldText';
 
-const List = ({data}: {data: ChatListData}): JSX.Element => {
+type ListProps = {
+  data: ChatListData;
+  onPress: any;
+};
+
+const List = ({data, onPress}: ListProps): JSX.Element => {
   const theme = useTheme();
+
   return (
-    <Surface elevation={0} style={styles.container}>
-      <TouchableOpacity activeOpacity={0.7} style={styles.wrapper}>
+    <TouchableOpacity activeOpacity={0.7} onPress={() => onPress(data)}>
+      <Surface elevation={0} style={[styles.wrapper, styles.container]}>
         <Avatar.Image
           size={65}
           source={{
@@ -31,15 +37,23 @@ const List = ({data}: {data: ChatListData}): JSX.Element => {
         />
         <View style={styles.contentWrapper}>
           <BoldText variant="titleMedium">{data.username}</BoldText>
-          <View style={[styles.wrapper, styles.msgContainer]}>
-            <Text variant="bodyMedium" style={styles.msg} numberOfLines={2}>
-              {data.lastMessage}
-            </Text>
-            <BoldText variant="bodySmall">{data.timestamp}</BoldText>
-          </View>
+          <Text variant="bodyMedium" style={styles.msg} numberOfLines={2}>
+            {data.lastMessage}
+          </Text>
         </View>
-      </TouchableOpacity>
-    </Surface>
+        <View style={[styles.msgContainer]}>
+          <BoldText variant="bodySmall">{data.timestamp}</BoldText>
+          <Badge
+            size={18}
+            style={[
+              {backgroundColor: theme.colors.secondary},
+              !data.unread && {opacity: 0},
+            ]}>
+            {data.unread}
+          </Badge>
+        </View>
+      </Surface>
+    </TouchableOpacity>
   );
 };
 
@@ -68,7 +82,7 @@ const styles: Style = StyleSheet.create<Style>({
     flex: 1,
   },
   msgContainer: {
-    justifyContent: 'space-between',
+    rowGap: 10,
   },
   msg: {
     flexShrink: 1,

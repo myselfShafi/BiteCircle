@@ -34,4 +34,13 @@ export interface ChatListData {
   lastMessage: string;
   timestamp: string;
   status: boolean;
+  unread?: number;
+}
+
+export interface ChatData {
+  id: string;
+  timestamp: string;
+  sender: boolean;
+  status?: number; // temporary, in use for msg sent-1, received-2, delivered-3
+  message: string;
 }
