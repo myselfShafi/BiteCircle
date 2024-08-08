@@ -3,7 +3,6 @@ export const getDateFormat = (timestamp: string): string => {
   let now = new Date();
 
   const diff = (now.getTime() - date.getTime()) / (1000 * 3600);
-  console.log({diff});
 
   if (diff > 48) {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

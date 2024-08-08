@@ -1,12 +1,22 @@
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
+import {ChatListData} from '../configs/types';
+import {Conversation} from '../screens';
 import {useAppTheme} from '../themes/theme';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
+
+export type StackParamList = {
+  app: undefined;
+  conversation: {
+    data: ChatListData; // temp passing whole static data. Pass user id to fetch chat
+  };
+};
 
 type RootTabParamList = {
   homeTab: undefined;
@@ -16,85 +26,101 @@ type RootTabParamList = {
   profileTab: undefined;
 };
 
+const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createMaterialBottomTabNavigator<RootTabParamList>();
+
+const TabNavigator = (): JSX.Element => {
+  const [activeTab, setActiveTab] = useState('homeTab');
+
+  return (
+    <Tab.Navigator
+      labeled={false}
+      keyboardHidesNavigationBar
+      activeIndicatorStyle={[styles.activeIndicator]}
+      barStyle={activeTab === 'reelTab' && styles.barStyle}
+      screenListeners={({route}) => ({
+        tabPress: () => setActiveTab(route.name),
+      })}>
+      <Tab.Screen
+        name="homeTab"
+        component={HomeStack}
+        options={{
+          tabBarIcon: ({focused, color}) => (
+            <Icon
+              name={focused ? 'home-sharp' : 'home-outline'}
+              color={color}
+              size={25}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="searchTab"
+        component={SearchStack}
+        options={{
+          tabBarIcon: ({focused, color}) => (
+            <Icon
+              name={focused ? 'search' : 'search-outline'}
+              color={color}
+              size={25}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="reelTab"
+        component={ReelStack}
+        options={{
+          tabBarIcon: ({focused, color}) => (
+            <Icon
+              name={focused ? 'film' : 'film-outline'}
+              color={color}
+              size={25}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="chatTab"
+        component={ChatStack}
+        options={{
+          tabBarIcon: ({focused, color}) => (
+            <Icon
+              name={focused ? 'chatbubbles-sharp' : 'chatbubbles-outline'}
+              color={color}
+              size={25}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="profileTab"
+        component={SearchStack}
+        options={{
+          tabBarIcon: ({focused, color}) => (
+            <Avatar.Image size={40} source={{uri: dummyImg}} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const AppNavigator = (): JSX.Element => {
   const appTheme = useAppTheme();
 
-  const [activeTab, setActiveTab] = useState('homeTab');
-
   return (
     <NavigationContainer theme={appTheme}>
-      <Tab.Navigator
-        labeled={false}
-        keyboardHidesNavigationBar
-        activeIndicatorStyle={[styles.activeIndicator]}
-        barStyle={activeTab === 'reelTab' && styles.barStyle}
-        screenListeners={({route}) => ({
-          tabPress: () => setActiveTab(route.name),
-        })}>
-        <Tab.Screen
-          name="homeTab"
-          component={HomeStack}
-          options={{
-            tabBarIcon: ({focused, color}) => (
-              <Icon
-                name={focused ? 'home-sharp' : 'home-outline'}
-                color={color}
-                size={25}
-              />
-            ),
-          }}
+      <Stack.Navigator
+        initialRouteName={'app'}
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name={'app'} component={TabNavigator} />
+        <Stack.Screen
+          name="conversation"
+          component={Conversation}
+          options={{headerShown: false}}
         />
-        <Tab.Screen
-          name="searchTab"
-          component={SearchStack}
-          options={{
-            tabBarIcon: ({focused, color}) => (
-              <Icon
-                name={focused ? 'search' : 'search-outline'}
-                color={color}
-                size={25}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="reelTab"
-          component={ReelStack}
-          options={{
-            tabBarIcon: ({focused, color}) => (
-              <Icon
-                name={focused ? 'film' : 'film-outline'}
-                color={color}
-                size={25}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="chatTab"
-          component={ChatStack}
-          options={{
-            tabBarIcon: ({focused, color}) => (
-              <Icon
-                name={focused ? 'chatbubbles-sharp' : 'chatbubbles-outline'}
-                color={color}
-                size={25}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="profileTab"
-          component={SearchStack}
-          options={{
-            tabBarIcon: ({focused, color}) => (
-              <Avatar.Image size={40} source={{uri: dummyImg}} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

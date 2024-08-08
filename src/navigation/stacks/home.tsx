@@ -12,17 +12,9 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 const HomeStack = (): JSX.Element => {
   return (
     <Stack.Navigator
-      screenOptions={{
-        headerTitle: '',
-        headerBackTitle: 'Back to feed',
-        headerBackTitleStyle: {fontSize: 16},
-      }}
+      screenOptions={{headerShown: false}}
       initialRouteName="home">
-      <Stack.Screen
-        name="home"
-        component={Home}
-        options={{headerShown: false}}
-      />
+      <Stack.Screen name="home" component={Home} />
       <Stack.Screen name="postDetail" component={PostDetail} />
     </Stack.Navigator>
   );

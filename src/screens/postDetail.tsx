@@ -1,3 +1,4 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
 import {
   FlatList,
@@ -7,8 +8,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {Appbar} from 'react-native-paper';
 import {CommentBox, FoodCard, InputBox} from '../components';
 import {CommentData} from '../configs/types';
+import {HomeStackParamList} from '../navigation/stacks/home';
 
 const data: CommentData[] = [
   {
@@ -66,12 +69,17 @@ const data: CommentData[] = [
   },
 ];
 
-const PostDetail = (): JSX.Element => {
+type PostDetailProps = NativeStackScreenProps<HomeStackParamList, 'postDetail'>;
+
+const PostDetail = ({navigation}: PostDetailProps): JSX.Element => {
   const [comments, setComments] = useState(data);
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
+      <Appbar.Header>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+      </Appbar.Header>
       <FlatList
         ListHeaderComponent={
           <>
@@ -81,6 +89,7 @@ const PostDetail = (): JSX.Element => {
             </View>
           </>
         }
+        showsVerticalScrollIndicator={false}
         data={comments}
         renderItem={item => <CommentBox data={item.item} />}
         keyExtractor={item => item.id.toString()}

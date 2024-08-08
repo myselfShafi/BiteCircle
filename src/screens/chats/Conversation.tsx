@@ -7,13 +7,10 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import {BoldText, Bubble} from '../../components';
 import {textConfig} from '../../configs';
 import {ChatData} from '../../configs/types';
-import {ChatStackParamList} from '../../navigation/stacks/Chats';
+import {StackParamList} from '../../navigation/navigator';
 
-type ConversationProps = NativeStackScreenProps<
-  ChatStackParamList,
-  'conversation'
->;
-type ConversationRouteProp = RouteProp<ChatStackParamList, 'conversation'>;
+type ConversationProps = NativeStackScreenProps<StackParamList, 'conversation'>;
+type ConversationRouteProp = RouteProp<StackParamList, 'conversation'>;
 
 const sampleChat: ChatData[] = [
   {
@@ -132,6 +129,7 @@ const Conversation = ({navigation}: ConversationProps): JSX.Element => {
         }
         stickyHeaderIndices={[0]}
       />
+      <Text>asfsaf</Text>
     </View>
   );
 };
