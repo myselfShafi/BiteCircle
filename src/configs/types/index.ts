@@ -33,4 +33,5 @@ export interface ChatListData {
   avatar: string;
   lastMessage: string;
   timestamp: string;
+  status: boolean;
 }
