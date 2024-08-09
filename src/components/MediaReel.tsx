@@ -8,24 +8,24 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Avatar, IconButton, Text, useTheme} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {Avatar, Text, useTheme} from 'react-native-paper';
 import Video, {VideoRef} from 'react-native-video';
 import {ReelsData} from '../configs/types';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utils/constants';
 import MainAppBar from './common/AppBar';
 import BoldText from './common/BoldText';
 import CustomButton from './common/Button';
+import LabelIconButton from './common/LabelIconButton';
 
 type MediaReelProps = {data: ReelsData; currentIndex: number; index: number};
 
 const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
   const theme = useTheme();
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState<boolean>(false);
   const focused = useIsFocused();
 
-  const [bookmark, setBookmark] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const [bookmark, setBookmark] = useState<boolean>(false);
+  const [liked, setLiked] = useState<boolean>(false);
 
   const preloadCount = Math.abs(currentIndex + 1) >= index;
 
@@ -118,16 +118,13 @@ const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
           {reactions.map(list => {
             const iconName = list.state ? list.selectIcon : list.icon;
             return (
-              <View style={styles.button} key={list.icon}>
-                <IconButton
-                  icon={({color}) => (
-                    <Icon name={iconName} size={25} color={color} />
-                  )}
+              <View key={list.icon}>
+                <LabelIconButton
+                  variant="vertical"
+                  icon={iconName}
+                  label={list.content}
                   onPress={list.onPress}
                 />
-                {list.content && (
-                  <Text variant="bodyMedium">{list.content}</Text>
-                )}
               </View>
             );
           })}
@@ -161,7 +158,6 @@ interface Style {
   comment: TextStyle;
   user: ViewStyle;
   reaction: ViewStyle;
-  button: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -213,9 +209,5 @@ const styles: Style = StyleSheet.create<Style>({
   reaction: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-  },
-  button: {
-    flexDirection: 'column',
-    alignItems: 'center',
   },
 });

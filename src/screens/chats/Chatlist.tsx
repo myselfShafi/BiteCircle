@@ -1,11 +1,12 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
-import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {BoldText, IconBtn, List} from '../../components';
+import React, {useState} from 'react';
+import {FlatList, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
+import {Divider, Switch, Text, useTheme} from 'react-native-paper';
+import {BoldText, IconBtn, List, ModalWrapper} from '../../components';
 import {textConfig} from '../../configs';
 import {ChatListData} from '../../configs/types';
 import {ChatStackParamList} from '../../navigation/stacks/Chats';
+import {SCREEN_WIDTH} from '../../utils/constants';
 
 const sampleChats: ChatListData[] = [
   {
@@ -116,11 +117,21 @@ type ChatlistProps = NativeStackScreenProps<ChatStackParamList, 'chats'>;
 
 const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
   const theme = useTheme();
+  const [visible, setVisible] = useState<boolean>(false);
+  const [status, setStatus] = useState<boolean>(true);
+  const [chatNotify, setChatNotify] = useState<boolean>(true);
+  const [backup, setBackup] = useState<boolean>(false);
+
+  const toggleStatus = () => setStatus(prev => !prev);
+  const toggleNotification = () => setChatNotify(prev => !prev);
+  const toggleBackup = () => setBackup(prev => !prev);
+  const handleOpen = () => setVisible(true);
 
   const navigate = (data: ChatListData) => {
     // temp passing whole data, pass user id to fetch chat
-    navigation.navigate('conversation', {data});
+    navigation.getParent()?.navigate('conversation', {data});
   };
+
   return (
     <View>
       <FlatList
@@ -151,9 +162,52 @@ const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
               <IconBtn
                 name="ellipsis-vertical-circle-outline"
                 size={25}
-                onPress={() => console.log('settings ..')}
+                onPress={handleOpen}
               />
             </View>
+            <ModalWrapper
+              visible={visible}
+              onDismiss={() => setVisible(false)}
+              contentContainerStyle={styles.modalView}
+              disableBackdrop>
+              <Text variant={'titleMedium'} style={styles.title}>
+                {textConfig.chatSettings}
+              </Text>
+              <Divider bold style={styles.divider} />
+              <View style={styles.status}>
+                <Text variant={'titleSmall'}>{textConfig.activity}</Text>
+                <Text>
+                  <Switch
+                    value={status}
+                    onValueChange={toggleStatus}
+                    color={theme.colors.secondary}
+                  />
+                </Text>
+              </View>
+              <View style={styles.status}>
+                <Text variant={'titleSmall'}>
+                  {textConfig.chatNotification}
+                </Text>
+                <Text>
+                  <Switch
+                    value={chatNotify}
+                    onValueChange={toggleNotification}
+                  />
+                </Text>
+              </View>
+              <Divider bold style={styles.divider} />
+              <View style={styles.status}>
+                <View style={styles.text}>
+                  <Text variant={'titleSmall'}>{textConfig.backup}</Text>
+                  <Text variant={'bodySmall'}>{textConfig.backupInfo}</Text>
+                </View>
+                <IconBtn
+                  name={backup ? 'checkmark-circle' : 'ellipse-outline'}
+                  onPress={toggleBackup}
+                  bgColor={backup ? theme.colors.onSecondary : null}
+                />
+              </View>
+            </ModalWrapper>
           </View>
         }
         stickyHeaderIndices={[0]}
@@ -168,6 +222,11 @@ interface Style {
   header: ViewStyle;
   flexRow: ViewStyle;
   container: ViewStyle;
+  modalView: ViewStyle;
+  status: ViewStyle;
+  title: TextStyle;
+  divider: ViewStyle;
+  text: TextStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -183,4 +242,25 @@ const styles: Style = StyleSheet.create<Style>({
   container: {
     rowGap: 10,
   },
+  modalView: {
+    padding: 15,
+    width: (SCREEN_WIDTH * 5) / 6,
+  },
+
+  status: {
+    padding: 5,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    alignSelf: 'center',
+  },
+  divider: {
+    width: '60%',
+    marginVertical: 10,
+    alignSelf: 'center',
+  },
+  text: {flexShrink: 1},
 });

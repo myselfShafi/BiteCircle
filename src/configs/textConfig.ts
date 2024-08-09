@@ -7,6 +7,11 @@ interface textConfigType {
   chat: string;
   online: string;
   lastActive: string;
+  chatSettings: string;
+  activity: string;
+  chatNotification: string;
+  backup: string;
+  backupInfo: string;
 }
 
 export const textConfig: textConfigType = {
@@ -18,4 +23,11 @@ export const textConfig: textConfigType = {
   chat: 'Chats',
   online: 'online',
   lastActive: 'last active today',
+  chatSettings: 'Chat Settings',
+  activity: 'Activity Status',
+  chatNotification: 'Chat Notifications',
+  backup: 'Backup Chats!',
+  backupInfo: '',
 };
+
+textConfig.backupInfo = `Back up to your Google Account's storage. You can restore them on a new phone afer you download ${textConfig.app_Title} on it`;

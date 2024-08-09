@@ -12,19 +12,24 @@ type IconBtnProps = Partial<IconButtonProps> & {
 
 const IconBtn = ({
   name,
-  size = 24,
+  size: iconSize,
   bgColor,
+  style,
   ...props
 }: IconBtnProps): JSX.Element => {
   const theme = useAppTheme();
 
   return (
     <IconButton
-      icon={() => (
-        <IonIcon name={name} size={size} color={theme.colors.primary} />
+      icon={({color, size}) => (
+        <IonIcon name={name} size={size} color={color} />
       )}
-      size={size + 5}
-      style={[styles.icon, {backgroundColor: bgColor ?? theme.colors.card}]}
+      size={iconSize}
+      style={[
+        style,
+        styles.icon,
+        {backgroundColor: bgColor ?? theme.colors.onTertiary},
+      ]}
       {...props}
     />
   );

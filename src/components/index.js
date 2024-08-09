@@ -10,6 +10,8 @@ import MainAppBar from './common/AppBar';
 import BoldText from './common/BoldText';
 import CustomButton from './common/Button';
 import IconBtn from './common/IconButton';
+import LabelIconButton from './common/LabelIconButton';
+import ModalWrapper from './common/Modal';
 import Shimmer from './common/Shimmer';
 import Spinner from './common/Spinner';
 import InputBox from './inputBlock';
@@ -22,9 +24,11 @@ export {
   FoodCard,
   IconBtn,
   InputBox,
+  LabelIconButton,
   List,
   MainAppBar,
   MediaReel,
+  ModalWrapper,
   Shimmer,
   Spinner,
   Story,
