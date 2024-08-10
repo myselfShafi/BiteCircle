@@ -249,7 +249,6 @@ const styles: Style = StyleSheet.create<Style>({
 
   status: {
     padding: 5,
-    borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

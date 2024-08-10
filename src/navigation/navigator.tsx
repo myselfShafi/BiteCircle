@@ -2,20 +2,21 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
-import {StyleSheet, ViewStyle} from 'react-native';
-import {Avatar} from 'react-native-paper';
+import {StyleSheet, View, ViewStyle} from 'react-native';
+import {Avatar, MaterialBottomTabScreenProps} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
 import {ChatListData} from '../configs/types';
-import {Conversation} from '../screens';
+import {Conversation, Profile} from '../screens';
 import {useAppTheme} from '../themes/theme';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 export type StackParamList = {
-  app: undefined;
+  app: MaterialBottomTabScreenProps<RootTabParamList>;
   conversation: {
     data: ChatListData; // temp passing whole static data. Pass user id to fetch chat
   };
+  profile: undefined;
 };
 
 type RootTabParamList = {
@@ -32,6 +33,7 @@ const Tab = createMaterialBottomTabNavigator<RootTabParamList>();
 const TabNavigator = (): JSX.Element => {
   const [activeTab, setActiveTab] = useState('homeTab');
 
+  const ComponentPlaceholder = () => <View></View>;
   return (
     <Tab.Navigator
       labeled={false}
@@ -95,12 +97,18 @@ const TabNavigator = (): JSX.Element => {
       />
       <Tab.Screen
         name="profileTab"
-        component={SearchStack}
+        component={ComponentPlaceholder}
         options={{
           tabBarIcon: ({focused, color}) => (
             <Avatar.Image size={40} source={{uri: dummyImg}} />
           ),
         }}
+        listeners={({navigation}) => ({
+          tabPress: e => {
+            e.preventDefault();
+            navigation.getParent()?.navigate('profile');
+          },
+        })}
       />
     </Tab.Navigator>
   );
@@ -115,11 +123,8 @@ const AppNavigator = (): JSX.Element => {
         initialRouteName={'app'}
         screenOptions={{headerShown: false}}>
         <Stack.Screen name={'app'} component={TabNavigator} />
-        <Stack.Screen
-          name="conversation"
-          component={Conversation}
-          options={{headerShown: false}}
-        />
+        <Stack.Screen name="conversation" component={Conversation} />
+        <Stack.Screen name="profile" component={Profile} />
       </Stack.Navigator>
     </NavigationContainer>
   );

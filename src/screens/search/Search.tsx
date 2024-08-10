@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {IconBtn, Suggestion, TrendingItem} from '../../components';
 import {textConfig} from '../../configs';
 
-const sampleTrending = [
+export const sampleTrending = [
   {
     id: 'image1',
     url: 'https://images.unsplash.com/photo-1722689417442-65b2a3012952',

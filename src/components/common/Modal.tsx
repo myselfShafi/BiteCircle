@@ -1,14 +1,16 @@
 import React from 'react';
-import {StyleSheet, ViewStyle} from 'react-native';
+import {FlexStyle, StyleSheet, ViewStyle} from 'react-native';
 import {Modal, ModalProps, Portal, useTheme} from 'react-native-paper';
 
 type ModalWrapperProps = ModalProps & {
   disableBackdrop?: boolean;
+  placement?: FlexStyle['justifyContent'];
 };
 
 const ModalWrapper = ({
   children,
   style,
+  placement = 'center',
   contentContainerStyle,
   disableBackdrop = false,
   ...props
@@ -17,10 +19,16 @@ const ModalWrapper = ({
   return (
     <Portal>
       <Modal
-        style={[styles.container, style]}
+        style={[
+          styles.container,
+          style,
+          {
+            justifyContent: placement,
+          },
+        ]}
         contentContainerStyle={[
-          contentContainerStyle,
           styles.contentWrapper,
+          contentContainerStyle,
           {
             backgroundColor: theme.colors.background,
           },
@@ -46,7 +54,6 @@ interface Style {
 
 const styles: Style = StyleSheet.create<Style>({
   container: {
-    padding: 20,
     alignItems: 'center',
   },
   contentWrapper: {
