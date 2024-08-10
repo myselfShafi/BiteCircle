@@ -1,5 +1,5 @@
 import {useIsFocused} from '@react-navigation/native';
-import React, {memo, useMemo, useRef, useState} from 'react';
+import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 import {
   ImageStyle,
   StyleSheet,
@@ -9,6 +9,13 @@ import {
   ViewStyle,
 } from 'react-native';
 import {Avatar, Text, useTheme} from 'react-native-paper';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+} from 'react-native-reanimated';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import Video, {VideoRef} from 'react-native-video';
 import {ReelsData} from '../configs/types';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utils/constants';
@@ -21,13 +28,27 @@ type MediaReelProps = {data: ReelsData; currentIndex: number; index: number};
 
 const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
   const theme = useTheme();
-  const [muted, setMuted] = useState<boolean>(false);
   const focused = useIsFocused();
 
+  const [muted, setMuted] = useState<boolean>(false);
   const [bookmark, setBookmark] = useState<boolean>(false);
   const [liked, setLiked] = useState<boolean>(false);
 
+  const scale = useSharedValue<number>(0);
+  const AnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: Math.max(scale.value, 0)}],
+  }));
+
   const preloadCount = Math.abs(currentIndex + 1) >= index;
+
+  const toggleMute = useCallback(() => {
+    scale.value = withSpring(1, undefined, isDone => {
+      if (isDone) {
+        scale.value = withDelay(200, withSpring(0));
+      }
+    });
+    setMuted(prev => !prev);
+  }, []);
 
   const reactions = useMemo(
     () => [
@@ -73,9 +94,16 @@ const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
         <MainAppBar
           icon={muted ? 'volume-mute-outline' : 'volume-high-outline'}
           bgColor={theme.colors.backdrop}
-          onPress={() => setMuted(!muted)}
+          onPress={toggleMute}
         />
       </View>
+      <Animated.View style={[styles.centerIcon, AnimatedStyle]}>
+        <IonIcon
+          name={muted ? 'volume-mute' : 'volume-high'}
+          size={60}
+          color={theme.colors.onBackground}
+        />
+      </Animated.View>
       <TouchableOpacity style={styles.wrapper} activeOpacity={0.9}>
         {preloadCount && (
           <Video
@@ -158,6 +186,7 @@ interface Style {
   comment: TextStyle;
   user: ViewStyle;
   reaction: ViewStyle;
+  centerIcon: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -209,5 +238,10 @@ const styles: Style = StyleSheet.create<Style>({
   reaction: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+  },
+  centerIcon: {
+    zIndex: 2,
+    alignSelf: 'center',
+    marginVertical: 'auto',
   },
 });
