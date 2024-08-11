@@ -11,6 +11,7 @@ import BoldText from './common/BoldText';
 import CustomButton from './common/Button';
 import IconBtn from './common/IconButton';
 import LabelIconButton from './common/LabelIconButton';
+import MainView from './common/MainView';
 import ModalWrapper from './common/Modal';
 import Shimmer from './common/Shimmer';
 import Spinner from './common/Spinner';
@@ -27,6 +28,7 @@ export {
   LabelIconButton,
   List,
   MainAppBar,
+  MainView,
   MediaReel,
   ModalWrapper,
   Shimmer,

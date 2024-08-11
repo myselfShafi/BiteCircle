@@ -1,8 +1,14 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import {Divider, Switch, Text, useTheme} from 'react-native-paper';
-import {BoldText, IconBtn, List, ModalWrapper} from '../../components';
+import {Button, Divider, Switch, Text, useTheme} from 'react-native-paper';
+import {
+  BoldText,
+  IconBtn,
+  List,
+  MainView,
+  ModalWrapper,
+} from '../../components';
 import {textConfig} from '../../configs';
 import {ChatListData} from '../../configs/types';
 import {ChatStackParamList} from '../../navigation/stacks/Chats';
@@ -121,6 +127,7 @@ const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
   const [status, setStatus] = useState<boolean>(true);
   const [chatNotify, setChatNotify] = useState<boolean>(true);
   const [backup, setBackup] = useState<boolean>(false);
+  const [data, setData] = useState(sampleChats);
 
   const toggleStatus = () => setStatus(prev => !prev);
   const toggleNotification = () => setChatNotify(prev => !prev);
@@ -132,87 +139,103 @@ const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
     navigation.getParent()?.navigate('conversation', {data});
   };
 
+  const onDelete = (id: number) => {
+    setData(prev => prev.filter(list => list.id !== id));
+  };
+
   return (
-    <View>
-      <FlatList
-        data={sampleChats}
-        renderItem={({item}) => <List data={item} onPress={navigate} />}
-        keyExtractor={item => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.container}
-        ListHeaderComponent={
-          <View
-            style={[
-              styles.header,
-              styles.flexRow,
-              {backgroundColor: theme.colors.elevation.level2},
-            ]}>
-            <View style={styles.flexRow}>
-              <BoldText variant="headlineLarge">{textConfig.chat}</BoldText>
-              <BoldText variant="bodyLarge">(3 unread)</BoldText>
-            </View>
-            <View style={styles.flexRow}>
-              <IconBtn
-                name="search-outline"
-                size={25}
-                bgColor={'transparent'}
-                rippleColor={'transparent'}
-                onPress={() => console.log('searching ..')}
+    <MainView>
+      <View
+        style={[
+          styles.header,
+          styles.flexRow,
+          {backgroundColor: theme.colors.elevation.level2},
+        ]}>
+        <View style={styles.flexRow}>
+          <BoldText variant="headlineLarge">{textConfig.chat}</BoldText>
+          {data.length > 0 && (
+            <BoldText variant="bodyLarge">(3 unread)</BoldText>
+          )}
+        </View>
+        <View style={styles.flexRow}>
+          <IconBtn
+            name="search-outline"
+            size={25}
+            bgColor={'transparent'}
+            rippleColor={'transparent'}
+            onPress={() => console.log('searching ..')}
+          />
+          <IconBtn
+            name="ellipsis-vertical-circle-outline"
+            size={25}
+            onPress={handleOpen}
+          />
+        </View>
+        <ModalWrapper
+          visible={visible}
+          onDismiss={() => setVisible(false)}
+          contentContainerStyle={styles.modalView}
+          disableBackdrop>
+          <BoldText variant={'titleMedium'} style={styles.title}>
+            {textConfig.chatSettings}
+          </BoldText>
+          <Divider bold style={styles.divider} />
+          <View style={styles.status}>
+            <Text variant={'titleSmall'}>{textConfig.activity}</Text>
+            <Text>
+              <Switch
+                value={status}
+                onValueChange={toggleStatus}
+                color={theme.colors.secondary}
               />
-              <IconBtn
-                name="ellipsis-vertical-circle-outline"
-                size={25}
-                onPress={handleOpen}
-              />
-            </View>
-            <ModalWrapper
-              visible={visible}
-              onDismiss={() => setVisible(false)}
-              contentContainerStyle={styles.modalView}
-              disableBackdrop>
-              <Text variant={'titleMedium'} style={styles.title}>
-                {textConfig.chatSettings}
-              </Text>
-              <Divider bold style={styles.divider} />
-              <View style={styles.status}>
-                <Text variant={'titleSmall'}>{textConfig.activity}</Text>
-                <Text>
-                  <Switch
-                    value={status}
-                    onValueChange={toggleStatus}
-                    color={theme.colors.secondary}
-                  />
-                </Text>
-              </View>
-              <View style={styles.status}>
-                <Text variant={'titleSmall'}>
-                  {textConfig.chatNotification}
-                </Text>
-                <Text>
-                  <Switch
-                    value={chatNotify}
-                    onValueChange={toggleNotification}
-                  />
-                </Text>
-              </View>
-              <Divider bold style={styles.divider} />
-              <View style={styles.status}>
-                <View style={styles.text}>
-                  <Text variant={'titleSmall'}>{textConfig.backup}</Text>
-                  <Text variant={'bodySmall'}>{textConfig.backupInfo}</Text>
-                </View>
-                <IconBtn
-                  name={backup ? 'checkmark-circle' : 'ellipse-outline'}
-                  onPress={toggleBackup}
-                  bgColor={backup ? theme.colors.onSecondary : null}
-                />
-              </View>
-            </ModalWrapper>
+            </Text>
           </View>
-        }
-        stickyHeaderIndices={[0]}
-      />
-    </View>
+          <View style={styles.status}>
+            <Text variant={'titleSmall'}>{textConfig.chatNotification}</Text>
+            <Text>
+              <Switch value={chatNotify} onValueChange={toggleNotification} />
+            </Text>
+          </View>
+          <Divider bold style={styles.divider} />
+          <View style={styles.status}>
+            <View style={styles.text}>
+              <Text variant={'titleSmall'}>{textConfig.backup}</Text>
+              <Text variant={'bodySmall'}>{textConfig.backupInfo}</Text>
+            </View>
+            <IconBtn
+              name={backup ? 'checkmark-circle' : 'ellipse-outline'}
+              onPress={toggleBackup}
+              bgColor={backup ? theme.colors.onSecondary : null}
+            />
+          </View>
+        </ModalWrapper>
+      </View>
+      {data.length > 0 ? (
+        <FlatList
+          data={data}
+          renderItem={({item}) => (
+            <List data={item} onPress={navigate} onDelete={onDelete} />
+          )}
+          keyExtractor={item => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.container}
+        />
+      ) : (
+        <View style={styles.emptyView}>
+          <BoldText variant="titleLarge">
+            {textConfig.emptyState.chatsHeader}
+          </BoldText>
+          <Text variant="bodyLarge" style={styles.title}>
+            {textConfig.emptyState.chatsTitle}
+          </Text>
+          <Button
+            mode="text"
+            onPress={() => navigation.getParent()?.navigate('searchTab')}>
+            {textConfig.emptyState.chatsBtn}
+          </Button>
+        </View>
+      )}
+    </MainView>
   );
 };
 
@@ -227,6 +250,7 @@ interface Style {
   title: TextStyle;
   divider: ViewStyle;
   text: TextStyle;
+  emptyView: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -241,6 +265,7 @@ const styles: Style = StyleSheet.create<Style>({
   },
   container: {
     rowGap: 10,
+    paddingVertical: 10,
   },
   modalView: {
     padding: 15,
@@ -254,7 +279,7 @@ const styles: Style = StyleSheet.create<Style>({
     justifyContent: 'space-between',
   },
   title: {
-    alignSelf: 'center',
+    textAlign: 'center',
   },
   divider: {
     width: '60%',
@@ -262,4 +287,12 @@ const styles: Style = StyleSheet.create<Style>({
     alignSelf: 'center',
   },
   text: {flexShrink: 1},
+  emptyView: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: (SCREEN_WIDTH * 3) / 4,
+    alignSelf: 'center',
+    rowGap: 10,
+  },
 });

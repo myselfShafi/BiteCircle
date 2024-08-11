@@ -9,7 +9,13 @@ import {
 } from 'react-native';
 import {Searchbar, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {IconBtn, Suggestion, TrendingItem} from '../../components';
+import {
+  BoldText,
+  IconBtn,
+  MainView,
+  Suggestion,
+  TrendingItem,
+} from '../../components';
 import {textConfig} from '../../configs';
 
 export const sampleTrending = [
@@ -94,7 +100,7 @@ const Search = (): JSX.Element => {
   const [search, setSearch] = useState('');
 
   return (
-    <View>
+    <MainView>
       <View style={styles.searchWrapper}>
         <Searchbar
           icon={({color}) => <Icon name={'search'} color={color} size={20} />}
@@ -111,9 +117,9 @@ const Search = (): JSX.Element => {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View>
-            <Text variant="titleMedium" style={styles.title}>
+            <BoldText variant="titleMedium" style={styles.title}>
               {textConfig.suggestion}
-            </Text>
+            </BoldText>
             <FlatList
               horizontal
               data={Array(6).fill(null)}
@@ -130,13 +136,13 @@ const Search = (): JSX.Element => {
                 </TouchableOpacity>
               }
             />
-            <Text variant="titleMedium" style={styles.title}>
+            <BoldText variant="titleMedium" style={styles.title}>
               {textConfig.trending}
-            </Text>
+            </BoldText>
           </View>
         }
       />
-    </View>
+    </MainView>
   );
 };
 

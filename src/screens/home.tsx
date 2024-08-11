@@ -2,7 +2,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useState} from 'react';
 import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
-import {FoodCard, MainAppBar, Shimmer, Story} from '../components';
+import {FoodCard, MainAppBar, MainView, Shimmer, Story} from '../components';
 import {StoryData} from '../configs/types';
 import {HomeStackParamList} from '../navigation/stacks/home';
 
@@ -45,7 +45,7 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
   );
 
   return (
-    <View style={[styles.container]}>
+    <MainView>
       <MainAppBar icon={'notifications-outline'} />
       <FlatList
         data={Array(4).fill(null)}
@@ -95,14 +95,13 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
           </View>
         }
       />
-    </View>
+    </MainView>
   );
 };
 
 export default Home;
 
 interface Style {
-  container: ViewStyle;
   reelWrapper: ViewStyle;
   reelContainer: ViewStyle;
   reelsShimmer: ViewStyle;
@@ -113,7 +112,6 @@ interface Style {
 }
 
 const styles: Style = StyleSheet.create<Style>({
-  container: {flex: 1},
   reelWrapper: {paddingVertical: 15},
   reelContainer: {justifyContent: 'center', marginHorizontal: 10},
   reelsShimmer: {

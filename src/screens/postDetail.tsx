@@ -76,10 +76,8 @@ const PostDetail = ({navigation}: PostDetailProps): JSX.Element => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
-      <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
-      </Appbar.Header>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <Appbar.BackAction onPress={() => navigation.goBack()} />
       <FlatList
         ListHeaderComponent={
           <>

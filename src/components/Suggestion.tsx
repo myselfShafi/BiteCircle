@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
-import {Avatar, Surface, Text} from 'react-native-paper';
+import {Avatar, Surface} from 'react-native-paper';
+import BoldText from './common/BoldText';
 import CustomButton from './common/Button';
 
 const Suggestion = (): JSX.Element => {
@@ -12,9 +13,9 @@ const Suggestion = (): JSX.Element => {
           uri: 'https://images.unsplash.com/photo-1594583388647-364ea6532257',
         }}
       />
-      <Text variant="labelLarge" numberOfLines={1} ellipsizeMode="tail">
+      <BoldText variant="labelLarge" numberOfLines={1} ellipsizeMode="tail">
         John Doe
-      </Text>
+      </BoldText>
       <CustomButton size="small" children={'Follow'} />
     </Surface>
   );

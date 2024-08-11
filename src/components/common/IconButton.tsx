@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, ViewStyle} from 'react-native';
+import React, {forwardRef, LegacyRef} from 'react';
+import {StyleSheet, View, ViewStyle} from 'react-native';
 import {IconButton, IconButtonProps} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {useAppTheme} from '../../themes/theme';
@@ -10,30 +10,30 @@ type IconBtnProps = Partial<IconButtonProps> & {
   bgColor?: any;
 };
 
-const IconBtn = ({
-  name,
-  size: iconSize,
-  bgColor,
-  style,
-  ...props
-}: IconBtnProps): JSX.Element => {
-  const theme = useAppTheme();
+const IconBtn = forwardRef(
+  (
+    {name, size: iconSize, bgColor, style, ...props}: IconBtnProps,
+    ref: LegacyRef<View>,
+  ): JSX.Element => {
+    const theme = useAppTheme();
 
-  return (
-    <IconButton
-      icon={({color, size}) => (
-        <IonIcon name={name} size={size} color={color} />
-      )}
-      size={iconSize}
-      style={[
-        style,
-        styles.icon,
-        {backgroundColor: bgColor ?? theme.colors.onTertiary},
-      ]}
-      {...props}
-    />
-  );
-};
+    return (
+      <IconButton
+        ref={ref}
+        icon={({color, size}) => (
+          <IonIcon name={name} size={size} color={color} />
+        )}
+        size={iconSize}
+        style={[
+          style,
+          styles.icon,
+          {backgroundColor: bgColor ?? theme.colors.onTertiary},
+        ]}
+        {...props}
+      />
+    );
+  },
+);
 
 export default IconBtn;
 

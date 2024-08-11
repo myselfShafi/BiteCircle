@@ -12,7 +12,13 @@ import {
   useTheme,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {BoldText, IconBtn, ModalWrapper, TrendingItem} from '../../components';
+import {
+  BoldText,
+  IconBtn,
+  MainView,
+  ModalWrapper,
+  TrendingItem,
+} from '../../components';
 import {textConfig} from '../../configs';
 import {StackParamList} from '../../navigation/navigator';
 import {SCREEN_WIDTH} from '../../utils/constants';
@@ -47,7 +53,7 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
   const toggleLock = () => setFingerLock(prev => !prev);
 
   return (
-    <View style={styles.container}>
+    <MainView>
       <Appbar.Header>
         <Appbar.BackAction
           onPress={() => {
@@ -150,7 +156,7 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
         </Button>
       </ModalWrapper>
       <View style={styles.profile}>
-        <Avatar.Image size={SCREEN_WIDTH / 4} source={{uri: profileData.img}} />
+        <Avatar.Image size={SCREEN_WIDTH / 3} source={{uri: profileData.img}} />
         <BoldText variant="titleLarge">{profileData.name}</BoldText>
         <Text variant="bodyMedium" style={styles.username}>
           @{profileData.username}
@@ -179,14 +185,13 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
         numColumns={3}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </MainView>
   );
 };
 
 export default Profile;
 
 interface Style {
-  container: ViewStyle;
   profile: ViewStyle;
   username: TextStyle;
   title: TextStyle;
@@ -201,7 +206,6 @@ interface Style {
 }
 
 const styles: Style = StyleSheet.create<Style>({
-  container: {flex: 1},
   profile: {
     alignItems: 'center',
     rowGap: 10,

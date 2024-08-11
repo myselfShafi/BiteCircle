@@ -1,3 +1,9 @@
+interface EmptyStateType {
+  chatsHeader: string;
+  chatsTitle: string;
+  chatsBtn: string;
+}
+
 interface textConfigType {
   app_Title: string;
   search_placeholder: string;
@@ -25,6 +31,7 @@ interface textConfigType {
   report: string;
   contact: string;
   logout: string;
+  emptyState: EmptyStateType;
 }
 
 export const textConfig: textConfigType = {
@@ -54,6 +61,11 @@ export const textConfig: textConfigType = {
   report: 'Report Bug',
   contact: 'Contact Us',
   logout: 'LOG OUT',
+  emptyState: {
+    chatsHeader: 'No Conversations Yet!',
+    chatsTitle: 'Looking a little lonely here. Reach out and talk to someone!',
+    chatsBtn: 'Start a Chat',
+  },
 };
 
 textConfig.backupInfo = `Back up to your Google Account's storage. You can restore them on a new phone afer you download ${textConfig.app_Title} on it`;
