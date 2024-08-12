@@ -1,6 +1,14 @@
+import {useFocusEffect} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
-import {FlatList, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {
+  FlatList,
+  StatusBar,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Button, Divider, Switch, Text, useTheme} from 'react-native-paper';
 import {
   BoldText,
@@ -123,6 +131,18 @@ type ChatlistProps = NativeStackScreenProps<ChatStackParamList, 'chats'>;
 
 const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
   const theme = useTheme();
+
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBackgroundColor(theme.colors.elevation.level2);
+      StatusBar.setBarStyle(theme.dark ? 'light-content' : 'dark-content');
+      return () => {
+        StatusBar.setBackgroundColor(theme.colors.background);
+        StatusBar.setBarStyle(theme.dark ? 'light-content' : 'dark-content');
+      };
+    }, []),
+  );
+
   const [visible, setVisible] = useState<boolean>(false);
   const [status, setStatus] = useState<boolean>(true);
   const [chatNotify, setChatNotify] = useState<boolean>(true);

@@ -47,20 +47,15 @@ const List = ({data, onPress, onDelete}: ListProps): JSX.Element => {
     transform: [{scale: deleteIcon.value}],
   }));
 
-  const handleGestureSlide = Gesture.Pan()
-    .onChange(() => {
+  const handleGestureSlide = Gesture.Pan().onFinalize(({translationX}) => {
+    if (translationX < 0) {
       slider.value = withSpring(-100);
       deleteIcon.value = withSpring(1);
-    })
-    .onEnd(({translationX}) => {
-      if (translationX < 0) {
-        slider.value = withSpring(-100);
-        deleteIcon.value = withSpring(1);
-      } else {
-        slider.value = withSpring(-2);
-        deleteIcon.value = withSpring(0);
-      }
-    });
+    } else {
+      slider.value = withSpring(-2);
+      deleteIcon.value = withSpring(0);
+    }
+  });
 
   const handleDelete = () => {
     slider.value = withTiming(-SCREEN_WIDTH, {duration: 300});

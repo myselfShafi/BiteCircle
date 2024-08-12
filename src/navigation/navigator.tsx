@@ -38,10 +38,11 @@ const TabNavigator = (): JSX.Element => {
     <Tab.Navigator
       labeled={false}
       keyboardHidesNavigationBar
+      initialRouteName="homeTab"
       activeIndicatorStyle={[styles.activeIndicator]}
       barStyle={activeTab === 'reelTab' && styles.barStyle}
       screenListeners={({route}) => ({
-        tabPress: () => setActiveTab(route.name),
+        focus: () => setActiveTab(route.name),
       })}>
       <Tab.Screen
         name="homeTab"

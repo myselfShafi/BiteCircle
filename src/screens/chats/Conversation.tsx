@@ -1,10 +1,17 @@
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, Keyboard, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  FlatList,
+  Keyboard,
+  StatusBar,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Appbar, Avatar, Text, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {BoldText, Bubble, InputBox} from '../../components';
+import {BoldText, Bubble, InputBox, MainView} from '../../components';
 import {textConfig} from '../../configs';
 import {ChatData} from '../../configs/types';
 import {StackParamList} from '../../navigation/navigator';
@@ -76,6 +83,7 @@ const sampleChat: ChatData[] = [
 
 const Conversation = ({navigation}: ConversationProps): JSX.Element => {
   const theme = useTheme();
+
   const {params} = useRoute<ConversationRouteProp>();
   const {avatar, lastMessage, status, timestamp, username} = params.data;
 
@@ -112,7 +120,44 @@ const Conversation = ({navigation}: ConversationProps): JSX.Element => {
   }, [chatData]);
 
   return (
-    <View>
+    <MainView>
+      <Appbar.Header style={{backgroundColor: theme.colors.elevation.level2}}>
+        <Appbar.BackAction
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+        <View style={[styles.wrapper, styles.profile]}>
+          <Avatar.Image size={50} source={{uri: avatar}} />
+          <View>
+            <BoldText variant="titleMedium">{username}</BoldText>
+            <View style={[styles.wrapper, styles.status]}>
+              <IonIcon
+                name={status ? 'ellipse' : 'ellipse-outline'}
+                size={8}
+                color={status ? theme.colors.secondary : ''}
+              />
+              <Text
+                variant="bodySmall"
+                style={{color: status ? theme.colors.secondary : ''}}>
+                {status ? textConfig.online : textConfig.lastActive}
+              </Text>
+            </View>
+          </View>
+        </View>
+        <Appbar.Action
+          icon={({color, size}) => (
+            <IonIcon name={'call-outline'} size={size} color={color} />
+          )}
+          onPress={() => {}}
+        />
+        <Appbar.Action
+          icon={({color, size}) => (
+            <IonIcon name={'videocam-outline'} size={size} color={color} />
+          )}
+          onPress={() => {}}
+        />
+      </Appbar.Header>
       <FlatList
         ref={flatListRef}
         data={chatData}
@@ -120,48 +165,6 @@ const Conversation = ({navigation}: ConversationProps): JSX.Element => {
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.container}
-        ListHeaderComponent={
-          <Appbar.Header
-            style={{backgroundColor: theme.colors.elevation.level2}}>
-            <Appbar.BackAction
-              onPress={() => {
-                navigation.goBack();
-              }}
-            />
-            <View style={[styles.wrapper, styles.profile]}>
-              <Avatar.Image size={50} source={{uri: avatar}} />
-              <View>
-                <BoldText variant="titleMedium">{username}</BoldText>
-                <View style={[styles.wrapper, styles.status]}>
-                  <IonIcon
-                    name={status ? 'ellipse' : 'ellipse-outline'}
-                    size={8}
-                    color={status ? theme.colors.secondary : ''}
-                  />
-                  <Text
-                    variant="bodySmall"
-                    style={{color: status ? theme.colors.secondary : ''}}>
-                    {status ? textConfig.online : textConfig.lastActive}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <Appbar.Action
-              icon={({color, size}) => (
-                <IonIcon name={'call-outline'} size={size} color={color} />
-              )}
-              onPress={() => {}}
-            />
-            <Appbar.Action
-              icon={({color, size}) => (
-                <IonIcon name={'videocam-outline'} size={size} color={color} />
-              )}
-              onPress={() => {}}
-            />
-          </Appbar.Header>
-        }
-        stickyHeaderIndices={[0]}
-        ListFooterComponent={<View style={styles.footer} />}
       />
       <View style={styles.input}>
         <InputBox
@@ -171,7 +174,12 @@ const Conversation = ({navigation}: ConversationProps): JSX.Element => {
           handleSend={handleSend}
         />
       </View>
-    </View>
+      <StatusBar
+        backgroundColor={theme.colors.elevation.level2}
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        animated
+      />
+    </MainView>
   );
 };
 
@@ -183,7 +191,6 @@ interface Style {
   container: ViewStyle;
   status: ViewStyle;
   input: ViewStyle;
-  footer: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -197,18 +204,12 @@ const styles: Style = StyleSheet.create<Style>({
   },
   container: {
     rowGap: 10,
+    paddingTop: 10,
   },
   status: {
     columnGap: 4,
   },
   input: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     padding: 10,
-  },
-  footer: {
-    paddingBottom: 80,
   },
 });
