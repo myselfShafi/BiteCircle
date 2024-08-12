@@ -233,6 +233,7 @@ const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
       {data.length > 0 ? (
         <FlatList
           data={data}
+          bounces={false}
           renderItem={({item}) => (
             <List data={item} onPress={navigate} onDelete={onDelete} />
           )}

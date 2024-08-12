@@ -1,9 +1,8 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
-import {FlatList, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
+import React, {memo, useState} from 'react';
+import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {
   Appbar,
-  Avatar,
   Button,
   Divider,
   Surface,
@@ -11,6 +10,13 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   BoldText,
@@ -42,11 +48,94 @@ const profileStats = [
 
 type ProfileProps = NativeStackScreenProps<StackParamList, 'profile'>;
 
+const offsetValue = 100;
+
+const ListTitleComp = memo((): JSX.Element => {
+  return (
+    <BoldText variant="titleMedium" style={[styles.title]}>
+      {textConfig.album} <Text>({sampleTrending.length})</Text>
+    </BoldText>
+  );
+});
+
+const StatsComp = memo((): JSX.Element => {
+  return (
+    <View style={styles.statsWrapper}>
+      {profileStats.map(stat => (
+        <View key={stat.id} style={styles.profile}>
+          <BoldText variant="titleLarge">
+            {stat.value.toLocaleString()}
+          </BoldText>
+          <Text variant="bodySmall">{stat.label}</Text>
+        </View>
+      ))}
+    </View>
+  );
+});
+
+const handleInterpolation = (
+  value: number,
+  initialOutput: number,
+  finalOutput: number,
+) => {
+  'worklet';
+  return interpolate(
+    value,
+    [0, offsetValue],
+    [initialOutput, finalOutput],
+    Extrapolation.CLAMP,
+  );
+};
+
 const Profile = ({navigation}: ProfileProps): JSX.Element => {
   const theme = useTheme();
   const [settings, setSettings] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [fingerLock, setFingerLock] = useState<boolean>(false);
+
+  const scrollY = useSharedValue(0);
+
+  const handleScroll = useAnimatedScrollHandler(e => {
+    scrollY.value = Math.floor(e.contentOffset.y);
+  });
+
+  const AnimateHeader = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateX: handleInterpolation(
+          scrollY.value,
+          0,
+          -(SCREEN_WIDTH / 3) + 20,
+        ),
+      },
+    ],
+  }));
+
+  const AnimateImg = useAnimatedStyle(() => ({
+    width: handleInterpolation(
+      scrollY.value,
+      SCREEN_WIDTH / 3,
+      SCREEN_WIDTH / 4.5,
+    ),
+    borderRadius: handleInterpolation(
+      scrollY.value,
+      SCREEN_WIDTH / 6,
+      SCREEN_WIDTH / 9,
+    ),
+  }));
+
+  const AnimateName = useAnimatedStyle(() => ({
+    transform: [{scale: handleInterpolation(scrollY.value, 1, 0.8)}],
+  }));
+
+  const AnimateBio = useAnimatedStyle(() => ({
+    opacity: handleInterpolation(scrollY.value, 1, 0),
+  }));
+
+  const AnimateStats = useAnimatedStyle(() => ({
+    opacity: handleInterpolation(scrollY.value, 0, 1),
+    maxHeight: handleInterpolation(scrollY.value, 0, 200),
+  }));
 
   const openSettings = () => setSettings(true);
   const toggleTheme = () => setDarkMode(prev => !prev);
@@ -155,35 +244,46 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
           {textConfig.logout}
         </Button>
       </ModalWrapper>
-      <View style={styles.profile}>
-        <Avatar.Image size={SCREEN_WIDTH / 3} source={{uri: profileData.img}} />
-        <BoldText variant="titleLarge">{profileData.name}</BoldText>
-        <Text variant="bodyMedium" style={styles.username}>
-          @{profileData.username}
-        </Text>
-        <BoldText variant="bodyMedium" style={styles.bio}>
-          {profileData.bio}
-        </BoldText>
+      <View>
+        <Animated.View style={[styles.profile, AnimateHeader]}>
+          <Animated.Image
+            source={{uri: profileData.img}}
+            style={[{aspectRatio: 1}, AnimateImg]}
+          />
+          <Animated.View style={[AnimateName]}>
+            <BoldText variant="titleLarge">{profileData.name}</BoldText>
+          </Animated.View>
+        </Animated.View>
+        <Animated.View style={[styles.stats2Wrapper, AnimateStats]}>
+          <StatsComp />
+        </Animated.View>
       </View>
-      <View style={styles.statsWrapper}>
-        {profileStats.map(stat => (
-          <View key={stat.id} style={styles.profile}>
-            <BoldText variant="titleLarge">
-              {stat.value.toLocaleString()}
-            </BoldText>
-            <Text variant="bodySmall">{stat.label}</Text>
-          </View>
-        ))}
-      </View>
-      <Text variant="titleMedium" style={styles.title}>
-        {textConfig.album} ({sampleTrending.length})
-      </Text>
-      <FlatList
+      <Animated.View style={[AnimateStats]}>
+        <ListTitleComp />
+      </Animated.View>
+      <Animated.FlatList
         data={sampleTrending}
+        onScroll={handleScroll}
         renderItem={({item}) => <TrendingItem data={item} />}
         keyExtractor={item => item?.id}
         numColumns={3}
         showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <>
+            <Animated.View style={[AnimateBio]}>
+              <View style={[styles.profile]}>
+                <Text variant="bodyMedium" style={styles.username}>
+                  @{profileData.username}
+                </Text>
+                <BoldText variant="bodyMedium" style={styles.bio}>
+                  {profileData.bio}
+                </BoldText>
+              </View>
+              <StatsComp />
+              <ListTitleComp />
+            </Animated.View>
+          </>
+        }
       />
     </MainView>
   );
@@ -197,6 +297,7 @@ interface Style {
   title: TextStyle;
   bio: TextStyle;
   statsWrapper: ViewStyle;
+  stats2Wrapper: ViewStyle;
   settingModal: ViewStyle;
   stack: ViewStyle;
   flexRow: ViewStyle;
@@ -209,12 +310,21 @@ const styles: Style = StyleSheet.create<Style>({
   profile: {
     alignItems: 'center',
     rowGap: 10,
+    position: 'relative',
+    zIndex: 2,
   },
   username: {fontStyle: 'italic'},
   bio: {
     marginVertical: 5,
     textAlign: 'center',
     maxWidth: (SCREEN_WIDTH * 5) / 6,
+  },
+  stats2Wrapper: {
+    width: (SCREEN_WIDTH * 2) / 3,
+    position: 'absolute',
+    right: 20,
+    justifyContent: 'center',
+    height: '100%',
   },
   statsWrapper: {
     flexDirection: 'row',
