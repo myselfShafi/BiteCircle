@@ -1,14 +1,13 @@
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import React, {Fragment, useState} from 'react';
+import {StatusBar, StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar, MaterialBottomTabScreenProps} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
 import {ChatListData} from '../configs/types';
+import {useAppTheme} from '../context/Theme';
 import {Conversation, Profile} from '../screens';
-import {useAppTheme} from '../themes/theme';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 export type StackParamList = {
@@ -116,10 +115,10 @@ const TabNavigator = (): JSX.Element => {
 };
 
 const AppNavigator = (): JSX.Element => {
-  const appTheme = useAppTheme();
+  const {theme} = useAppTheme();
 
   return (
-    <NavigationContainer theme={appTheme}>
+    <Fragment>
       <Stack.Navigator
         initialRouteName={'app'}
         screenOptions={{headerShown: false}}>
@@ -127,7 +126,12 @@ const AppNavigator = (): JSX.Element => {
         <Stack.Screen name="conversation" component={Conversation} />
         <Stack.Screen name="profile" component={Profile} />
       </Stack.Navigator>
-    </NavigationContainer>
+      <StatusBar
+        backgroundColor={theme.colors.background}
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        animated
+      />
+    </Fragment>
   );
 };
 

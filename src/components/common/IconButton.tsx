@@ -2,7 +2,7 @@ import React, {forwardRef, LegacyRef} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import {IconButton, IconButtonProps} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {useAppTheme} from '../../themes/theme';
+import {useAppTheme} from '../../context/Theme';
 
 type IconBtnProps = Partial<IconButtonProps> & {
   name: string;
@@ -15,7 +15,7 @@ const IconBtn = forwardRef(
     {name, size: iconSize, bgColor, style, ...props}: IconBtnProps,
     ref: LegacyRef<View>,
   ): JSX.Element => {
-    const theme = useAppTheme();
+    const {theme} = useAppTheme();
 
     return (
       <IconButton

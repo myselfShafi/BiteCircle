@@ -19,6 +19,7 @@ import {
 } from '../../components';
 import {textConfig} from '../../configs';
 import {ChatListData} from '../../configs/types';
+import {useAppTheme} from '../../context/Theme';
 import {ChatStackParamList} from '../../navigation/stacks/Chats';
 import {SCREEN_WIDTH} from '../../utils/constants';
 
@@ -131,6 +132,7 @@ type ChatlistProps = NativeStackScreenProps<ChatStackParamList, 'chats'>;
 
 const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
   const theme = useTheme();
+  const {isDark} = useAppTheme();
 
   useFocusEffect(
     useCallback(() => {
@@ -140,7 +142,7 @@ const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
         StatusBar.setBackgroundColor(theme.colors.background);
         StatusBar.setBarStyle(theme.dark ? 'light-content' : 'dark-content');
       };
-    }, []),
+    }, [theme, isDark]),
   );
 
   const [visible, setVisible] = useState<boolean>(false);

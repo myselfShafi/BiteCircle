@@ -1,6 +1,57 @@
+import {
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+  Theme as NavigationTheme,
+} from '@react-navigation/native';
 import {MD3DarkTheme, MD3LightTheme} from 'react-native-paper';
+import {ThemeProp} from 'react-native-paper/lib/typescript/types';
 
-export const lightPalette = {
+export type customPaletteType = NavigationTheme['colors'] &
+  ThemeProp['colors'] & {
+    primary: string;
+    onPrimary: string;
+    primaryContainer: string;
+    onPrimaryContainer: string;
+    secondary: string;
+    onSecondary: string;
+    secondaryContainer: string;
+    onSecondaryContainer: string;
+    tertiary: string;
+    onTertiary: string;
+    tertiaryContainer: string;
+    onTertiaryContainer: string;
+    error: string;
+    onError: string;
+    errorContainer: string;
+    onErrorContainer: string;
+    background: string;
+    onBackground: string;
+    surface: string;
+    onSurface: string;
+    surfaceVariant: string;
+    onSurfaceVariant: string;
+    outline: string;
+    outlineVariant: string;
+    shadow: string;
+    scrim: string;
+    inverseSurface: string;
+    inverseOnSurface: string;
+    inversePrimary: string;
+    elevation: {
+      level0: string;
+      level1: string;
+      level2: string;
+      level3: string;
+      level4: string;
+      level5: string;
+    };
+    surfaceDisabled: string;
+    onSurfaceDisabled: string;
+    backdrop: string;
+  };
+
+export const lightPalette: customPaletteType = {
+  ...NavigationDefaultTheme.colors,
   ...MD3LightTheme.colors,
   primary: 'rgb(176, 46, 0)',
   onPrimary: 'rgb(255, 255, 255)',
@@ -44,7 +95,8 @@ export const lightPalette = {
   backdrop: 'rgba(59, 45, 41, 0.4)',
 };
 
-export const darkPalette = {
+export const darkPalette: customPaletteType = {
+  ...NavigationDarkTheme.colors,
   ...MD3DarkTheme.colors,
   primary: 'rgb(255, 181, 160)',
   onPrimary: 'rgb(96, 21, 0)',

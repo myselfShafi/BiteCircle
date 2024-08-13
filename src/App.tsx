@@ -1,18 +1,15 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
-import {Provider} from 'react-native-paper';
+import ThemeContextProvider from './context/Theme';
 import AppNavigator from './navigation/navigator';
-import {useAppTheme} from './themes/theme';
 
 function App(): React.JSX.Element {
-  const appTheme = useAppTheme();
-
   return (
-    <Provider theme={appTheme}>
+    <ThemeContextProvider>
       <SafeAreaView style={{flex: 1}}>
         <AppNavigator />
       </SafeAreaView>
-    </Provider>
+    </ThemeContextProvider>
   );
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {FlexStyle, StyleSheet, ViewStyle} from 'react-native';
 import {Modal, ModalProps, Portal, useTheme} from 'react-native-paper';
 
-type ModalWrapperProps = ModalProps & {
+export type ModalWrapperProps = ModalProps & {
   disableBackdrop?: boolean;
   placement?: FlexStyle['justifyContent'];
 };
