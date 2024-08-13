@@ -27,7 +27,8 @@ const IconBtn = forwardRef(
         style={[
           style,
           styles.icon,
-          {backgroundColor: bgColor ?? theme.colors.onTertiary},
+
+          {backgroundColor: bgColor ?? theme.colors.surface},
         ]}
         {...props}
       />

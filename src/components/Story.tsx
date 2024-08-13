@@ -17,7 +17,7 @@ const Story = ({data}: ReelPropType): JSX.Element => {
       <View
         style={[
           styles.wrapper,
-          {borderColor: theme.colors.onPrimaryContainer},
+          {borderColor: theme.colors.tertiaryContainer},
           loading && {display: 'none'},
         ]}>
         <Image

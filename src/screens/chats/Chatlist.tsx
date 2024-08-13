@@ -227,7 +227,7 @@ const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
             <IconBtn
               name={backup ? 'checkmark-circle' : 'ellipse-outline'}
               onPress={toggleBackup}
-              bgColor={backup ? theme.colors.onSecondary : null}
+              bgColor={theme.colors.errorContainer}
             />
           </View>
         </ModalWrapper>

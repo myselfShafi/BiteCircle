@@ -1,7 +1,7 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {memo, useState} from 'react';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import {Appbar, Text} from 'react-native-paper';
+import {Appbar, Text, useTheme} from 'react-native-paper';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -75,6 +75,7 @@ const handleInterpolation = (
 
 const Profile = ({navigation}: ProfileProps): JSX.Element => {
   const [settings, setSettings] = useState<boolean>(false);
+  const theme = useTheme();
 
   const scrollY = useSharedValue(0);
 
@@ -124,7 +125,7 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
 
   return (
     <MainView>
-      <Appbar.Header>
+      <Appbar.Header style={{backgroundColor: theme.colors.background}}>
         <Appbar.BackAction
           onPress={() => {
             navigation.goBack();

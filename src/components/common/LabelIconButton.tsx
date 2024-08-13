@@ -12,6 +12,7 @@ type LabelIconButtonProps = IconButtonProps & {
 const LabelIconButton = ({
   icon,
   label,
+  iconColor,
   variant = 'horizontal',
   ...props
 }: LabelIconButtonProps): JSX.Element => {
@@ -23,9 +24,14 @@ const LabelIconButton = ({
       ]}>
       <IconButton
         icon={({color}) => <IonIcon name={icon} size={25} color={color} />}
+        iconColor={iconColor}
         {...props}
       />
-      {label && <Text variant="bodyMedium">{label}</Text>}
+      {label && (
+        <Text variant="bodyMedium" style={{color: iconColor}}>
+          {label}
+        </Text>
+      )}
     </View>
   );
 };

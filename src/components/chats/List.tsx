@@ -110,7 +110,7 @@ const List = ({data, onPress, onDelete}: ListProps): JSX.Element => {
         <View
           style={[
             styles.deleteWrapper,
-            {backgroundColor: theme.colors.onError},
+            {backgroundColor: theme.colors.onErrorContainer},
           ]}>
           <AnimatedIcon
             name="trash"

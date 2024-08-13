@@ -81,12 +81,12 @@ const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
 
   const videoRef = useRef<VideoRef>(null);
 
-  const onBuffer = (buffer: any) => {
-    console.log('buffring', buffer);
-  };
-  const onError = (error: any) => {
-    console.log('error', error);
-  };
+  // const onBuffer = (buffer: any) => {    // used for dev mode, integrate later
+  //   console.log('buffring', buffer);
+  // };
+  // const onError = (error: any) => {
+  //   console.log('error', error);
+  // };
 
   return (
     <View style={styles.container}>
@@ -95,13 +95,14 @@ const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
           icon={muted ? 'volume-mute-outline' : 'volume-high-outline'}
           bgColor={theme.colors.backdrop}
           onPress={toggleMute}
+          iconColor={theme.colors.onPrimary}
         />
       </View>
       <Animated.View style={[styles.centerIcon, AnimatedStyle]}>
         <IonIcon
           name={muted ? 'volume-mute' : 'volume-high'}
           size={60}
-          color={theme.colors.onBackground}
+          color={theme.colors.onPrimary}
         />
       </Animated.View>
       <TouchableOpacity style={styles.wrapper} activeOpacity={0.9}>
@@ -109,8 +110,8 @@ const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
           <Video
             source={preloadCount ? data.src : undefined}
             ref={videoRef}
-            onBuffer={onBuffer}
-            onError={onError}
+            // onBuffer={onBuffer}
+            // onError={onError}
             style={styles.video}
             repeat={true}
             resizeMode="cover"
@@ -132,12 +133,16 @@ const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
             }}
             size={45}
           />
-          <BoldText variant="titleMedium">{data.name}</BoldText>
+          <BoldText
+            variant="titleMedium"
+            style={{color: theme.colors.onPrimary}}>
+            {data.name}
+          </BoldText>
           <CustomButton size="small" children={'Follow'} />
         </View>
         <Text
           variant="bodyLarge"
-          style={styles.comment}
+          style={[styles.comment, {color: theme.colors.onPrimary}]}
           numberOfLines={3}
           ellipsizeMode="tail">
           {data.comment}
@@ -152,6 +157,7 @@ const MediaReel = ({data, currentIndex, index}: MediaReelProps) => {
                   icon={iconName}
                   label={list.content}
                   onPress={list.onPress}
+                  iconColor={theme.colors.onPrimary}
                 />
               </View>
             );

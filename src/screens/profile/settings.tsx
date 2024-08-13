@@ -55,7 +55,7 @@ const ProfileSettings = memo(
               <Switch
                 value={isDark}
                 onValueChange={toggleTheme}
-                color={theme.colors.secondary}
+                color={theme.colors.primary}
               />
             </Text>
           </View>
