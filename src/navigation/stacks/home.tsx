@@ -1,10 +1,13 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
+import {PostData} from '../../configs/types';
 import {Home, PostDetail} from '../../screens';
 
 export type HomeStackParamList = {
   home: undefined;
-  postDetail: undefined; //temporary
+  postDetail: {
+    data: PostData;
+  }; //temporary
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();

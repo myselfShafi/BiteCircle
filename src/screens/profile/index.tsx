@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {memo, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Appbar, Text, useTheme} from 'react-native-paper';
 import Animated, {
@@ -11,9 +11,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import {BoldText, IconBtn, MainView, TrendingItem} from '../../components';
 import {textConfig} from '../../configs';
+import {sampleTrending} from '../../mockData';
 import {StackParamList} from '../../navigation/navigator';
 import {SCREEN_WIDTH} from '../../utils/constants';
-import {sampleTrending} from '../search/Search';
 import ProfileSettings from './settings';
 
 const profileData = {
@@ -122,6 +122,7 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
   }));
 
   const openSettings = () => setSettings(true);
+  const handleDismiss = useCallback(() => setSettings(false), []);
 
   return (
     <MainView>
@@ -134,10 +135,7 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
         <Appbar.Content title="" />
         <IconBtn name="cog-outline" onPress={openSettings} />
       </Appbar.Header>
-      <ProfileSettings
-        visible={settings}
-        onDismiss={() => setSettings(false)}
-      />
+      <ProfileSettings visible={settings} onDismiss={handleDismiss} />
       <View>
         <Animated.View style={[styles.profile, AnimateHeader]}>
           <Animated.Image

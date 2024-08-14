@@ -4,34 +4,8 @@ import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import {FoodCard, MainAppBar, MainView, Shimmer, Story} from '../components';
 import {StoryData} from '../configs/types';
+import {SamplePosts, sampleStory} from '../mockData';
 import {HomeStackParamList} from '../navigation/stacks/home';
-
-const sampleReels = [
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1618684833569-d9476d99c36e',
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1594583388647-364ea6532257',
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1706811833540-2a1054cddafb',
-  },
-  {
-    id: 4,
-    image: 'https://images.unsplash.com/photo-1490984792589-bc12fe270585',
-  },
-  {
-    id: 5,
-    image: 'https://images.unsplash.com/photo-1536724844213-31a3b25a807c',
-  },
-  {
-    id: 6,
-    image: 'https://images.unsplash.com/photo-1526096478311-ff9cf8d38693',
-  },
-];
 
 type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
 
@@ -41,22 +15,23 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
 
   const story = useCallback(
     ({item}: {item: StoryData}) => <Story data={item} />,
-    [sampleReels],
+    [sampleStory],
   );
 
   return (
     <MainView>
       <MainAppBar icon={'notifications-outline'} />
       <FlatList
-        data={Array(4).fill(null)}
+        data={SamplePosts}
         renderItem={({item}) => (
           <FoodCard
+            data={item}
             onPress={() => {
-              navigation.navigate('postDetail');
+              navigation.navigate('postDetail', {data: item});
             }}
           />
         )}
-        keyExtractor={(item, index) => item?.id || index}
+        keyExtractor={item => item?.id.toString()}
         showsVerticalScrollIndicator={false}
         ListFooterComponent={
           cardFetch ? (
@@ -77,7 +52,7 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
           <View style={styles.reelWrapper}>
             <FlatList
               horizontal
-              data={sampleReels}
+              data={sampleStory}
               ListHeaderComponent={<Avatar.Icon size={55} icon="plus" />}
               ListHeaderComponentStyle={styles.reelContainer}
               renderItem={story}

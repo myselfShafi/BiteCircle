@@ -2,38 +2,7 @@ import React, {useCallback, useRef, useState} from 'react';
 import {FlatList, ViewToken} from 'react-native';
 import {MediaReel, Spinner} from '../../components';
 import {ReelsData} from '../../configs/types';
-
-const sampleReels: ReelsData[] = [
-  {
-    id: '1',
-    src: require('../../assets/videos/Video-670.mp4'),
-    img: 'https://images.unsplash.com/photo-1508184964240-ee96bb9677a7',
-    name: 'John Doe',
-    comment: 'Just tried this amazing new pasta recipe. Highly recommend!',
-  },
-  {
-    id: '2',
-    src: require('../../assets/videos/Video-579.mp4'),
-    img: 'https://images.unsplash.com/photo-1514626585111-9aa86183ac98',
-    name: 'Jane Smith',
-    comment: "Homemade pizza night! 🍕 What's your favorite topping?",
-  },
-  {
-    id: '3',
-    src: require('../../assets/videos/1111421-hd_1920_1080_30fps.mp4'),
-    img: 'https://images.unsplash.com/photo-1508184964240-ee96bb9677a7',
-    name: 'Alice Johnson',
-    comment: 'Freshly baked cookies straight out of the oven. Smells heavenly!',
-  },
-  {
-    id: '4',
-    src: require('../../assets/videos/Video-291.mp4'),
-    img: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce',
-    name: 'Alice Brown',
-    comment:
-      'Exploring new flavors with this exotic fruit salad. So refreshing!',
-  },
-];
+import {sampleReels} from '../../mockData';
 
 const Reels = (): JSX.Element => {
   const [activeIndex, setActiveIndex] = useState<number>(0);

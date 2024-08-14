@@ -17,84 +17,7 @@ import {
   TrendingItem,
 } from '../../components';
 import {textConfig} from '../../configs';
-
-export const sampleTrending = [
-  {
-    id: 'image1',
-    url: 'https://images.unsplash.com/photo-1722689417442-65b2a3012952',
-    category: 'culinary',
-  },
-  {
-    id: 'image2',
-    url: 'https://images.unsplash.com/photo-1464454709131-ffd692591ee5',
-    category: 'fruit',
-  },
-  {
-    id: 'image3',
-    url: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    category: 'burger',
-  },
-  {
-    id: 'image4',
-    url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836',
-    category: 'cereal',
-  },
-  {
-    id: 'image5',
-    url: 'https://images.unsplash.com/photo-1478145046317-39f10e56b5e9',
-    category: 'fruit',
-  },
-  {
-    id: 'image6',
-    url: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f',
-    category: 'ice cream',
-  },
-  {
-    id: 'image7',
-    url: 'https://images.unsplash.com/photo-1483918793747-5adbf82956c4',
-    category: 'drinks',
-  },
-  {
-    id: 'image8',
-    url: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929',
-    category: 'pancake',
-  },
-  {
-    id: 'image9',
-    url: 'https://images.unsplash.com/photo-1625938146369-adc83368bda7',
-    category: 'asian food',
-  },
-  {
-    id: 'image10',
-    url: 'https://images.unsplash.com/photo-1700760934249-93efbb574d23',
-    category: 'pizza',
-  },
-  {
-    id: 'image11',
-    url: 'https://images.unsplash.com/photo-1612095437389-d459aee25de4',
-    category: 'coffee',
-  },
-  {
-    id: 'image12',
-    url: 'https://images.unsplash.com/photo-1504674900247-dac964293360',
-    category: 'healthy',
-  },
-  {
-    id: 'image13',
-    url: 'https://images.unsplash.com/photo-1504674900247-dac964293360',
-    category: 'healthy',
-  },
-  {
-    id: 'image14',
-    url: 'https://images.unsplash.com/photo-1504674900247-dac964293360',
-    category: 'healthy',
-  },
-  {
-    id: 'image15',
-    url: 'https://images.unsplash.com/photo-1504674900247-dac964293360',
-    category: 'healthy',
-  },
-];
+import {SampleSuggestions, sampleTrending} from '../../mockData';
 
 const Search = (): JSX.Element => {
   const [search, setSearch] = useState('');
@@ -122,9 +45,9 @@ const Search = (): JSX.Element => {
             </BoldText>
             <FlatList
               horizontal
-              data={Array(6).fill(null)}
-              renderItem={({item}) => <Suggestion />}
-              keyExtractor={(item, idx) => item?.id.toString() || idx}
+              data={SampleSuggestions}
+              renderItem={({item}) => <Suggestion data={item} />}
+              keyExtractor={(item, idx) => item?.id}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.cardWrapper}
               ListFooterComponent={

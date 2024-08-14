@@ -1,20 +1,25 @@
 import React from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
 import {Avatar, Surface} from 'react-native-paper';
+import {SuggestionData} from '../configs/types';
 import BoldText from './common/BoldText';
 import CustomButton from './common/Button';
 
-const Suggestion = (): JSX.Element => {
+type SuggestionProps = {
+  data: SuggestionData;
+};
+
+const Suggestion = ({data}: SuggestionProps): JSX.Element => {
   return (
     <Surface elevation={0} style={styles.wrapper}>
       <Avatar.Image
         size={75}
         source={{
-          uri: 'https://images.unsplash.com/photo-1594583388647-364ea6532257',
+          uri: data.img,
         }}
       />
       <BoldText variant="labelLarge" numberOfLines={1} ellipsizeMode="tail">
-        John Doe
+        {data.name}
       </BoldText>
       <CustomButton size="small" children={'Follow'} />
     </Surface>

@@ -1,5 +1,14 @@
 import {ReactVideoProps} from 'react-native-video';
 
+export interface PostData {
+  id: number;
+  avatar: string;
+  image: string;
+  name: string;
+  post: string;
+  timestamp: string;
+}
+
 export interface CommentData {
   id: number;
   image: string;
@@ -17,6 +26,12 @@ export interface TrendsData {
   id: string;
   url: string;
   category: string;
+}
+
+export interface SuggestionData {
+  id: string;
+  img: string;
+  name: string;
 }
 
 export interface ReelsData {
