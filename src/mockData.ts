@@ -372,28 +372,28 @@ export const SampleSuggestions: SuggestionData[] = [
 export const sampleReels: ReelsData[] = [
   {
     id: '1',
-    src: require('./assets/videos/Video-670.mp4'),
+    src: require('./assets/videos/vid-1.mp4'),
     img: 'https://images.unsplash.com/photo-1558487661-9d4f01e2ad64',
     name: 'John Doe',
     comment: 'Just tried this amazing new pasta recipe. Highly recommend!',
   },
   {
     id: '2',
-    src: require('./assets/videos/Video-579.mp4'),
+    src: require('./assets/videos/vid-2.mp4'),
     img: 'https://images.unsplash.com/photo-1514626585111-9aa86183ac98',
     name: 'Jane Smith',
     comment: "Homemade pizza night! 🍕 What's your favorite topping?",
   },
   {
     id: '3',
-    src: require('./assets/videos/1111421-hd_1920_1080_30fps.mp4'),
+    src: require('./assets/videos/vid-3.mp4'),
     img: 'https://images.unsplash.com/photo-1508184964240-ee96bb9677a7',
     name: 'Alice Johnson',
     comment: 'Freshly baked cookies straight out of the oven. Smells heavenly!',
   },
   {
     id: '4',
-    src: require('./assets/videos/Video-291.mp4'),
+    src: require('./assets/videos/vid-4.mp4'),
     img: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce',
     name: 'Alice Brown',
     comment:
