@@ -121,7 +121,10 @@ const AppNavigator = (): JSX.Element => {
     <Fragment>
       <Stack.Navigator
         initialRouteName={'app'}
-        screenOptions={{headerShown: false}}>
+        screenOptions={{
+          headerShown: false,
+          navigationBarColor: theme.colors.elevation.level2,
+        }}>
         <Stack.Screen name={'app'} component={TabNavigator} />
         <Stack.Screen name="conversation" component={Conversation} />
         <Stack.Screen name="profile" component={Profile} />
