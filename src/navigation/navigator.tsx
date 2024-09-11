@@ -7,10 +7,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
 import {ChatListData} from '../configs/types';
 import {useAppTheme} from '../context/Theme';
-import {Conversation, Profile} from '../screens';
+import {Conversation, Profile, Welcome} from '../screens';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 export type StackParamList = {
+  auth: undefined;
   app: MaterialBottomTabScreenProps<RootTabParamList>;
   conversation: {
     data: ChatListData; // temp passing whole static data. Pass user id to fetch chat
@@ -120,11 +121,13 @@ const AppNavigator = (): JSX.Element => {
   return (
     <Fragment>
       <Stack.Navigator
-        initialRouteName={'app'}
+        initialRouteName={'auth'}
         screenOptions={{
           headerShown: false,
-          navigationBarColor: theme.colors.elevation.level2,
+          navigationBarColor: theme.colors.background,
         }}>
+        <Stack.Screen name={'auth'} component={Welcome} />
+
         <Stack.Screen name={'app'} component={TabNavigator} />
         <Stack.Screen name="conversation" component={Conversation} />
         <Stack.Screen name="profile" component={Profile} />
