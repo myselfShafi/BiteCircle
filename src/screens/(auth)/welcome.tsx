@@ -1,14 +1,19 @@
 import React, {Fragment, useState} from 'react';
 import {
-  Image,
   ImageBackground,
   ImageStyle,
   StyleSheet,
   TextStyle,
-  View,
   ViewStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import {BoldText, CustomButton, IconBtn, MainView} from '../../components';
 import {textConfig} from '../../configs';
 import {useAppTheme} from '../../context/Theme';
@@ -16,16 +21,45 @@ import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utils/constants';
 import Login from './login/login';
 import Register from './register/register';
 
+type authType = 'login' | 'signup' | null;
+
 const Welcome = (): JSX.Element => {
   const {theme} = useAppTheme();
 
-  const [showLogin, setShowLogin] = useState<boolean>(false);
-  const [showSignup, setShowSignup] = useState<boolean>(false);
-  const showAuth = showLogin || showSignup;
+  const [authMode, setAuthMode] = useState<authType>(null);
+
+  const screenHeight = useSharedValue<number>(SCREEN_HEIGHT / 2.5);
+  const scale = useSharedValue<number>(1);
+  const shift = useSharedValue<number>(1);
+
+  const AnimateScreen = useAnimatedStyle(() => ({
+    height: screenHeight.value,
+  }));
+
+  const AnimateLogo = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
+
+  const AnimateShift = useAnimatedStyle(() => ({
+    opacity: shift.value,
+  }));
 
   const handleBack = () => {
-    setShowLogin(false);
-    setShowSignup(false);
+    screenHeight.value = withSpring(SCREEN_HEIGHT / 2.5);
+    scale.value = withTiming(1, {duration: 500});
+    shift.value = withTiming(1, {duration: 500});
+    setAuthMode(null);
+  };
+
+  const handleAuth = (mode: authType) => {
+    let height = mode === 'login' ? SCREEN_HEIGHT / 1.75 : SCREEN_HEIGHT / 1.4;
+    let options = {duration: 500};
+    screenHeight.value = withTiming(height, options);
+    scale.value = withTiming(0.75, options);
+    shift.value = withTiming(0, options, () => {
+      'worklet';
+      runOnJS(setAuthMode)(mode);
+    });
   };
 
   return (
@@ -34,7 +68,7 @@ const Welcome = (): JSX.Element => {
         source={require('../../assets/welcome1.webp')}
         resizeMode="cover"
         style={styles.image}>
-        {showAuth && (
+        {authMode && (
           <IconBtn
             name={'return-up-back'}
             onPress={handleBack}
@@ -44,49 +78,47 @@ const Welcome = (): JSX.Element => {
         <LinearGradient
           colors={['transparent', 'transparent', theme.colors.background]}
           style={styles.logoWrapper}>
-          <Image
+          <Animated.Image
             source={require('../../assets/bg_logo.png')}
-            style={styles.logo}
+            style={[styles.logo, AnimateLogo]}
             resizeMode="contain"
           />
-          {!showAuth && (
-            <BoldText variant="titleSmall" style={styles.tagline}>
-              {textConfig.tagline}
-            </BoldText>
-          )}
         </LinearGradient>
       </ImageBackground>
-      <View
-        style={[
-          styles.container,
-          showLogin
-            ? styles.loginWrapper
-            : showSignup
-            ? styles.signupWrapper
-            : styles.wrapper,
-        ]}>
-        {!showAuth && (
-          <Fragment>
-            <CustomButton
-              variant="titleMedium"
-              size="large"
-              style={styles.button}
-              onPress={() => setShowSignup(true)}>
-              {textConfig.signup}
-            </CustomButton>
-            <CustomButton
-              mode="outlined"
-              variant="titleMedium"
-              size="large"
-              style={styles.button}
-              onPress={() => setShowLogin(true)}>
-              {textConfig.login}
-            </CustomButton>
-          </Fragment>
-        )}
-        {showLogin && <Login />}
-        {showSignup && <Register />}
-      </View>
+      <Animated.View style={[AnimateScreen]}>
+        <Animated.View style={[AnimateShift, styles.container]}>
+          {!authMode && (
+            <BoldText
+              variant="titleSmall"
+              style={styles.tagline}
+              children={textConfig.tagline}
+            />
+          )}
+          {!authMode && (
+            <Fragment>
+              <CustomButton
+                variant="titleMedium"
+                size="large"
+                style={styles.button}
+                onPress={() => handleAuth('signup')}>
+                {textConfig.signup}
+              </CustomButton>
+              <CustomButton
+                mode="outlined"
+                variant="titleMedium"
+                size="large"
+                style={styles.button}
+                onPress={() => handleAuth('login')}>
+                {textConfig.login}
+              </CustomButton>
+            </Fragment>
+          )}
+        </Animated.View>
+        <Animated.View style={[styles.container]}>
+          {authMode === 'login' && <Login />}
+          {authMode === 'signup' && <Register />}
+        </Animated.View>
+      </Animated.View>
     </MainView>
   );
 };
@@ -99,9 +131,6 @@ interface Style {
   image: ImageStyle;
   logo: ImageStyle;
   container: ViewStyle;
-  wrapper: ViewStyle;
-  loginWrapper: ViewStyle;
-  signupWrapper: ViewStyle;
   tagline: TextStyle;
   button: ViewStyle;
 }
@@ -126,22 +155,15 @@ const styles: Style = StyleSheet.create<Style>({
     height: SCREEN_WIDTH / 2,
   },
   container: {
-    padding: 35,
+    paddingBottom: 35,
+    paddingHorizontal: 35,
     rowGap: 20,
-  },
-  wrapper: {
-    height: (SCREEN_HEIGHT * 1) / 3,
-  },
-  loginWrapper: {
-    height: (SCREEN_HEIGHT * 2) / 3,
-  },
-  signupWrapper: {
-    height: (SCREEN_HEIGHT * 3) / 4,
   },
   tagline: {
     width: SCREEN_WIDTH / 1.75,
-    textAlign: 'center',
     fontStyle: 'italic',
+    marginHorizontal: 'auto',
+    textAlign: 'center',
   },
   button: {
     borderRadius: 20,
