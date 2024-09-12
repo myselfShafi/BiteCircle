@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {BoldText, CustomButton, IconBtn, MainView} from '../../components';
+import {textConfig} from '../../configs';
 import {useAppTheme} from '../../context/Theme';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utils/constants';
 import Login from './login/login';
@@ -20,13 +21,12 @@ const Welcome = (): JSX.Element => {
 
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const [showSignup, setShowSignup] = useState<boolean>(false);
+  const showAuth = showLogin || showSignup;
 
   const handleBack = () => {
     setShowLogin(false);
     setShowSignup(false);
   };
-
-  const showAuth = showLogin || showSignup;
 
   return (
     <MainView>
@@ -34,13 +34,15 @@ const Welcome = (): JSX.Element => {
         source={require('../../assets/welcome1.webp')}
         resizeMode="cover"
         style={styles.image}>
-        {showAuth && <IconBtn name={'return-up-back'} onPress={handleBack} />}
+        {showAuth && (
+          <IconBtn
+            name={'return-up-back'}
+            onPress={handleBack}
+            style={styles.back}
+          />
+        )}
         <LinearGradient
-          colors={[
-            'rgba(255, 255, 255, 0)',
-            'rgba(255, 255, 255, 0)',
-            theme.colors.background,
-          ]}
+          colors={['transparent', 'transparent', theme.colors.background]}
           style={styles.logoWrapper}>
           <Image
             source={require('../../assets/bg_logo.png')}
@@ -49,8 +51,7 @@ const Welcome = (): JSX.Element => {
           />
           {!showAuth && (
             <BoldText variant="titleSmall" style={styles.tagline}>
-              Share Your Culinary Adventures and Explore New Flavors from a
-              Community that Celebrates the Love of Food!
+              {textConfig.tagline}
             </BoldText>
           )}
         </LinearGradient>
@@ -58,22 +59,28 @@ const Welcome = (): JSX.Element => {
       <View
         style={[
           styles.container,
-          showAuth ? styles.authWrapper : styles.wrapper,
+          showLogin
+            ? styles.loginWrapper
+            : showSignup
+            ? styles.signupWrapper
+            : styles.wrapper,
         ]}>
         {!showAuth && (
           <Fragment>
             <CustomButton
               variant="titleMedium"
               size="large"
+              style={styles.button}
               onPress={() => setShowSignup(true)}>
-              Sign Up
+              {textConfig.signup}
             </CustomButton>
             <CustomButton
               mode="outlined"
               variant="titleMedium"
               size="large"
+              style={styles.button}
               onPress={() => setShowLogin(true)}>
-              Log In
+              {textConfig.login}
             </CustomButton>
           </Fragment>
         )}
@@ -88,12 +95,15 @@ export default Welcome;
 
 interface Style {
   logoWrapper: ViewStyle;
+  back: ViewStyle;
   image: ImageStyle;
   logo: ImageStyle;
   container: ViewStyle;
   wrapper: ViewStyle;
-  authWrapper: ViewStyle;
+  loginWrapper: ViewStyle;
+  signupWrapper: ViewStyle;
   tagline: TextStyle;
+  button: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -101,6 +111,12 @@ const styles: Style = StyleSheet.create<Style>({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  back: {
+    position: 'absolute',
+    zIndex: 10,
+    top: 15,
+    left: 15,
   },
   image: {
     flex: 1,
@@ -116,12 +132,18 @@ const styles: Style = StyleSheet.create<Style>({
   wrapper: {
     height: (SCREEN_HEIGHT * 1) / 3,
   },
-  authWrapper: {
+  loginWrapper: {
     height: (SCREEN_HEIGHT * 2) / 3,
+  },
+  signupWrapper: {
+    height: (SCREEN_HEIGHT * 3) / 4,
   },
   tagline: {
     width: SCREEN_WIDTH / 1.75,
     textAlign: 'center',
     fontStyle: 'italic',
+  },
+  button: {
+    borderRadius: 20,
   },
 });

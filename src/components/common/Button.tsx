@@ -16,12 +16,14 @@ type CustomButtonProps = TouchableOpacityProps & {
   size: 'small' | 'medium' | 'large' | undefined;
   variant?: PaperTextProps<TextProps>['variant'];
   mode?: ButtonProps['mode'];
+  icon?: JSX.Element;
 };
 
 const CustomButton = ({
   size,
   children,
   style,
+  icon,
   mode = 'contained',
   variant = 'labelLarge',
   ...props
@@ -31,7 +33,6 @@ const CustomButton = ({
   return (
     <TouchableOpacity
       style={[
-        style,
         styles.button,
         size && styles[size],
         mode === 'contained' && {
@@ -40,6 +41,8 @@ const CustomButton = ({
         {
           borderColor: theme.colors.secondaryContainer,
         },
+        icon && styles.icon,
+        style,
       ]}
       activeOpacity={0.7}
       {...props}>
@@ -53,6 +56,7 @@ const CustomButton = ({
         }}>
         {children}
       </BoldText>
+      {icon}
     </TouchableOpacity>
   );
 };
@@ -64,6 +68,7 @@ interface Style {
   medium: ViewStyle;
   large: ViewStyle;
   button: ViewStyle;
+  icon: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -75,5 +80,10 @@ const styles: Style = StyleSheet.create<Style>({
     width: 'auto',
     alignItems: 'center',
     borderWidth: 2,
+  },
+  icon: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'center',
+    columnGap: 5,
   },
 });

@@ -17,5 +17,6 @@ interface Style {
 const styles: Style = StyleSheet.create<Style>({
   wrapper: {
     flex: 1,
+    position: 'relative',
   },
 });

@@ -9,7 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Appbar, Avatar, Text, useTheme} from 'react-native-paper';
+import {Appbar, Avatar, Text, TextInput, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {BoldText, Bubble, InputBox, MainView} from '../../components';
 import {textConfig} from '../../configs';
@@ -73,6 +73,7 @@ const Conversation = ({navigation}: ConversationProps): JSX.Element => {
   const theme = useTheme();
 
   const flatListRef = useRef<FlatList<ChatData>>(null);
+  const messageRef = useRef(null);
 
   const [chatData, setChatData] = useState<ChatData[]>(sampleChat);
   const [sendChat, setSendChat] = useState<string>('');
@@ -117,10 +118,26 @@ const Conversation = ({navigation}: ConversationProps): JSX.Element => {
       />
       <View style={styles.input}>
         <InputBox
+          ref={messageRef}
           placeholder="Type your message.."
           value={sendChat}
           onChangeText={onChangeText}
-          handleSend={handleSend}
+          style={styles.border}
+          left={
+            <TextInput.Icon
+              icon={'emoticon-outline'}
+              size={22}
+              onPress={() => console.log('comment Pressed')}
+            />
+          }
+          right={
+            <TextInput.Icon
+              icon={'send-circle-outline'}
+              size={30}
+              color={theme.colors.secondary}
+              onPress={handleSend}
+            />
+          }
         />
       </View>
       <StatusBar
@@ -140,6 +157,7 @@ interface Style {
   container: ViewStyle;
   status: ViewStyle;
   input: ViewStyle;
+  border: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -160,5 +178,8 @@ const styles: Style = StyleSheet.create<Style>({
   },
   input: {
     padding: 10,
+  },
+  border: {
+    borderTopLeftRadius: 0,
   },
 });

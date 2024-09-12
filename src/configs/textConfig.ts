@@ -6,6 +6,9 @@ interface EmptyStateType {
 
 interface textConfigType {
   app_Title: string;
+  tagline: string;
+  loginTitle: string;
+  signupTitle: string;
   search_placeholder: string;
   suggestion: string;
   allSuggestion: string;
@@ -30,12 +33,19 @@ interface textConfigType {
   helpSub: string;
   report: string;
   contact: string;
+  login: string;
+  signup: string;
+  googleSignup: string;
   logout: string;
   emptyState: EmptyStateType;
 }
 
 export const textConfig: textConfigType = {
   app_Title: 'BiteCircle',
+  loginTitle: 'Log In To Your Account',
+  signupTitle: 'Create New Account',
+  tagline:
+    'Share Your Culinary Adventures and Explore New Flavors from a Community that Celebrates the Love of Food!',
   search_placeholder: 'Looking for the best cooking ideas?',
   suggestion: 'Suggestions',
   allSuggestion: 'See All',
@@ -60,7 +70,10 @@ export const textConfig: textConfigType = {
   helpSub: 'Get Assistance and Find Answers to Your Questions',
   report: 'Report Bug',
   contact: 'Contact Us',
-  logout: 'LOG OUT',
+  login: 'Log In',
+  signup: 'Sign Up',
+  googleSignup: 'Sign Up With Google',
+  logout: 'Log Out',
   emptyState: {
     chatsHeader: 'No Conversations Yet!',
     chatsTitle: 'Looking a little lonely here. Reach out and talk to someone!',
