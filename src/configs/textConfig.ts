@@ -9,6 +9,8 @@ interface textConfigType {
   tagline: string;
   loginTitle: string;
   signupTitle: string;
+  goLogin: string;
+  forgotPwd: string;
   search_placeholder: string;
   suggestion: string;
   allSuggestion: string;
@@ -44,6 +46,8 @@ export const textConfig: textConfigType = {
   app_Title: 'BiteCircle',
   loginTitle: 'Log In To Your Account',
   signupTitle: 'Create New Account',
+  goLogin: 'Already have an account? Log In',
+  forgotPwd: 'Forgot Password?',
   tagline:
     'Share Your Culinary Adventures and Explore New Flavors from a Community that Celebrates the Love of Food!',
   search_placeholder: 'Looking for the best cooking ideas?',

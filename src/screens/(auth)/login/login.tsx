@@ -1,15 +1,21 @@
 import React, {Fragment, useState} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
-import {Button, TextInput} from 'react-native-paper';
+import {Button, TextInput, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {BoldText, CustomButton, InputBox} from '../../../components';
 import {textConfig} from '../../../configs';
+import {AuthProps} from '../welcome';
 
-const Login = (): JSX.Element => {
+const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
+  const theme = useTheme();
   const [showPwd, setShowPwd] = useState<boolean>(false);
 
   const togglePwd = () => {
     setShowPwd(prev => !prev);
+  };
+
+  const handleLogin = () => {
+    navigation.navigate('app');
   };
 
   return (
@@ -63,8 +69,16 @@ const Login = (): JSX.Element => {
           />
         }
       />
-      <Button mode="text" children={'Forgot Password?'} />
-      <CustomButton variant="titleMedium" size="large" style={styles.button}>
+      <Button
+        mode="text"
+        textColor={theme.colors.secondary}
+        children={textConfig.forgotPwd}
+      />
+      <CustomButton
+        variant="titleMedium"
+        size="large"
+        style={styles.button}
+        onPress={handleLogin}>
         {textConfig.login}
       </CustomButton>
     </Fragment>

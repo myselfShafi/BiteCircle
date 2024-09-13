@@ -1,11 +1,17 @@
 import React, {Fragment, useState} from 'react';
 import {Image, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import {Button, Divider, TextInput} from 'react-native-paper';
+import {Button, Divider, TextInput, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {BoldText, CustomButton, InputBox} from '../../../components';
 import {textConfig} from '../../../configs';
+import {AuthProps} from '../welcome';
 
-const Register = (): JSX.Element => {
+type SignupProps = Omit<AuthProps, 'route'> & {
+  goLogin: () => void;
+};
+
+const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
+  const theme = useTheme();
   const [showPwd, setShowPwd] = useState<boolean>(false);
 
   const togglePwd = () => {
@@ -96,7 +102,12 @@ const Register = (): JSX.Element => {
         style={styles.button}>
         {textConfig.googleSignup}
       </CustomButton>
-      <Button mode="text" children={'Already have an account? Log In'} />
+      <Button
+        mode="text"
+        children={textConfig.goLogin}
+        textColor={theme.colors.secondary}
+        onPress={goLogin}
+      />
     </Fragment>
   );
 };

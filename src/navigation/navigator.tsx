@@ -2,7 +2,7 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {Fragment, useState} from 'react';
 import {StatusBar, StyleSheet, View, ViewStyle} from 'react-native';
-import {Avatar, MaterialBottomTabScreenProps} from 'react-native-paper';
+import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
 import {ChatListData} from '../configs/types';
@@ -12,7 +12,7 @@ import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 export type StackParamList = {
   auth: undefined;
-  app: MaterialBottomTabScreenProps<RootTabParamList>;
+  app: undefined;
   conversation: {
     data: ChatListData; // temp passing whole static data. Pass user id to fetch chat
   };
@@ -124,9 +124,15 @@ const AppNavigator = (): JSX.Element => {
         initialRouteName={'auth'}
         screenOptions={{
           headerShown: false,
-          navigationBarColor: theme.colors.background,
+          navigationBarColor: theme.colors.elevation.level2,
         }}>
-        <Stack.Screen name={'auth'} component={Welcome} />
+        <Stack.Screen
+          name={'auth'}
+          component={Welcome}
+          options={{
+            navigationBarColor: theme.colors.background,
+          }}
+        />
 
         <Stack.Screen name={'app'} component={TabNavigator} />
         <Stack.Screen name="conversation" component={Conversation} />

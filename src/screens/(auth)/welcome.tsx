@@ -1,7 +1,10 @@
+import {useIsFocused} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {Fragment, useState} from 'react';
 import {
   ImageBackground,
   ImageStyle,
+  StatusBar,
   StyleSheet,
   TextStyle,
   ViewStyle,
@@ -17,19 +20,23 @@ import Animated, {
 import {BoldText, CustomButton, IconBtn, MainView} from '../../components';
 import {textConfig} from '../../configs';
 import {useAppTheme} from '../../context/Theme';
+import {StackParamList} from '../../navigation/navigator';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utils/constants';
 import Login from './login/login';
 import Register from './register/register';
 
 type authType = 'login' | 'signup' | null;
 
-const Welcome = (): JSX.Element => {
+export type AuthProps = NativeStackScreenProps<StackParamList, 'auth'>;
+
+const Welcome = ({navigation}: AuthProps): JSX.Element => {
   const {theme} = useAppTheme();
+  const isfocus = useIsFocused();
 
   const [authMode, setAuthMode] = useState<authType>(null);
+  let options = {duration: 500};
 
   const screenHeight = useSharedValue<number>(SCREEN_HEIGHT / 2.5);
-  const scale = useSharedValue<number>(1);
   const shift = useSharedValue<number>(1);
 
   const AnimateScreen = useAnimatedStyle(() => ({
@@ -37,7 +44,14 @@ const Welcome = (): JSX.Element => {
   }));
 
   const AnimateLogo = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
+    transform: [
+      {
+        scale:
+          shift.value === 1
+            ? withTiming(1, options)
+            : withTiming(0.75, options),
+      },
+    ],
   }));
 
   const AnimateShift = useAnimatedStyle(() => ({
@@ -46,16 +60,13 @@ const Welcome = (): JSX.Element => {
 
   const handleBack = () => {
     screenHeight.value = withSpring(SCREEN_HEIGHT / 2.5);
-    scale.value = withTiming(1, {duration: 500});
-    shift.value = withTiming(1, {duration: 500});
+    shift.value = 1;
     setAuthMode(null);
   };
 
   const handleAuth = (mode: authType) => {
     let height = mode === 'login' ? SCREEN_HEIGHT / 1.75 : SCREEN_HEIGHT / 1.4;
-    let options = {duration: 500};
     screenHeight.value = withTiming(height, options);
-    scale.value = withTiming(0.75, options);
     shift.value = withTiming(0, options, () => {
       'worklet';
       runOnJS(setAuthMode)(mode);
@@ -64,10 +75,17 @@ const Welcome = (): JSX.Element => {
 
   return (
     <MainView>
+      {isfocus && (
+        <StatusBar
+          translucent
+          backgroundColor={'transparent'}
+          barStyle={'light-content'}
+        />
+      )}
       <ImageBackground
         source={require('../../assets/welcome1.webp')}
         resizeMode="cover"
-        style={styles.image}>
+        style={[styles.image]}>
         {authMode && (
           <IconBtn
             name={'return-up-back'}
@@ -115,8 +133,13 @@ const Welcome = (): JSX.Element => {
           )}
         </Animated.View>
         <Animated.View style={[styles.container]}>
-          {authMode === 'login' && <Login />}
-          {authMode === 'signup' && <Register />}
+          {authMode === 'login' && <Login navigation={navigation} />}
+          {authMode === 'signup' && (
+            <Register
+              navigation={navigation}
+              goLogin={() => handleAuth('login')}
+            />
+          )}
         </Animated.View>
       </Animated.View>
     </MainView>
@@ -144,7 +167,7 @@ const styles: Style = StyleSheet.create<Style>({
   back: {
     position: 'absolute',
     zIndex: 10,
-    top: 15,
+    top: 40,
     left: 15,
   },
   image: {
