@@ -15,7 +15,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
   };
 
   const handleLogin = () => {
-    navigation.navigate('app');
+    navigation.replace('app');
   };
 
   return (

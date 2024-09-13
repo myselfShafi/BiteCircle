@@ -131,12 +131,23 @@ const AppNavigator = (): JSX.Element => {
           component={Welcome}
           options={{
             navigationBarColor: theme.colors.background,
+            animation: 'slide_from_left',
           }}
         />
 
         <Stack.Screen name={'app'} component={TabNavigator} />
-        <Stack.Screen name="conversation" component={Conversation} />
-        <Stack.Screen name="profile" component={Profile} />
+        <Stack.Screen
+          name="conversation"
+          component={Conversation}
+          options={{animation: 'slide_from_right'}}
+        />
+        <Stack.Screen
+          name="profile"
+          component={Profile}
+          options={{
+            animation: 'slide_from_right',
+          }}
+        />
       </Stack.Navigator>
       <StatusBar
         backgroundColor={theme.colors.background}

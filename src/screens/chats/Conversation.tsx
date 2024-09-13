@@ -42,11 +42,15 @@ const ConversationHeader = memo(
               <IonIcon
                 name={status ? 'ellipse' : 'ellipse-outline'}
                 size={8}
-                color={status ? theme.colors.secondary : ''}
+                color={status ? theme.colors.secondary : theme.colors.onSurface}
               />
               <Text
                 variant="bodySmall"
-                style={{color: status ? theme.colors.secondary : ''}}>
+                style={{
+                  color: status
+                    ? theme.colors.secondary
+                    : theme.colors.onSurface,
+                }}>
                 {status ? textConfig.online : textConfig.lastActive}
               </Text>
             </View>

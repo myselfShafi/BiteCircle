@@ -2,6 +2,7 @@ import React, {memo, useState} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Button, Divider, Surface, Switch, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {ProfileProps} from '.';
 import {BoldText, ModalWrapper} from '../../components';
 import {ModalWrapperProps} from '../../components/common/Modal';
 import {textConfig} from '../../configs';
@@ -9,12 +10,20 @@ import {useAppTheme} from '../../context/Theme';
 import {SCREEN_WIDTH} from '../../utils/constants';
 
 const ProfileSettings = memo(
-  ({...props}: Omit<ModalWrapperProps, 'children'>): JSX.Element => {
+  ({
+    navigation,
+    ...props
+  }: Omit<ModalWrapperProps, 'children'> &
+    Omit<ProfileProps, 'route'>): JSX.Element => {
     const {isDark, theme, toggleTheme} = useAppTheme();
 
     const [fingerLock, setFingerLock] = useState<boolean>(false);
 
     const toggleLock = () => setFingerLock(prev => !prev);
+
+    const handleLogout = () => {
+      navigation.replace('auth');
+    };
 
     return (
       <ModalWrapper
@@ -104,7 +113,7 @@ const ProfileSettings = memo(
           icon={({color, size}) => (
             <Icon name={'log-out'} size={size} color={color} />
           )}
-          onPress={() => console.log('logged out ...')}>
+          onPress={handleLogout}>
           {textConfig.logout}
         </Button>
       </ModalWrapper>

@@ -32,7 +32,7 @@ const profileStats = [
   {id: 3, label: textConfig.following, value: profileData.following},
 ];
 
-type ProfileProps = NativeStackScreenProps<StackParamList, 'profile'>;
+export type ProfileProps = NativeStackScreenProps<StackParamList, 'profile'>;
 
 const offsetValue = 100;
 
@@ -135,7 +135,11 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
         <Appbar.Content title="" />
         <IconBtn name="cog-outline" onPress={openSettings} />
       </Appbar.Header>
-      <ProfileSettings visible={settings} onDismiss={handleDismiss} />
+      <ProfileSettings
+        visible={settings}
+        onDismiss={handleDismiss}
+        navigation={navigation}
+      />
       <View>
         <Animated.View style={[styles.profile, AnimateHeader]}>
           <Animated.Image
