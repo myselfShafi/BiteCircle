@@ -1,14 +1,6 @@
-import {useFocusEffect} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {memo, useCallback, useState} from 'react';
-import {
-  FlatList,
-  StatusBar,
-  StyleSheet,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {FlatList, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Button, Divider, Switch, Text} from 'react-native-paper';
 import {
   BoldText,
@@ -24,6 +16,7 @@ import {useAppTheme} from '../../context/Theme';
 import {sampleChats} from '../../mockData';
 import {ChatStackParamList} from '../../navigation/stacks/Chats';
 import {SCREEN_WIDTH} from '../../utils/constants';
+import {useStatusBar} from '../../utils/hooks';
 
 type ChatlistProps = NativeStackScreenProps<ChatStackParamList, 'chats'>;
 
@@ -82,17 +75,10 @@ const ChatlistSettings = memo(
 );
 
 const Chatlist = ({navigation}: ChatlistProps): JSX.Element => {
-  const {theme, isDark} = useAppTheme();
-
-  useFocusEffect(
-    useCallback(() => {
-      StatusBar.setBackgroundColor(theme.colors.elevation.level2);
-      StatusBar.setBarStyle(theme.dark ? 'light-content' : 'dark-content');
-      return () => {
-        StatusBar.setBackgroundColor(theme.colors.background);
-        StatusBar.setBarStyle(theme.dark ? 'light-content' : 'dark-content');
-      };
-    }, [theme, isDark]),
+  const {theme} = useAppTheme();
+  useStatusBar(
+    theme.colors.elevation.level2,
+    theme.dark ? 'light-content' : 'dark-content',
   );
 
   const [visible, setVisible] = useState<boolean>(false);

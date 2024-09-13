@@ -1,10 +1,8 @@
-import {useIsFocused} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {Fragment, useState} from 'react';
 import {
   ImageBackground,
   ImageStyle,
-  StatusBar,
   StyleSheet,
   TextStyle,
   ViewStyle,
@@ -22,6 +20,7 @@ import {textConfig} from '../../configs';
 import {useAppTheme} from '../../context/Theme';
 import {StackParamList} from '../../navigation/navigator';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utils/constants';
+import {useStatusBar} from '../../utils/hooks';
 import Login from './login/login';
 import Register from './register/register';
 
@@ -31,7 +30,7 @@ export type AuthProps = NativeStackScreenProps<StackParamList, 'auth'>;
 
 const Welcome = ({navigation}: AuthProps): JSX.Element => {
   const {theme} = useAppTheme();
-  const isfocus = useIsFocused();
+  useStatusBar('transparent', 'light-content', true);
 
   const [authMode, setAuthMode] = useState<authType>(null);
   let options = {duration: 500};
@@ -75,13 +74,6 @@ const Welcome = ({navigation}: AuthProps): JSX.Element => {
 
   return (
     <MainView>
-      {isfocus && (
-        <StatusBar
-          translucent
-          backgroundColor={'transparent'}
-          barStyle={'light-content'}
-        />
-      )}
       <ImageBackground
         source={require('../../assets/welcome1.webp')}
         resizeMode="cover"

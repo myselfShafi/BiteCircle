@@ -1,17 +1,19 @@
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {Fragment, useState} from 'react';
-import {StatusBar, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
 import {ChatListData} from '../configs/types';
 import {useAppTheme} from '../context/Theme';
-import {Conversation, Profile, Welcome} from '../screens';
+import {Conversation, ForgotPassword, Profile, Welcome} from '../screens';
+import {useStatusBar} from '../utils/hooks';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 export type StackParamList = {
   auth: undefined;
+  forgotPwd: undefined;
   app: undefined;
   conversation: {
     data: ChatListData; // temp passing whole static data. Pass user id to fetch chat
@@ -31,7 +33,12 @@ const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createMaterialBottomTabNavigator<RootTabParamList>();
 
 const TabNavigator = (): JSX.Element => {
+  const {theme} = useAppTheme();
   const [activeTab, setActiveTab] = useState('homeTab');
+  useStatusBar(
+    theme.colors.background,
+    theme.dark ? 'light-content' : 'dark-content',
+  );
 
   const ComponentPlaceholder = () => <View></View>;
   return (
@@ -134,7 +141,13 @@ const AppNavigator = (): JSX.Element => {
             animation: 'slide_from_left',
           }}
         />
-
+        <Stack.Screen
+          name={'forgotPwd'}
+          component={ForgotPassword}
+          options={{
+            animation: 'slide_from_right',
+          }}
+        />
         <Stack.Screen name={'app'} component={TabNavigator} />
         <Stack.Screen
           name="conversation"
@@ -149,11 +162,6 @@ const AppNavigator = (): JSX.Element => {
           }}
         />
       </Stack.Navigator>
-      <StatusBar
-        backgroundColor={theme.colors.background}
-        barStyle={theme.dark ? 'light-content' : 'dark-content'}
-        animated
-      />
     </Fragment>
   );
 };

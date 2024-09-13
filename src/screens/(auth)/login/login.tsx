@@ -18,6 +18,10 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
     navigation.replace('app');
   };
 
+  const goToForgotPwd = () => {
+    navigation.push('forgotPwd');
+  };
+
   return (
     <Fragment>
       <BoldText variant="titleLarge" style={styles.title}>
@@ -73,6 +77,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
         mode="text"
         textColor={theme.colors.secondary}
         children={textConfig.forgotPwd}
+        onPress={goToForgotPwd}
       />
       <CustomButton
         variant="titleMedium"
