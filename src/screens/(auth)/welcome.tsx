@@ -5,6 +5,7 @@ import {
   ImageStyle,
   StyleSheet,
   TextStyle,
+  View,
   ViewStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -124,7 +125,7 @@ const Welcome = ({navigation}: AuthProps): JSX.Element => {
             </Fragment>
           )}
         </Animated.View>
-        <Animated.View style={[styles.container]}>
+        <View style={styles.container}>
           {authMode === 'login' && <Login navigation={navigation} />}
           {authMode === 'signup' && (
             <Register
@@ -132,7 +133,7 @@ const Welcome = ({navigation}: AuthProps): JSX.Element => {
               goLogin={() => handleAuth('login')}
             />
           )}
-        </Animated.View>
+        </View>
       </Animated.View>
     </MainView>
   );

@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {dummyImg} from '../components/FoodCard';
 import {ChatListData} from '../configs/types';
 import {useAppTheme} from '../context/Theme';
-import {Conversation, ForgotPassword, Profile, Welcome} from '../screens';
+import {Conversation, Profile, UpdatePassword, Welcome} from '../screens';
 import {useStatusBar} from '../utils/hooks';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
@@ -143,8 +143,9 @@ const AppNavigator = (): JSX.Element => {
         />
         <Stack.Screen
           name={'forgotPwd'}
-          component={ForgotPassword}
+          component={UpdatePassword}
           options={{
+            navigationBarColor: theme.colors.background,
             animation: 'slide_from_right',
           }}
         />

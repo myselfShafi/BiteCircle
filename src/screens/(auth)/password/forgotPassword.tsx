@@ -1,37 +1,73 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
-import {StyleSheet, ViewStyle} from 'react-native';
-import {IconBtn, MainView} from '../../../components';
-import {StackParamList} from '../../../navigation/navigator';
+import React, {Fragment} from 'react';
+import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
+import {TextInput, useTheme} from 'react-native-paper';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+import {BoldText, CustomButton, InputBox} from '../../../components';
+import {textConfig} from '../../../configs';
+import {SCREEN_HEIGHT} from '../../../utils/constants';
 
-type PwdScreenProps = NativeStackScreenProps<StackParamList, 'forgotPwd'>;
+const ForgotPassword = ({addProgress}: {addProgress: () => void}) => {
+  const theme = useTheme();
 
-const ForgotPassword = ({navigation}: PwdScreenProps) => {
-  const handleBack = () => {
-    navigation.goBack();
+  const handleSubmit = () => {
+    addProgress();
   };
+
   return (
-    <MainView>
-      <IconBtn
-        name={'return-up-back'}
-        onPress={handleBack}
-        style={styles.back}
+    <Fragment>
+      <BoldText variant="titleLarge" style={styles.title}>
+        {textConfig.forgotPwdTitle}
+      </BoldText>
+      <BoldText
+        variant="bodyMedium"
+        style={[styles.title, {color: theme.colors.onBackground}]}
+        children={textConfig.forgotPwdSubTitle}
       />
-    </MainView>
+      <InputBox
+        placeholder={'Email'}
+        keyboardType="email-address"
+        textContentType="emailAddress"
+        left={
+          <TextInput.Icon
+            icon={({size, color}) => (
+              <IonIcon name="mail-outline" size={size} color={color} />
+            )}
+            size={20}
+            disabled
+            aria-disabled
+          />
+        }
+      />
+      <CustomButton
+        variant="titleMedium"
+        size="large"
+        style={styles.button}
+        onPress={handleSubmit}>
+        {textConfig.submit}
+      </CustomButton>
+    </Fragment>
   );
 };
 
 export default ForgotPassword;
 
 interface Style {
-  back: ViewStyle;
+  title: TextStyle;
+  container: ViewStyle;
+  button: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
-  back: {
-    position: 'absolute',
-    zIndex: 10,
-    top: 40,
-    left: 15,
+  container: {
+    height: SCREEN_HEIGHT / 2.5,
+    padding: 35,
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  button: {
+    borderRadius: 20,
+    marginVertical: 20,
   },
 });

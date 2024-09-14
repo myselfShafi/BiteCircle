@@ -28,7 +28,8 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
         {textConfig.loginTitle}
       </BoldText>
       <InputBox
-        placeholder={'Email'}
+        placeholder={textConfig.placeholders.email}
+        textContentType="emailAddress"
         keyboardType="email-address"
         left={
           <TextInput.Icon
@@ -42,7 +43,8 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
         }
       />
       <InputBox
-        placeholder={'Password'}
+        placeholder={textConfig.placeholders.password}
+        textContentType="password"
         secureTextEntry={!showPwd}
         autoCorrect={false}
         left={
@@ -77,6 +79,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
         mode="text"
         textColor={theme.colors.secondary}
         children={textConfig.forgotPwd}
+        rippleColor={'transparent'}
         onPress={goToForgotPwd}
       />
       <CustomButton

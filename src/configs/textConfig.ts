@@ -4,11 +4,25 @@ interface EmptyStateType {
   chatsBtn: string;
 }
 
+interface placeholderType {
+  fullName: string;
+  email: string;
+  password: string;
+  newPassword: string;
+  cnfNewPassword: string;
+}
+
 interface textConfigType {
   app_Title: string;
   tagline: string;
   loginTitle: string;
   signupTitle: string;
+  forgotPwdTitle: string;
+  forgotPwdSubTitle: string;
+  resetPwdTitle: string;
+  resetPwdSubTitle: string;
+  setPwdTitle: string;
+  setPwdSubTitle: string;
   goLogin: string;
   forgotPwd: string;
   search_placeholder: string;
@@ -39,13 +53,23 @@ interface textConfigType {
   signup: string;
   googleSignup: string;
   logout: string;
+  submit: string;
+  verifyOtp: string;
   emptyState: EmptyStateType;
+  placeholders: placeholderType;
 }
 
 export const textConfig: textConfigType = {
   app_Title: 'BiteCircle',
   loginTitle: 'Log In To Your Account',
   signupTitle: 'Create New Account',
+  forgotPwdTitle: 'Forgot Password?',
+  forgotPwdSubTitle:
+    "No worries, we'll send you reset instructions. Please enter the email associated with your account.",
+  resetPwdTitle: 'Reset Password',
+  resetPwdSubTitle: 'We sent a 4-digit code to',
+  setPwdTitle: 'Set New Password',
+  setPwdSubTitle: 'Must be atleast 8-character long',
   goLogin: 'Already have an account? Log In',
   forgotPwd: 'Forgot Password?',
   tagline:
@@ -78,10 +102,19 @@ export const textConfig: textConfigType = {
   signup: 'Sign Up',
   googleSignup: 'Sign Up With Google',
   logout: 'Log Out',
+  submit: 'Submit',
+  verifyOtp: 'Verify OTP',
   emptyState: {
     chatsHeader: 'No Conversations Yet!',
     chatsTitle: 'Looking a little lonely here. Reach out and talk to someone!',
     chatsBtn: 'Start a Chat',
+  },
+  placeholders: {
+    fullName: 'Full Name',
+    email: 'Email',
+    password: 'Password',
+    newPassword: 'New Password',
+    cnfNewPassword: 'Confirm New Password',
   },
 };
 
