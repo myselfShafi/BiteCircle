@@ -23,6 +23,8 @@ interface textConfigType {
   resetPwdSubTitle: string;
   setPwdTitle: string;
   setPwdSubTitle: string;
+  verifyEmailTitle: string;
+  verifyEmailSubTitle: string;
   goLogin: string;
   forgotPwd: string;
   search_placeholder: string;
@@ -55,6 +57,8 @@ interface textConfigType {
   logout: string;
   submit: string;
   verifyOtp: string;
+  resendOtp: string;
+  resent: string;
   emptyState: EmptyStateType;
   placeholders: placeholderType;
 }
@@ -70,6 +74,8 @@ export const textConfig: textConfigType = {
   resetPwdSubTitle: 'We sent a 4-digit code to',
   setPwdTitle: 'Set New Password',
   setPwdSubTitle: 'Must be atleast 8-character long',
+  verifyEmailTitle: 'Verify Email',
+  verifyEmailSubTitle: 'Please check your inbox to verify your email.',
   goLogin: 'Already have an account? Log In',
   forgotPwd: 'Forgot Password?',
   tagline:
@@ -104,6 +110,8 @@ export const textConfig: textConfigType = {
   logout: 'Log Out',
   submit: 'Submit',
   verifyOtp: 'Verify OTP',
+  resendOtp: "Didn't recieve the email yet? Send Again",
+  resent: 'Verification code sent successfully',
   emptyState: {
     chatsHeader: 'No Conversations Yet!',
     chatsTitle: 'Looking a little lonely here. Reach out and talk to someone!',

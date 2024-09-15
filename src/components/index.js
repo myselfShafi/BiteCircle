@@ -13,6 +13,7 @@ import IconBtn from './common/IconButton';
 import LabelIconButton from './common/LabelIconButton';
 import MainView from './common/MainView';
 import ModalWrapper from './common/Modal';
+import OtpInput from './common/OtpInput';
 import Shimmer from './common/Shimmer';
 import Spinner from './common/Spinner';
 import InputBox from './inputBlock';
@@ -31,6 +32,7 @@ export {
   MainView,
   MediaReel,
   ModalWrapper,
+  OtpInput,
   Shimmer,
   Spinner,
   Story,

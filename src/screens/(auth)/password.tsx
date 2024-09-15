@@ -1,13 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
-import {
-  Image,
-  ImageStyle,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {ScrollView, StyleSheet, View, ViewStyle} from 'react-native';
 import {ProgressBar, useTheme} from 'react-native-paper';
 import Animated, {
   runOnJS,
@@ -15,10 +8,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {IconBtn, MainView} from '../../components';
 import {StackParamList} from '../../navigation/navigator';
 import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../../utils/constants';
 import {useStatusBar} from '../../utils/hooks';
+import LogoWrapper from './layout/logoWrapper';
 import ForgotPassword from './password/forgotPassword';
 import ResetPassword from './password/resetPassword';
 import VerifyOTP from './password/verifyOTP';
@@ -57,28 +50,12 @@ const UpdatePassword = ({navigation}: PwdScreenProps) => {
   const AnimatePanel2 = useAnimatedStyle(() => addStyles(2));
   const AnimatePanel3 = useAnimatedStyle(() => addStyles(3));
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     navigation.goBack();
-  };
+  }, []);
 
   return (
-    <MainView>
-      <MainView
-        style={[
-          styles.logoWrapper,
-          {backgroundColor: theme.colors.onSecondaryContainer},
-        ]}>
-        <Image
-          source={require('../../assets/bg_logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </MainView>
-      <IconBtn
-        name={'return-up-back'}
-        onPress={handleBack}
-        style={styles.back}
-      />
+    <LogoWrapper handleBack={handleBack}>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         {progress === 1 && (
           <Animated.View style={[AnimatePanel1]}>
@@ -128,16 +105,13 @@ const UpdatePassword = ({navigation}: PwdScreenProps) => {
           </View>
         ))}
       </View>
-    </MainView>
+    </LogoWrapper>
   );
 };
 
 export default UpdatePassword;
 
 interface Style {
-  back: ViewStyle;
-  logo: ImageStyle;
-  logoWrapper: ViewStyle;
   container: ViewStyle;
   progress: ViewStyle;
   barWidth: ViewStyle;
@@ -145,22 +119,6 @@ interface Style {
 }
 
 const styles: Style = StyleSheet.create<Style>({
-  back: {
-    position: 'absolute',
-    zIndex: 10,
-    top: 40,
-    left: 15,
-  },
-  logo: {
-    width: SCREEN_WIDTH / 3,
-    height: SCREEN_WIDTH / 3,
-  },
-  logoWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomEndRadius: 50,
-    borderBottomStartRadius: 50,
-  },
   container: {
     padding: 35,
     height: SCREEN_HEIGHT / 2.5,

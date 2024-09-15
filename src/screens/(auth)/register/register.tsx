@@ -17,6 +17,11 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
   const togglePwd = () => {
     setShowPwd(prev => !prev);
   };
+
+  const handleSignup = () => {
+    navigation.push('verifyEmail');
+  };
+
   return (
     <Fragment>
       <BoldText variant="titleLarge" style={styles.title}>
@@ -81,7 +86,11 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
           />
         }
       />
-      <CustomButton variant="titleMedium" size="large" style={styles.button}>
+      <CustomButton
+        variant="titleMedium"
+        size="large"
+        style={styles.button}
+        onPress={handleSignup}>
         {textConfig.signup}
       </CustomButton>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>

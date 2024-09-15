@@ -8,12 +8,14 @@ import {dummyImg} from '../components/FoodCard';
 import {ChatListData} from '../configs/types';
 import {useAppTheme} from '../context/Theme';
 import {Conversation, Profile, UpdatePassword, Welcome} from '../screens';
+import VerifyEmail from '../screens/(auth)/register/verifyEmail';
 import {useStatusBar} from '../utils/hooks';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 export type StackParamList = {
   auth: undefined;
   forgotPwd: undefined;
+  verifyEmail: undefined;
   app: undefined;
   conversation: {
     data: ChatListData; // temp passing whole static data. Pass user id to fetch chat
@@ -144,6 +146,14 @@ const AppNavigator = (): JSX.Element => {
         <Stack.Screen
           name={'forgotPwd'}
           component={UpdatePassword}
+          options={{
+            navigationBarColor: theme.colors.background,
+            animation: 'slide_from_right',
+          }}
+        />
+        <Stack.Screen
+          name={'verifyEmail'}
+          component={VerifyEmail}
           options={{
             navigationBarColor: theme.colors.background,
             animation: 'slide_from_right',
