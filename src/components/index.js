@@ -12,6 +12,7 @@ import CustomButton from './common/Button';
 import IconBtn from './common/IconButton';
 import LabelIconButton from './common/LabelIconButton';
 import MainView from './common/MainView';
+import MediaUpload from './common/MediaUpload';
 import ModalWrapper from './common/Modal';
 import OtpInput from './common/OtpInput';
 import Shimmer from './common/Shimmer';
@@ -31,6 +32,7 @@ export {
   MainAppBar,
   MainView,
   MediaReel,
+  MediaUpload,
   ModalWrapper,
   OtpInput,
   Shimmer,

@@ -59,6 +59,8 @@ interface textConfigType {
   verifyOtp: string;
   resendOtp: string;
   resent: string;
+  continue: string;
+  skip: string;
   emptyState: EmptyStateType;
   placeholders: placeholderType;
 }
@@ -112,6 +114,8 @@ export const textConfig: textConfigType = {
   verifyOtp: 'Verify OTP',
   resendOtp: "Didn't recieve the email yet? Send Again",
   resent: 'Verification code sent successfully',
+  continue: 'Continue',
+  skip: 'Skip For Now ..',
   emptyState: {
     chatsHeader: 'No Conversations Yet!',
     chatsTitle: 'Looking a little lonely here. Reach out and talk to someone!',

@@ -1,5 +1,6 @@
 import Login from './(auth)/login/login';
 import UpdatePassword from './(auth)/password';
+import UploadAvatar from './(auth)/register/avatar&Cover';
 import Register from './(auth)/register/register';
 import Welcome from './(auth)/welcome';
 import Chatlist from './chats/Chatlist';
@@ -21,5 +22,6 @@ export {
   Register,
   Search,
   UpdatePassword,
+  UploadAvatar,
   Welcome,
 };

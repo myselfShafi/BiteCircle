@@ -1,4 +1,5 @@
 import {
+  ColorValue,
   StyleSheet,
   TextProps,
   TouchableOpacity,
@@ -17,6 +18,7 @@ type CustomButtonProps = TouchableOpacityProps & {
   variant?: PaperTextProps<TextProps>['variant'];
   mode?: ButtonProps['mode'];
   icon?: JSX.Element;
+  color?: ColorValue;
 };
 
 const CustomButton = ({
@@ -24,11 +26,13 @@ const CustomButton = ({
   children,
   style,
   icon,
+  color,
   mode = 'contained',
   variant = 'labelLarge',
   ...props
 }: CustomButtonProps): JSX.Element => {
   const theme = useTheme();
+  const currentColor = color || theme.colors.secondaryContainer;
 
   return (
     <TouchableOpacity
@@ -36,10 +40,10 @@ const CustomButton = ({
         styles.button,
         size && styles[size],
         mode === 'contained' && {
-          backgroundColor: theme.colors.secondaryContainer,
+          backgroundColor: currentColor,
         },
         {
-          borderColor: theme.colors.secondaryContainer,
+          borderColor: mode === 'text' ? 'transparent' : currentColor,
         },
         icon && styles.icon,
         style,
@@ -52,7 +56,7 @@ const CustomButton = ({
           color:
             mode === 'contained'
               ? theme.colors.onSecondaryContainer
-              : theme.colors.secondaryContainer,
+              : currentColor,
         }}>
         {children}
       </BoldText>

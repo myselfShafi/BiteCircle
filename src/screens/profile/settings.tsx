@@ -22,7 +22,7 @@ const ProfileSettings = memo(
     const toggleLock = () => setFingerLock(prev => !prev);
 
     const handleLogout = () => {
-      navigation.replace('auth');
+      navigation.reset({index: 0, routes: [{name: 'auth'}]});
     };
 
     return (

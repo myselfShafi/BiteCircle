@@ -15,7 +15,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
   };
 
   const handleLogin = () => {
-    navigation.replace('app');
+    navigation.reset({index: 0, routes: [{name: 'app'}]});
   };
 
   const goToForgotPwd = () => {

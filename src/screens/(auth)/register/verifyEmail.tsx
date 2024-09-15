@@ -6,22 +6,26 @@ import {BoldText, OtpInput} from '../../../components';
 import {textConfig} from '../../../configs';
 import {StackParamList} from '../../../navigation/navigator';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
+import {useStatusBar} from '../../../utils/hooks';
 import LogoWrapper from '../layout/logoWrapper';
 
 export type verifyEmailProps = NativeStackScreenProps<
   StackParamList,
   'verifyEmail'
 >;
+let email = 'test@gmail.com';
 
 const VerifyEmail = ({navigation}: verifyEmailProps) => {
   const theme = useTheme();
+  useStatusBar('transparent', 'light-content', true);
 
   const handleBack = useCallback(() => {
     navigation.goBack();
   }, []);
 
-  let email = 'test@gmail.com';
-
+  const handleSubmit = () => {
+    navigation.push('uploadAvatar');
+  };
   return (
     <LogoWrapper handleBack={handleBack}>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -33,7 +37,10 @@ const VerifyEmail = ({navigation}: verifyEmailProps) => {
           style={[styles.title, {color: theme.colors.onBackground}]}
           children={`${textConfig.verifyEmailSubTitle} ${textConfig.resetPwdSubTitle} ${email} `}
         />
-        <OtpInput buttonText={textConfig.verifyEmailTitle} />
+        <OtpInput
+          buttonText={textConfig.verifyEmailTitle}
+          handleSubmit={handleSubmit}
+        />
         <Button
           mode="text"
           textColor={theme.colors.secondary}
