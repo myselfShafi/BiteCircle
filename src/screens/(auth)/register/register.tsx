@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from 'react';
 import {Image, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import {Button, Divider, TextInput, useTheme} from 'react-native-paper';
+import {Divider, TextInput, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {BoldText, CustomButton, InputBox} from '../../../components';
 import {textConfig} from '../../../configs';
@@ -111,11 +111,10 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
         style={styles.button}>
         {textConfig.googleSignup}
       </CustomButton>
-      <Button
+      <CustomButton
         mode="text"
         children={textConfig.goLogin}
-        textColor={theme.colors.secondary}
-        rippleColor={'transparent'}
+        size="small"
         onPress={goLogin}
       />
     </Fragment>

@@ -1,7 +1,7 @@
 import React, {Fragment, RefObject, useEffect, useRef} from 'react';
 import {StyleSheet, TextInput, TextStyle, ViewStyle} from 'react-native';
-import {Button, useTheme} from 'react-native-paper';
-import {BoldText, OtpInput} from '../../../components';
+import {useTheme} from 'react-native-paper';
+import {BoldText, CustomButton, OtpInput} from '../../../components';
 import {textConfig} from '../../../configs';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
 
@@ -36,12 +36,7 @@ const VerifyOTP = ({addProgress}: {addProgress: () => void}) => {
         children={`${textConfig.resetPwdSubTitle} ${email}`}
       />
       <OtpInput handleSubmit={handleSubmit} buttonText={textConfig.verifyOtp} />
-      <Button
-        mode="text"
-        textColor={theme.colors.secondary}
-        children={textConfig.resendOtp}
-        rippleColor={'transparent'}
-      />
+      <CustomButton mode="text" children={textConfig.resendOtp} size="small" />
     </Fragment>
   );
 };

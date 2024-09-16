@@ -1,8 +1,8 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback} from 'react';
 import {ScrollView, StyleSheet, TextStyle, ViewStyle} from 'react-native';
-import {Button, useTheme} from 'react-native-paper';
-import {BoldText, OtpInput} from '../../../components';
+import {useTheme} from 'react-native-paper';
+import {BoldText, CustomButton, OtpInput} from '../../../components';
 import {textConfig} from '../../../configs';
 import {StackParamList} from '../../../navigation/navigator';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
@@ -41,11 +41,10 @@ const VerifyEmail = ({navigation}: verifyEmailProps) => {
           buttonText={textConfig.verifyEmailTitle}
           handleSubmit={handleSubmit}
         />
-        <Button
+        <CustomButton
           mode="text"
-          textColor={theme.colors.secondary}
           children={textConfig.resendOtp}
-          rippleColor={'transparent'}
+          size="small"
         />
       </ScrollView>
     </LogoWrapper>

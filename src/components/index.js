@@ -16,6 +16,7 @@ import MediaUpload from './common/MediaUpload';
 import ModalWrapper from './common/Modal';
 import OtpInput from './common/OtpInput';
 import Shimmer from './common/Shimmer';
+import CustomSnackbar from './common/Snackbar';
 import Spinner from './common/Spinner';
 import InputBox from './inputBlock';
 
@@ -24,6 +25,7 @@ export {
   Bubble,
   CommentBox,
   CustomButton,
+  CustomSnackbar,
   FoodCard,
   IconBtn,
   InputBox,

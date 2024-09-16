@@ -46,6 +46,7 @@ const CustomButton = ({
           borderColor: mode === 'text' ? 'transparent' : currentColor,
         },
         icon && styles.icon,
+        mode === 'text' && styles.text,
         style,
       ]}
       activeOpacity={0.7}
@@ -73,6 +74,7 @@ interface Style {
   large: ViewStyle;
   button: ViewStyle;
   icon: ViewStyle;
+  text: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -89,5 +91,8 @@ const styles: Style = StyleSheet.create<Style>({
     flexDirection: 'row-reverse',
     justifyContent: 'center',
     columnGap: 5,
+  },
+  text: {
+    alignSelf: 'center',
   },
 });
