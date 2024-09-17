@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {SafeAreaView} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
+import {ErrorBoundary, FallbackMain} from './components/error-boundary';
 import ThemeContextProvider from './context/Theme';
 import AppNavigator from './navigation/navigator';
 
@@ -12,7 +13,9 @@ function App(): React.JSX.Element {
   return (
     <ThemeContextProvider>
       <SafeAreaView style={{flex: 1}}>
-        <AppNavigator />
+        <ErrorBoundary fallback={<FallbackMain />}>
+          <AppNavigator />
+        </ErrorBoundary>
       </SafeAreaView>
     </ThemeContextProvider>
   );

@@ -9,6 +9,7 @@ import {ChatListData} from '../configs/types';
 import {useAppTheme} from '../context/Theme';
 import {
   Conversation,
+  NoConnection,
   Profile,
   UpdatePassword,
   UploadAvatar,
@@ -16,6 +17,7 @@ import {
 } from '../screens';
 import VerifyEmail from '../screens/(auth)/register/verifyEmail';
 import {useStatusBar} from '../utils/hooks';
+import useConnectivity from '../utils/hooks/useConnectivity';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 export type StackParamList = {
@@ -133,6 +135,11 @@ const TabNavigator = (): JSX.Element => {
 
 const AppNavigator = (): JSX.Element => {
   const {theme} = useAppTheme();
+  const connectivity = useConnectivity();
+
+  if (!connectivity) {
+    return <NoConnection />;
+  }
 
   return (
     <Fragment>

@@ -6,6 +6,7 @@ import Welcome from './(auth)/welcome';
 import Chatlist from './chats/Chatlist';
 import Conversation from './chats/Conversation';
 import Home from './home';
+import NoConnection from './noConnection';
 import PostDetail from './postDetail';
 import Profile from './profile';
 import Reels from './reels/main';
@@ -16,6 +17,7 @@ export {
   Conversation,
   Home,
   Login,
+  NoConnection,
   PostDetail,
   Profile,
   Reels,
