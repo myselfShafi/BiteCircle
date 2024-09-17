@@ -13,7 +13,7 @@ import InputBox from '../inputBlock';
 import CustomButton from './Button';
 
 type OtpInputProps = {
-  handleSubmit?: () => void;
+  handleSubmit: () => void;
   buttonText?: string;
 };
 
@@ -22,6 +22,7 @@ const OtpInput = ({
   buttonText = textConfig.submit,
 }: OtpInputProps) => {
   const [code, setCode] = useState<string[]>(['', '', '', '']);
+  const [error, setError] = useState<boolean>(false);
 
   const inputRefs: RefObject<TextInput>[] = [
     useRef<TextInput>(null),
@@ -35,6 +36,7 @@ const OtpInput = ({
   }, []);
 
   const handleChange = (text: string, idx: number) => {
+    setError(false);
     if (text.length > 1) {
       const newCodes = text.split('');
       setCode(newCodes);
@@ -59,6 +61,16 @@ const OtpInput = ({
       inputRefs[idx - 1].current?.focus();
     }
   };
+
+  const validateSubmit = () => {
+    if (code.some(field => field.trim() === '')) {
+      setError(true);
+      return;
+    }
+    setError(false);
+    handleSubmit();
+  };
+
   return (
     <Fragment>
       <View style={styles.wrapper}>
@@ -71,7 +83,9 @@ const OtpInput = ({
             textContentType="oneTimeCode"
             maxLength={index === 0 ? code.length : 1}
             contentStyle={styles.input}
+            errorStyle={styles.error}
             value={field}
+            errorText={error ? '!' : ''}
             onChangeText={(text: string) => handleChange(text, index)}
             onKeyPress={(e: NativeSyntheticEvent<TextInputKeyPressEventData>) =>
               handleKeyPress(e, index)
@@ -84,7 +98,7 @@ const OtpInput = ({
         variant="titleMedium"
         size="large"
         style={styles.button}
-        onPress={handleSubmit}>
+        onPress={validateSubmit}>
         {buttonText}
       </CustomButton>
     </Fragment>
@@ -97,6 +111,7 @@ interface Style {
   button: ViewStyle;
   wrapper: ViewStyle;
   input: TextStyle;
+  error: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -112,5 +127,8 @@ const styles: Style = StyleSheet.create<Style>({
   wrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  error: {
+    alignSelf: 'center',
   },
 });

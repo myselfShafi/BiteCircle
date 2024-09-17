@@ -1,5 +1,12 @@
 import React, {forwardRef} from 'react';
-import {StyleSheet, TextInput, TextStyle, View, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {
   HelperText,
   TextInput as PaperTextInput,
@@ -9,15 +16,20 @@ import {
 
 type InputBoxProps = TextInputProps & {
   errorText?: string;
+  errorStyle?: StyleProp<ViewStyle>;
+  wrapperStyle?: StyleProp<ViewStyle>;
 };
 
 const InputBox = forwardRef<TextInput, InputBoxProps>(
-  ({style, errorText = '', ...props}, ref): JSX.Element => {
+  (
+    {style, errorStyle, wrapperStyle, errorText = '', ...props},
+    ref,
+  ): JSX.Element => {
     const theme = useTheme();
     let hasError = errorText?.length > 0;
 
     return (
-      <View>
+      <View style={wrapperStyle}>
         <PaperTextInput
           theme={{roundness: 20}}
           underlineStyle={styles.underline}
@@ -33,7 +45,10 @@ const InputBox = forwardRef<TextInput, InputBoxProps>(
           {...props}
         />
         {hasError && (
-          <HelperText type="error" visible={hasError} style={styles.helperText}>
+          <HelperText
+            type="error"
+            visible={hasError}
+            style={[styles.helperText, errorStyle]}>
             {errorText}
           </HelperText>
         )}

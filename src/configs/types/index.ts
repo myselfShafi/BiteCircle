@@ -11,6 +11,15 @@ export interface RegisterInput {
   password: string;
 }
 
+export interface EmailInput {
+  email: string;
+}
+
+export interface ResetPasswordInput {
+  newPassword: string;
+  cnfNewPassword: string;
+}
+
 export interface PostData {
   id: number;
   avatar: string;
