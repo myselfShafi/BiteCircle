@@ -1,7 +1,7 @@
 import {Formik} from 'formik';
 import React, {Fragment, useState} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
-import {TextInput, useTheme} from 'react-native-paper';
+import {TextInput} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {BoldText, CustomButton, InputBox} from '../../../components';
 import {textConfig} from '../../../configs';
@@ -9,9 +9,7 @@ import {LoginSchema} from '../../../utils/validationSchema';
 import {AuthProps} from '../welcome';
 
 const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
-  const theme = useTheme();
   const [showPwd, setShowPwd] = useState<boolean>(false);
-  const [err, setErr] = useState<boolean>(false);
 
   const togglePwd = () => {
     setShowPwd(prev => !prev);
@@ -22,9 +20,8 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
   };
 
   const handleLogin = (value: any) => {
-    // navigation.reset({index: 0, routes: [{name: 'app'}]});
     console.log({value});
-    setErr(true);
+    navigation.reset({index: 0, routes: [{name: 'app'}]});
   };
 
   return (
