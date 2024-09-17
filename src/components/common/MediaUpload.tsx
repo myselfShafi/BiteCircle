@@ -59,6 +59,7 @@ const MediaUpload = memo(
     return (
       <Fragment>
         <TouchableOpacity
+          activeOpacity={0.5}
           onPress={handleOpen}
           style={[styles.wrapper, style]}
           {...props}>
@@ -98,6 +99,7 @@ interface Style {
 const styles: Style = StyleSheet.create<Style>({
   wrapper: {
     position: 'relative',
+    alignSelf: 'center',
   },
   modal: {
     paddingVertical: 20,

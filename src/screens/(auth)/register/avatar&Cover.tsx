@@ -8,7 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Avatar, useTheme} from 'react-native-paper';
+import {Avatar, Surface, Tooltip, useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   BoldText,
@@ -50,6 +50,16 @@ const UploadAvatar = ({navigation}: uploadAvatarProps) => {
           style={styles.title}
         />
         <View style={styles.content}>
+          <View style={styles.wrapper}>
+            <BoldText variant="bodyLarge" children={'Your Username'} />
+            <Tooltip
+              title={'You can change this later from your profile.'}
+              enterTouchDelay={0}>
+              <Surface elevation={0} style={styles.username}>
+                <BoldText>@user_name</BoldText>
+              </Surface>
+            </Tooltip>
+          </View>
           <View style={styles.wrapper}>
             <BoldText variant="bodyLarge" children={'Upload Your Avatar'} />
             <MediaUpload style={styles.center} setUpload={setAvatar}>
@@ -109,6 +119,7 @@ interface Style {
   cover: ImageStyle;
   placeholder: ImageStyle;
   content: ViewStyle;
+  username: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -139,6 +150,7 @@ const styles: Style = StyleSheet.create<Style>({
     borderWidth: 2,
     borderRadius: 20,
     height: SCREEN_HEIGHT / 4,
+    width: '100%',
     overflow: 'hidden',
   },
   placeholder: {
@@ -153,5 +165,10 @@ const styles: Style = StyleSheet.create<Style>({
   content: {
     flex: 1,
     justifyContent: 'space-evenly',
+  },
+  username: {
+    padding: 10,
+    borderRadius: 10,
+    maxWidth: '80%',
   },
 });
