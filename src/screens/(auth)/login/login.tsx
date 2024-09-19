@@ -3,13 +3,21 @@ import React, {Fragment, useState} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {BoldText, CustomButton, InputBox} from '../../../components';
+import {
+  BoldText,
+  CustomButton,
+  CustomSnackbar,
+  InputBox,
+} from '../../../components';
 import {textConfig} from '../../../configs';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 import {LoginSchema} from '../../../utils/validationSchema';
 import {AuthProps} from '../welcome';
 
 const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
   const [showPwd, setShowPwd] = useState<boolean>(false);
+
+  const {data, loading, error, handleError, fetchData} = useCustomFetch();
 
   const togglePwd = () => {
     setShowPwd(prev => !prev);
@@ -19,9 +27,16 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
     navigation.push('forgotPwd');
   };
 
-  const handleLogin = (value: any) => {
-    console.log({value});
-    navigation.reset({index: 0, routes: [{name: 'app'}]});
+  const handleLogin = async (value: any) => {
+    const result = await fetchData({
+      method: 'POST',
+      url: 'api/users/login',
+      data: {email: value.email, passwordHash: value.password},
+    });
+    if (result?.data.success) {
+      console.log(result.data, data);
+      navigation.reset({index: 0, routes: [{name: 'app'}]});
+    }
   };
 
   return (
@@ -30,7 +45,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
         {textConfig.loginTitle}
       </BoldText>
       <Formik
-        initialValues={{email: '', password: ''}}
+        initialValues={{email: 'test@gmail.com', password: 'qwertyuiop'}}
         validationSchema={LoginSchema}
         onSubmit={handleLogin}>
         {({handleChange, handleBlur, handleSubmit, values, errors}) => (
@@ -43,6 +58,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               errorText={errors.email}
+              disabled={loading}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -63,6 +79,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               errorText={errors.password}
+              disabled={loading}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -97,11 +114,14 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
               mode="text"
               children={textConfig.forgotPwd}
               size="small"
+              disabled={loading}
               onPress={goToForgotPwd}
             />
             <CustomButton
               variant="titleMedium"
               size="large"
+              loading={loading}
+              disabled={loading}
               style={styles.button}
               onPress={() => handleSubmit()}>
               {textConfig.login}
@@ -109,6 +129,13 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
           </>
         )}
       </Formik>
+      <CustomSnackbar
+        variant="error"
+        visible={error.status}
+        onDismiss={handleError}
+        onIconPress={handleError}
+        children={error.message}
+      />
     </Fragment>
   );
 };

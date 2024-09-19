@@ -7,6 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {
+  ActivityIndicator,
   ButtonProps,
   TextProps as PaperTextProps,
   useTheme,
@@ -19,6 +20,7 @@ type CustomButtonProps = TouchableOpacityProps & {
   mode?: ButtonProps['mode'];
   icon?: JSX.Element;
   color?: ColorValue;
+  loading?: boolean;
 };
 
 const CustomButton = ({
@@ -26,6 +28,7 @@ const CustomButton = ({
   children,
   style,
   icon,
+  loading,
   color,
   mode = 'contained',
   variant = 'labelLarge',
@@ -49,7 +52,7 @@ const CustomButton = ({
         mode === 'text' && styles.text,
         style,
       ]}
-      activeOpacity={0.7}
+      activeOpacity={loading ? 1 : 0.7}
       {...props}>
       <BoldText
         variant={variant}
@@ -59,7 +62,11 @@ const CustomButton = ({
               ? theme.colors.onSecondaryContainer
               : currentColor,
         }}>
-        {children}
+        {loading ? (
+          <ActivityIndicator animating={true} color={theme.colors.secondary} />
+        ) : (
+          children
+        )}
       </BoldText>
       {icon}
     </TouchableOpacity>
