@@ -20,6 +20,32 @@ export interface ResetPasswordInput {
   cnfNewPassword: string;
 }
 
+interface Media {
+  url: string;
+  publicId: string;
+}
+interface User {
+  __v: number;
+  _id: string;
+  avatar: Media;
+  bio: string;
+  coverImage: Media;
+  createdAt: string;
+  email: string;
+  fullName: string;
+  updatedAt: string;
+  userName: string;
+}
+
+export interface AuthInitialState {
+  status: boolean;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    user: User;
+  } | null;
+}
+
 export interface PostData {
   id: number;
   avatar: string;

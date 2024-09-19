@@ -10,14 +10,16 @@ import {
   InputBox,
 } from '../../../components';
 import {textConfig} from '../../../configs';
+import {authLogin} from '../../../store/features/authSlice';
+import {useAppDispatch} from '../../../store/hooks';
 import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 import {LoginSchema} from '../../../utils/validationSchema';
 import {AuthProps} from '../welcome';
 
 const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
   const [showPwd, setShowPwd] = useState<boolean>(false);
-
-  const {data, loading, error, handleError, fetchData} = useCustomFetch();
+  const {loading, error, handleError, fetchData} = useCustomFetch();
+  const dispatch = useAppDispatch();
 
   const togglePwd = () => {
     setShowPwd(prev => !prev);
@@ -34,7 +36,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
       data: {email: value.email, passwordHash: value.password},
     });
     if (result?.data.success) {
-      console.log(result.data, data);
+      dispatch(authLogin(result.data.data));
       navigation.reset({index: 0, routes: [{name: 'app'}]});
     }
   };

@@ -4,7 +4,6 @@ import React, {Fragment, useState} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {dummyImg} from '../components/FoodCard';
 import {ChatListData} from '../configs/types';
 import {useAppTheme} from '../context/Theme';
 import {
@@ -16,6 +15,7 @@ import {
   Welcome,
 } from '../screens';
 import VerifyEmail from '../screens/(auth)/register/verifyEmail';
+import {useAppSelector} from '../store/hooks';
 import {useStatusBar} from '../utils/hooks';
 import useConnectivity from '../utils/hooks/useConnectivity';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
@@ -45,11 +45,14 @@ const Tab = createMaterialBottomTabNavigator<RootTabParamList>();
 
 const TabNavigator = (): JSX.Element => {
   const {theme} = useAppTheme();
-  const [activeTab, setActiveTab] = useState('homeTab');
   useStatusBar(
     theme.colors.background,
     theme.dark ? 'light-content' : 'dark-content',
   );
+  const {data} = useAppSelector(state => state.auth);
+  const [activeTab, setActiveTab] = useState('homeTab');
+
+  let profileImg = data?.user.avatar.url;
 
   const ComponentPlaceholder = () => <View></View>;
   return (
@@ -118,8 +121,8 @@ const TabNavigator = (): JSX.Element => {
         name="profileTab"
         component={ComponentPlaceholder}
         options={{
-          tabBarIcon: ({focused, color}) => (
-            <Avatar.Image size={40} source={{uri: dummyImg}} />
+          tabBarIcon: () => (
+            <Avatar.Image size={40} source={{uri: profileImg}} />
           ),
         }}
         listeners={({navigation}) => ({

@@ -13,6 +13,7 @@ import {BoldText, IconBtn, MainView, TrendingItem} from '../../components';
 import {textConfig} from '../../configs';
 import {sampleTrending} from '../../mockData';
 import {StackParamList} from '../../navigation/navigator';
+import {useAppSelector} from '../../store/hooks';
 import {SCREEN_WIDTH} from '../../utils/constants';
 import ProfileSettings from './settings';
 
@@ -74,6 +75,7 @@ const handleInterpolation = (
 };
 
 const Profile = ({navigation}: ProfileProps): JSX.Element => {
+  const {data} = useAppSelector(state => state.auth);
   const [settings, setSettings] = useState<boolean>(false);
   const theme = useTheme();
 
@@ -143,11 +145,11 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
       <View>
         <Animated.View style={[styles.profile, AnimateHeader]}>
           <Animated.Image
-            source={{uri: profileData.img}}
+            source={{uri: data?.user.avatar.url}}
             style={[{aspectRatio: 1}, AnimateImg]}
           />
           <Animated.View style={[AnimateName]}>
-            <BoldText variant="titleLarge">{profileData.name}</BoldText>
+            <BoldText variant="titleLarge">{data?.user.fullName}</BoldText>
           </Animated.View>
         </Animated.View>
         <Animated.View style={[styles.stats2Wrapper, AnimateStats]}>
@@ -169,10 +171,10 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
             <Animated.View style={[AnimateBio]}>
               <View style={[styles.profile]}>
                 <Text variant="bodyMedium" style={styles.username}>
-                  @{profileData.username}
+                  @{data?.user.userName}
                 </Text>
                 <BoldText variant="bodyMedium" style={styles.bio}>
-                  {profileData.bio}
+                  {data?.user.bio}
                 </BoldText>
               </View>
               <StatsComp />

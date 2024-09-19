@@ -4,6 +4,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {ErrorBoundary, FallbackMain} from './components/error-boundary';
 import ThemeContextProvider from './context/Theme';
 import AppNavigator from './navigation/navigator';
+import StoreProvider from './store/storeProvider';
 
 function App(): React.JSX.Element {
   useEffect(() => {
@@ -12,11 +13,13 @@ function App(): React.JSX.Element {
 
   return (
     <ThemeContextProvider>
-      <SafeAreaView style={{flex: 1}}>
-        <ErrorBoundary fallback={<FallbackMain />}>
-          <AppNavigator />
-        </ErrorBoundary>
-      </SafeAreaView>
+      <StoreProvider>
+        <SafeAreaView style={{flex: 1}}>
+          <ErrorBoundary fallback={<FallbackMain />}>
+            <AppNavigator />
+          </ErrorBoundary>
+        </SafeAreaView>
+      </StoreProvider>
     </ThemeContextProvider>
   );
 }
