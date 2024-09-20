@@ -145,11 +145,11 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
       <View>
         <Animated.View style={[styles.profile, AnimateHeader]}>
           <Animated.Image
-            source={{uri: data?.user.avatar.url}}
+            source={{uri: data?.avatar.url}}
             style={[{aspectRatio: 1}, AnimateImg]}
           />
           <Animated.View style={[AnimateName]}>
-            <BoldText variant="titleLarge">{data?.user.fullName}</BoldText>
+            <BoldText variant="titleLarge">{data?.fullName}</BoldText>
           </Animated.View>
         </Animated.View>
         <Animated.View style={[styles.stats2Wrapper, AnimateStats]}>
@@ -171,10 +171,10 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
             <Animated.View style={[AnimateBio]}>
               <View style={[styles.profile]}>
                 <Text variant="bodyMedium" style={styles.username}>
-                  @{data?.user.userName}
+                  @{data?.userName}
                 </Text>
                 <BoldText variant="bodyMedium" style={styles.bio}>
-                  {data?.user.bio}
+                  {data?.bio}
                 </BoldText>
               </View>
               <StatsComp />

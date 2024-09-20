@@ -1,8 +1,8 @@
 import * as Keychain from 'react-native-keychain';
 
-const storeSession = async (key: string, token: string) => {
+const storeSession = async (key: string, token: object) => {
   try {
-    await Keychain.setGenericPassword(key, token);
+    await Keychain.setGenericPassword(key, JSON.stringify(token));
   } catch (error) {
     console.error('session storage error ::: ', error);
     throw new Error('Failed to store session tokens!');
@@ -13,7 +13,7 @@ const retrieveSession = async () => {
   try {
     const creds = await Keychain.getGenericPassword();
     if (creds) {
-      return creds;
+      return {...creds, password: JSON.parse(creds.password)};
     } else {
       return null;
     }

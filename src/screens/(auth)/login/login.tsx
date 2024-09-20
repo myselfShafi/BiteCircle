@@ -37,16 +37,11 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
       data: {email: value.email, passwordHash: value.password},
     });
     if (result?.data.success) {
-      dispatch(
-        authLogin({
-          refreshToken: result.data.data.refreshToken,
-          user: result.data.data.user,
-        }),
-      );
-      await storeSession(
-        result.data.data.user.email,
-        result.data.data.accessToken,
-      );
+      dispatch(authLogin(result.data.data.user));
+      await storeSession('tokens', {
+        accessToken: result.data.data.accessToken,
+        refreshToken: result.data.data.refreshToken,
+      });
       navigation.reset({index: 0, routes: [{name: 'app'}]});
     }
   };

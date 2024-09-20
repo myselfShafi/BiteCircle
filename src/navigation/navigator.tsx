@@ -52,7 +52,7 @@ const TabNavigator = (): JSX.Element => {
   const {data} = useAppSelector(state => state.auth);
   const [activeTab, setActiveTab] = useState('homeTab');
 
-  let profileImg = data?.user.avatar.url;
+  let profileImg = data?.avatar.url;
 
   const ComponentPlaceholder = () => <View></View>;
   return (
@@ -184,7 +184,11 @@ const AppNavigator = (): JSX.Element => {
             animation: 'slide_from_right',
           }}
         />
-        <Stack.Screen name={'app'} component={TabNavigator} />
+        <Stack.Screen
+          name={'app'}
+          component={TabNavigator}
+          options={{animation: 'slide_from_bottom'}}
+        />
         <Stack.Screen
           name="conversation"
           component={Conversation}
