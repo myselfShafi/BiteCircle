@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 import {Appbar, Avatar, Text, TextInput, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {BoldText, Bubble, InputBox, MainView} from '../../components';
-import {textConfig} from '../../configs';
-import {ChatData} from '../../configs/types';
-import {sampleChat} from '../../mockData';
-import {StackParamList} from '../../navigation/navigator';
+import {BoldText, Bubble, InputBox, MainView} from '../../../components';
+import {textConfig} from '../../../configs';
+import {ChatData} from '../../../configs/types';
+import {sampleChat} from '../../../mockData';
+import {StackParamList} from '../../../navigation/navigator';
 
 type ConversationProps = NativeStackScreenProps<StackParamList, 'conversation'>;
 type ConversationRouteProp = RouteProp<StackParamList, 'conversation'>;

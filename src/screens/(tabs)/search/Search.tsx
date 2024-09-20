@@ -15,9 +15,9 @@ import {
   MainView,
   Suggestion,
   TrendingItem,
-} from '../../components';
-import {textConfig} from '../../configs';
-import {SampleSuggestions, sampleTrending} from '../../mockData';
+} from '../../../components';
+import {textConfig} from '../../../configs';
+import {SampleSuggestions, sampleTrending} from '../../../mockData';
 
 const Search = (): JSX.Element => {
   const [search, setSearch] = useState('');

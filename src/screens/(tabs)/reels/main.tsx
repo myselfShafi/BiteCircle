@@ -1,8 +1,8 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {FlatList, ViewToken} from 'react-native';
-import {MediaReel, Spinner} from '../../components';
-import {ReelsData} from '../../configs/types';
-import {sampleReels} from '../../mockData';
+import {MediaReel, Spinner} from '../../../components';
+import {ReelsData} from '../../../configs/types';
+import {sampleReels} from '../../../mockData';
 
 const Reels = (): JSX.Element => {
   const [activeIndex, setActiveIndex] = useState<number>(0);

@@ -40,7 +40,6 @@ interface User {
 export interface AuthInitialState {
   status: boolean;
   data: {
-    accessToken: string;
     refreshToken: string;
     user: User;
   } | null;

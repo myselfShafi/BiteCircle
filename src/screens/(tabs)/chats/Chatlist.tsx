@@ -8,15 +8,15 @@ import {
   List,
   MainView,
   ModalWrapper,
-} from '../../components';
-import {ModalWrapperProps} from '../../components/common/Modal';
-import {textConfig} from '../../configs';
-import {ChatListData} from '../../configs/types';
-import {useAppTheme} from '../../context/Theme';
-import {sampleChats} from '../../mockData';
-import {ChatStackParamList} from '../../navigation/stacks/Chats';
-import {SCREEN_WIDTH} from '../../utils/constants';
-import {useStatusBar} from '../../utils/hooks';
+} from '../../../components';
+import {ModalWrapperProps} from '../../../components/common/Modal';
+import {textConfig} from '../../../configs';
+import {ChatListData} from '../../../configs/types';
+import {useAppTheme} from '../../../context/Theme';
+import {sampleChats} from '../../../mockData';
+import {ChatStackParamList} from '../../../navigation/stacks/Chats';
+import {SCREEN_WIDTH} from '../../../utils/constants';
+import {useStatusBar} from '../../../utils/hooks';
 
 type ChatlistProps = NativeStackScreenProps<ChatStackParamList, 'chats'>;
 

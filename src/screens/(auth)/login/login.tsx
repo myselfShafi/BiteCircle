@@ -12,6 +12,7 @@ import {
 import {textConfig} from '../../../configs';
 import {authLogin} from '../../../store/features/authSlice';
 import {useAppDispatch} from '../../../store/hooks';
+import {storeSession} from '../../../utils/encryptStorage';
 import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 import {LoginSchema} from '../../../utils/validationSchema';
 import {AuthProps} from '../welcome';
@@ -36,7 +37,16 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
       data: {email: value.email, passwordHash: value.password},
     });
     if (result?.data.success) {
-      dispatch(authLogin(result.data.data));
+      dispatch(
+        authLogin({
+          refreshToken: result.data.data.refreshToken,
+          user: result.data.data.user,
+        }),
+      );
+      await storeSession(
+        result.data.data.user.email,
+        result.data.data.accessToken,
+      );
       navigation.reset({index: 0, routes: [{name: 'app'}]});
     }
   };
