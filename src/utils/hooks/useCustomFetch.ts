@@ -1,18 +1,17 @@
 import {SERVER_BASE_URL} from '@env';
 import axios, {
   AxiosInstance,
+  AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
 import {useCallback, useEffect, useState} from 'react';
 
-interface fetchDataProps {
+interface fetchDataProps extends AxiosRequestConfig {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   data?: object;
-  headers?: Record<string, string>;
-  params?: object;
-  withCredentials?: boolean;
+  headers?: AxiosRequestConfig['headers'];
 }
 
 const useCustomFetch = () => {
@@ -69,22 +68,20 @@ const useCustomFetch = () => {
       url,
       data = {},
       headers = {'Content-Type': 'application/json'},
-      withCredentials,
-      params = {},
+      ...configs
     }: fetchDataProps) => {
       setLoading(true);
       handleError();
       controller.abort(); // aborts any existing controllers to create new instance below on func trigger
       controller = new AbortController();
       try {
-        const result: AxiosResponse = await axiosInstance({
+        const result: AxiosResponse = await axiosInstance<AxiosRequestConfig>({
           url,
           method,
           data,
-          params,
           headers,
-          withCredentials,
           signal: controller.signal,
+          ...configs,
         });
         setData(result.data);
         return result;

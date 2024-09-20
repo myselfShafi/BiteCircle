@@ -52,7 +52,9 @@ const TabNavigator = (): JSX.Element => {
   const {data} = useAppSelector(state => state.auth);
   const [activeTab, setActiveTab] = useState('homeTab');
 
-  let profileImg = data?.avatar.url;
+  let profileImg = data?.avatar
+    ? {uri: data?.avatar.url}
+    : require('../assets/avatar.webp');
 
   const ComponentPlaceholder = () => <View></View>;
   return (
@@ -121,9 +123,7 @@ const TabNavigator = (): JSX.Element => {
         name="profileTab"
         component={ComponentPlaceholder}
         options={{
-          tabBarIcon: () => (
-            <Avatar.Image size={40} source={{uri: profileImg}} />
-          ),
+          tabBarIcon: () => <Avatar.Image size={40} source={profileImg} />,
         }}
         listeners={({navigation}) => ({
           tabPress: e => {

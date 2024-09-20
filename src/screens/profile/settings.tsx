@@ -3,11 +3,15 @@ import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Button, Divider, Surface, Switch, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ProfileProps} from '.';
-import {BoldText, ModalWrapper} from '../../components';
+import {BoldText, CustomSnackbar, ModalWrapper} from '../../components';
 import {ModalWrapperProps} from '../../components/common/Modal';
 import {textConfig} from '../../configs';
 import {useAppTheme} from '../../context/Theme';
+import {authLogout} from '../../store/features/authSlice';
+import {useAppDispatch} from '../../store/hooks';
 import {SCREEN_WIDTH} from '../../utils/constants';
+import {resetSession, retrieveSession} from '../../utils/encryptStorage';
+import useCustomFetch from '../../utils/hooks/useCustomFetch';
 
 const ProfileSettings = memo(
   ({
@@ -18,11 +22,25 @@ const ProfileSettings = memo(
     const {isDark, theme, toggleTheme} = useAppTheme();
 
     const [fingerLock, setFingerLock] = useState<boolean>(false);
+    const {loading, error, handleError, fetchData} = useCustomFetch();
+    const dispatch = useAppDispatch();
 
     const toggleLock = () => setFingerLock(prev => !prev);
 
-    const handleLogout = () => {
-      navigation.reset({index: 0, routes: [{name: 'auth'}]});
+    const handleLogout = async () => {
+      const token = await retrieveSession();
+      const result = await fetchData({
+        method: 'POST',
+        url: 'api/users/logout',
+        headers: {Authorization: `Bearer ${token?.password.accessToken}`},
+      });
+      if (result?.data.success) {
+        dispatch(authLogout());
+        const response = await resetSession();
+        if (response) {
+          navigation.reset({index: 0, routes: [{name: 'auth'}]});
+        }
+      }
     };
 
     return (
@@ -113,9 +131,18 @@ const ProfileSettings = memo(
           icon={({color, size}) => (
             <Icon name={'log-out'} size={size} color={color} />
           )}
-          onPress={handleLogout}>
+          onPress={handleLogout}
+          loading={loading}
+          disabled={loading}>
           {textConfig.logout}
         </Button>
+        <CustomSnackbar
+          variant="error"
+          visible={error.status}
+          onDismiss={handleError}
+          onIconPress={handleError}
+          children={error.message}
+        />
       </ModalWrapper>
     );
   },

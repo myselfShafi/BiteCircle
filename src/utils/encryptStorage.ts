@@ -22,9 +22,9 @@ const retrieveSession = async () => {
   }
 };
 
-const resetSession = async (name: string) => {
+const resetSession = async () => {
   try {
-    await Keychain.resetGenericPassword();
+    return await Keychain.resetGenericPassword();
   } catch (error) {
     console.error('session reset error ::: ', error);
   }
