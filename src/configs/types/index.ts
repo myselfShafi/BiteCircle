@@ -38,6 +38,7 @@ interface User {
 }
 
 export interface AuthInitialState {
+  isLoading: boolean;
   status: boolean;
   data: User | null;
 }

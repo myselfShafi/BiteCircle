@@ -35,11 +35,9 @@ const ProfileSettings = memo(
         headers: {Authorization: `Bearer ${token?.password.accessToken}`},
       });
       if (result?.data.success) {
-        dispatch(authLogout());
-        const response = await resetSession();
-        if (response) {
-          navigation.reset({index: 0, routes: [{name: 'auth'}]});
-        }
+        await resetSession().then(() => {
+          dispatch(authLogout());
+        });
       }
     };
 

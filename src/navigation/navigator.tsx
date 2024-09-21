@@ -1,8 +1,9 @@
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
+import SplashScreen from 'react-native-splash-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ChatListData} from '../configs/types';
 import {useAppTheme} from '../context/Theme';
@@ -15,9 +16,13 @@ import {
   Welcome,
 } from '../screens';
 import VerifyEmail from '../screens/(auth)/register/verifyEmail';
-import {useAppSelector} from '../store/hooks';
+import {authLoaded, authLogin, authLogout} from '../store/features/authSlice';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import {retrieveSession} from '../utils/encryptStorage';
 import {useStatusBar} from '../utils/hooks';
 import useConnectivity from '../utils/hooks/useConnectivity';
+import useCustomFetch from '../utils/hooks/useCustomFetch';
+import {isTokenValid, refreshAccessToken} from '../utils/tokenValidate';
 import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 
 export type StackParamList = {
@@ -139,6 +144,45 @@ const TabNavigator = (): JSX.Element => {
 const AppNavigator = (): JSX.Element => {
   const {theme} = useAppTheme();
   const connectivity = useConnectivity();
+  const {isLoading, status} = useAppSelector(state => state.auth);
+
+  const {fetchData} = useCustomFetch();
+  const dispatch = useAppDispatch();
+
+  const getData = useCallback(async (token: string) => {
+    const response = await fetchData({
+      method: 'GET',
+      url: '/api/users/authenticate-user',
+      headers: {Authorization: `Bearer ${token}`},
+    });
+    if (response?.data.success) {
+      dispatch(authLogin(response.data.data));
+      dispatch(authLoaded());
+    }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const token = await retrieveSession();
+      if (!token) {
+        dispatch(authLogout());
+        dispatch(authLoaded());
+        return;
+      }
+      // check if stored access token is expired
+      if (isTokenValid(token?.password.accessToken)) {
+        getData(token?.password.accessToken);
+      } else {
+        const newAccessToken = await refreshAccessToken(
+          token?.password.refreshToken,
+        );
+        if (newAccessToken) {
+          getData(newAccessToken);
+        }
+      }
+    })();
+    !isLoading && SplashScreen.hide();
+  }, [isLoading]);
 
   if (!connectivity) {
     return <NoConnection />;
@@ -147,60 +191,67 @@ const AppNavigator = (): JSX.Element => {
   return (
     <Fragment>
       <Stack.Navigator
-        initialRouteName={'auth'}
+        initialRouteName={status ? 'app' : 'auth'}
         screenOptions={{
           headerShown: false,
           navigationBarColor: theme.colors.elevation.level2,
         }}>
-        <Stack.Screen
-          name={'auth'}
-          component={Welcome}
-          options={{
-            navigationBarColor: theme.colors.background,
-            animation: 'slide_from_left',
-          }}
-        />
-        <Stack.Screen
-          name={'forgotPwd'}
-          component={UpdatePassword}
-          options={{
-            navigationBarColor: theme.colors.background,
-            animation: 'slide_from_right',
-          }}
-        />
-        <Stack.Screen
-          name={'verifyEmail'}
-          component={VerifyEmail}
-          options={{
-            navigationBarColor: theme.colors.background,
-            animation: 'slide_from_right',
-          }}
-        />
-        <Stack.Screen
-          name={'uploadAvatar'}
-          component={UploadAvatar}
-          options={{
-            navigationBarColor: theme.colors.background,
-            animation: 'slide_from_right',
-          }}
-        />
-        <Stack.Screen
-          name={'app'}
-          component={TabNavigator}
-          options={{animation: 'slide_from_bottom'}}
-        />
-        <Stack.Screen
-          name="conversation"
-          component={Conversation}
-          options={{animation: 'slide_from_right'}}
-        />
-        <Stack.Screen
-          name="profile"
-          component={Profile}
-          options={{
-            animation: 'slide_from_right',
-          }}
-        />
+        {status ? (
+          <>
+            <Stack.Screen
+              name={'app'}
+              component={TabNavigator}
+              options={{animation: 'slide_from_bottom'}}
+            />
+            <Stack.Screen
+              name="conversation"
+              component={Conversation}
+              options={{animation: 'slide_from_right'}}
+            />
+            <Stack.Screen
+              name="profile"
+              component={Profile}
+              options={{
+                animation: 'slide_from_right',
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name={'auth'}
+              component={Welcome}
+              options={{
+                navigationBarColor: theme.colors.background,
+                animation: 'slide_from_left',
+              }}
+            />
+            <Stack.Screen
+              name={'forgotPwd'}
+              component={UpdatePassword}
+              options={{
+                navigationBarColor: theme.colors.background,
+                animation: 'slide_from_right',
+              }}
+            />
+            <Stack.Screen
+              name={'verifyEmail'}
+              component={VerifyEmail}
+              options={{
+                navigationBarColor: theme.colors.background,
+                animation: 'slide_from_right',
+              }}
+            />
+            <Stack.Screen
+              name={'uploadAvatar'}
+              component={UploadAvatar}
+              options={{
+                navigationBarColor: theme.colors.background,
+                animation: 'slide_from_right',
+              }}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </Fragment>
   );
