@@ -7,7 +7,7 @@ import axios, {
 } from 'axios';
 import {useCallback, useEffect, useState} from 'react';
 
-interface fetchDataProps extends AxiosRequestConfig {
+export interface fetchDataProps extends AxiosRequestConfig {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   data?: object;
@@ -95,7 +95,7 @@ const useCustomFetch = () => {
               error.response.data.message ||
               'Something went wrong! Please try later',
           });
-          console.error('axios fetch error ::: ', error);
+          console.error('axios fetch error ::: ', error.response.data);
         }
       } finally {
         setLoading(false);

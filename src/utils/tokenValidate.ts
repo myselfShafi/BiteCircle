@@ -1,6 +1,7 @@
+import {AxiosResponse} from 'axios';
 import {jwtDecode, JwtPayload} from 'jwt-decode';
 import {resetSession, storeSession} from './encryptStorage';
-import useCustomFetch from './hooks/useCustomFetch';
+import {fetchDataProps} from './hooks/useCustomFetch';
 
 const isTokenValid = (token: string) => {
   try {
@@ -17,16 +18,19 @@ const isTokenValid = (token: string) => {
   }
 };
 
-const refreshAccessToken = async (oldRefreshToken: string) => {
-  const {fetchData} = useCustomFetch();
+const refreshAccessToken = async (
+  oldRefreshToken: string,
+  fetchData: (params: fetchDataProps) => Promise<AxiosResponse | undefined>,
+) => {
   try {
-    if (!oldRefreshToken) return false;
+    if (!oldRefreshToken) return null;
     const newTokens = await fetchData({
       method: 'POST',
       url: '/api/users/authenticate-user',
-      data: {oldRefreshToken},
+      data: {refreshToken: oldRefreshToken},
     });
-    if (!newTokens) return false;
+    console.log({newTokens});
+    if (!newTokens) return null;
 
     const {accessToken, refreshToken} = newTokens?.data;
     await resetSession();

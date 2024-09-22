@@ -163,22 +163,27 @@ const AppNavigator = (): JSX.Element => {
 
   useEffect(() => {
     (async () => {
-      const token = await retrieveSession();
-      if (!token) {
-        dispatch(authLogout());
-        dispatch(authLoaded());
-        return;
-      }
-      // check if stored access token is expired
-      if (isTokenValid(token?.password.accessToken)) {
-        getData(token?.password.accessToken);
-      } else {
-        const newAccessToken = await refreshAccessToken(
-          token?.password.refreshToken,
-        );
-        if (newAccessToken) {
-          getData(newAccessToken);
+      try {
+        const token = await retrieveSession();
+        if (!token) {
+          dispatch(authLogout());
+          dispatch(authLoaded());
+          return;
         }
+        // check if stored access token is expired
+        if (isTokenValid(token?.password.accessToken)) {
+          await getData(token?.password.accessToken);
+        } else {
+          const newAccessToken = await refreshAccessToken(
+            token?.password.refreshToken,
+            fetchData,
+          );
+          if (newAccessToken) {
+            await getData(newAccessToken);
+          }
+        }
+      } catch (error) {
+        console.log('splash screen error :: ', error);
       }
     })();
     !isLoading && SplashScreen.hide();
