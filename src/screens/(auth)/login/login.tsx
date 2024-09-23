@@ -10,7 +10,7 @@ import {
   InputBox,
 } from '../../../components';
 import {textConfig} from '../../../configs';
-import {authLogin} from '../../../store/features/authSlice';
+import {authLogin, authSignup} from '../../../store/features/authSlice';
 import {useAppDispatch} from '../../../store/hooks';
 import {storeSession} from '../../../utils/encryptStorage';
 import useCustomFetch from '../../../utils/hooks/useCustomFetch';
@@ -37,11 +37,31 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
       data: {email: value.email, passwordHash: value.password},
     });
     if (result?.data.success) {
-      await storeSession('tokens', {
-        accessToken: result.data.data.accessToken,
-        refreshToken: result.data.data.refreshToken,
-      });
-      dispatch(authLogin(result.data.data.user));
+      let userData = result.data.data.user;
+      if (!userData.isVerifiedEmail) {
+        // temp store data
+        const resendOtp = await fetchData({
+          method: 'POST',
+          url: 'api/otp/send-emailOtp',
+          data: {email: value.email, action: 'VERIFY-EMAIL'},
+        });
+        if (resendOtp?.data.success) {
+          dispatch(
+            authSignup({
+              fullName: userData.fullName,
+              email: userData.email,
+              userName: userData.userName,
+            }),
+            navigation.push('verifyEmail'),
+          );
+        }
+      } else {
+        await storeSession('tokens', {
+          accessToken: userData.accessToken,
+          refreshToken: userData.refreshToken,
+        });
+        dispatch(authLogin(userData));
+      }
     }
   };
 
@@ -65,6 +85,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
               onBlur={handleBlur('email')}
               errorText={errors.email}
               disabled={loading}
+              wrapperStyle={styles.gap}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -86,6 +107,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
               onBlur={handleBlur('password')}
               errorText={errors.password}
               disabled={loading}
+              wrapperStyle={styles.gap}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -121,6 +143,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
               children={textConfig.forgotPwd}
               size="small"
               disabled={loading}
+              style={styles.gap}
               onPress={goToForgotPwd}
             />
             <CustomButton
@@ -151,6 +174,7 @@ export default Login;
 interface Style {
   title: TextStyle;
   button: ViewStyle;
+  gap: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -160,5 +184,8 @@ const styles: Style = StyleSheet.create<Style>({
   },
   button: {
     borderRadius: 20,
+  },
+  gap: {
+    marginBottom: 20,
   },
 });

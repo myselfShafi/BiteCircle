@@ -13,7 +13,7 @@ import InputBox from '../inputBlock';
 import CustomButton from './Button';
 
 type OtpInputProps = {
-  handleSubmit: () => void;
+  handleSubmit: (otp: string) => void;
   buttonText?: string;
 };
 
@@ -68,7 +68,8 @@ const OtpInput = ({
       return;
     }
     setError(false);
-    handleSubmit();
+    let otp = code.join('');
+    handleSubmit(otp);
   };
 
   return (

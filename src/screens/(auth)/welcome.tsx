@@ -3,9 +3,9 @@ import React, {Fragment, useState} from 'react';
 import {
   ImageBackground,
   ImageStyle,
+  ScrollView,
   StyleSheet,
   TextStyle,
-  View,
   ViewStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -125,7 +125,7 @@ const Welcome = ({navigation}: AuthProps): JSX.Element => {
             </Fragment>
           )}
         </Animated.View>
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           {authMode === 'login' && <Login navigation={navigation} />}
           {authMode === 'signup' && (
             <Register
@@ -133,7 +133,7 @@ const Welcome = ({navigation}: AuthProps): JSX.Element => {
               goLogin={() => handleAuth('login')}
             />
           )}
-        </View>
+        </ScrollView>
       </Animated.View>
     </MainView>
   );
@@ -173,7 +173,6 @@ const styles: Style = StyleSheet.create<Style>({
   container: {
     paddingBottom: 35,
     paddingHorizontal: 35,
-    rowGap: 20,
   },
   tagline: {
     width: SCREEN_WIDTH / 1.75,
@@ -183,5 +182,6 @@ const styles: Style = StyleSheet.create<Style>({
   },
   button: {
     borderRadius: 20,
+    marginTop: 20,
   },
 });

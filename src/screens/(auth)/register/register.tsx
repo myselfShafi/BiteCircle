@@ -3,9 +3,17 @@ import React, {Fragment, useState} from 'react';
 import {Image, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Divider, TextInput} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {BoldText, CustomButton, InputBox} from '../../../components';
+import {
+  BoldText,
+  CustomButton,
+  CustomSnackbar,
+  InputBox,
+} from '../../../components';
 import {textConfig} from '../../../configs';
 import {RegisterInput} from '../../../configs/types';
+import {authSignup} from '../../../store/features/authSlice';
+import {useAppDispatch} from '../../../store/hooks';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 import {RegisterSchema} from '../../../utils/validationSchema';
 import {AuthProps} from '../welcome';
 
@@ -14,6 +22,8 @@ type SignupProps = Omit<AuthProps, 'route'> & {
 };
 
 const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const {loading, error, handleError, fetchData} = useCustomFetch();
   const [showPwd, setShowPwd] = useState<boolean>(false);
   let initialValues = {fullName: '', email: '', password: ''};
 
@@ -21,9 +31,27 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
     setShowPwd(prev => !prev);
   };
 
-  const handleSignup = (values: RegisterInput) => {
-    console.log({values});
-    navigation.push('verifyEmail');
+  const handleSignup = async (values: RegisterInput) => {
+    const result = await fetchData({
+      method: 'POST',
+      url: 'api/users/signup',
+      data: {
+        fullName: values.fullName,
+        email: values.email,
+        passwordHash: values.password,
+      },
+    });
+    if (result?.data.success) {
+      let userData = result.data.data;
+      dispatch(
+        authSignup({
+          fullName: userData.fullName,
+          email: userData.email,
+          userName: userData.userName,
+        }),
+        navigation.push('verifyEmail'),
+      );
+    }
   };
 
   return (
@@ -43,6 +71,8 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
               onChangeText={handleChange('fullName')}
               onBlur={handleBlur('fullName')}
               errorText={errors.fullName}
+              wrapperStyle={styles.gap}
+              disabled={loading}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -61,6 +91,8 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               errorText={errors.email}
+              wrapperStyle={styles.gap}
+              disabled={loading}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -80,6 +112,8 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               errorText={errors.password}
+              wrapperStyle={styles.gap}
+              disabled={loading}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -114,13 +148,15 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
               variant="titleMedium"
               size="large"
               style={styles.button}
+              loading={loading}
+              disabled={loading}
               onPress={() => handleSubmit()}>
               {textConfig.signup}
             </CustomButton>
           </>
         )}
       </Formik>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={styles.divider}>
         <Divider style={{flex: 1}} horizontalInset />
         <BoldText variant="bodyMedium">or</BoldText>
         <Divider style={{flex: 1}} horizontalInset />
@@ -129,20 +165,29 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
         variant="titleMedium"
         mode="outlined"
         size="large"
+        style={[styles.button, styles.gap]}
+        disabled={loading}
         icon={
           <Image
             source={require('../../../assets/google.png')}
             style={{width: 25, height: 25}}
           />
-        }
-        style={styles.button}>
+        }>
         {textConfig.googleSignup}
       </CustomButton>
       <CustomButton
         mode="text"
         children={textConfig.goLogin}
         size="small"
+        disabled={loading}
         onPress={goLogin}
+      />
+      <CustomSnackbar
+        variant="error"
+        visible={error.status}
+        onDismiss={handleError}
+        onIconPress={handleError}
+        children={error.message}
       />
     </Fragment>
   );
@@ -153,6 +198,8 @@ export default Register;
 interface Style {
   title: TextStyle;
   button: ViewStyle;
+  gap: ViewStyle;
+  divider: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -160,7 +207,11 @@ const styles: Style = StyleSheet.create<Style>({
     textAlign: 'center',
     marginBottom: 20,
   },
+  gap: {
+    marginBottom: 20,
+  },
   button: {
     borderRadius: 20,
   },
+  divider: {flexDirection: 'row', alignItems: 'center', marginVertical: 20},
 });

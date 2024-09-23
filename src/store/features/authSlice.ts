@@ -22,9 +22,14 @@ const authSlice = createSlice({
       state.status = false;
       state.data = null;
     },
+    authSignup: (state, action) => {
+      // temp store few data when new user registers
+      state.data = action.payload;
+    },
   },
 });
 
-export const {authLoaded, authLogin, authLogout} = authSlice.actions;
+export const {authLoaded, authLogin, authLogout, authSignup} =
+  authSlice.actions;
 
 export default authSlice.reducer;

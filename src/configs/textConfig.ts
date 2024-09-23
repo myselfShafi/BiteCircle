@@ -77,7 +77,7 @@ export const textConfig: textConfigType = {
   setPwdTitle: 'Set New Password',
   setPwdSubTitle: 'Must be atleast 8-character long',
   verifyEmailTitle: 'Verify Email',
-  verifyEmailSubTitle: 'Please check your inbox to verify your email.',
+  verifyEmailSubTitle: 'Please check inbox to verify your email.',
   goLogin: 'Already have an account? Log In',
   forgotPwd: 'Forgot Password?',
   tagline:
