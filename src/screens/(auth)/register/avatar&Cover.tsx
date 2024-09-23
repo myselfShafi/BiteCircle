@@ -18,6 +18,8 @@ import {
 } from '../../../components';
 import {textConfig} from '../../../configs';
 import {StackParamList} from '../../../navigation/navigator';
+import {authLogin} from '../../../store/features/authSlice';
+import {useAppDispatch} from '../../../store/hooks';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
 
 export type uploadAvatarProps = NativeStackScreenProps<
@@ -25,17 +27,14 @@ export type uploadAvatarProps = NativeStackScreenProps<
   'uploadAvatar'
 >;
 
-const UploadAvatar = ({navigation, route}: uploadAvatarProps) => {
+const UploadAvatar = ({route}: uploadAvatarProps) => {
   const theme = useTheme();
-  const {
-    data: {userName},
-  } = route.params;
+  const {data} = route.params;
+  const dispatch = useAppDispatch();
   const [coverImage, setCoverImage] = useState<string | undefined | null>(null);
   const [avatar, setAvatar] = useState<string | undefined | null>(null);
 
-  const handleSkip = () => {
-    navigation.reset({index: 0, routes: [{name: 'app'}]});
-  };
+  const handleSkip = () => dispatch(authLogin(data));
 
   let avatarSrc = avatar
     ? {uri: avatar}
@@ -59,7 +58,7 @@ const UploadAvatar = ({navigation, route}: uploadAvatarProps) => {
               title={'You can change this later from your profile.'}
               enterTouchDelay={0}>
               <Surface elevation={0} style={styles.username}>
-                <BoldText>@{userName || 'new_user2018'}</BoldText>
+                <BoldText>@{data?.userName || 'new_user2018'}</BoldText>
               </Surface>
             </Tooltip>
           </View>

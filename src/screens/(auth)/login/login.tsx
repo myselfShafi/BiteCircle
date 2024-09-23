@@ -37,7 +37,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
       data: {email: value.email, passwordHash: value.password},
     });
     if (result?.data.success) {
-      let userData = result.data.data;
+      let userData = result.data.data.user;
       if (!userData.isVerifiedEmail) {
         // temp store data
         const resendOtp = await fetchData({
@@ -55,8 +55,8 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
         }
       } else {
         await storeSession('tokens', {
-          accessToken: userData.accessToken,
-          refreshToken: userData.refreshToken,
+          accessToken: result.data.data.accessToken,
+          refreshToken: result.data.data.refreshToken,
         });
         dispatch(authLogin(userData));
       }

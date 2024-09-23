@@ -1,6 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {memo, useCallback, useState} from 'react';
-import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
+import {ImageStyle, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Appbar, Text, useTheme} from 'react-native-paper';
 import Animated, {
   Extrapolation,
@@ -103,10 +103,10 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
       SCREEN_WIDTH / 3,
       SCREEN_WIDTH / 4.5,
     ),
-    borderRadius: handleInterpolation(
+    height: handleInterpolation(
       scrollY.value,
-      SCREEN_WIDTH / 6,
-      SCREEN_WIDTH / 9,
+      SCREEN_WIDTH / 3,
+      SCREEN_WIDTH / 4.5,
     ),
   }));
 
@@ -145,8 +145,12 @@ const Profile = ({navigation}: ProfileProps): JSX.Element => {
       <View>
         <Animated.View style={[styles.profile, AnimateHeader]}>
           <Animated.Image
-            source={{uri: data?.avatar.url}}
-            style={[{aspectRatio: 1}, AnimateImg]}
+            source={
+              data?.avatar
+                ? {uri: data?.avatar.url}
+                : require('../../assets/avatar.webp')
+            }
+            style={[styles.avatar, AnimateImg]}
           />
           <Animated.View style={[AnimateName]}>
             <BoldText variant="titleLarge">{data?.fullName}</BoldText>
@@ -196,6 +200,7 @@ interface Style {
   bio: TextStyle;
   statsWrapper: ViewStyle;
   stats2Wrapper: ViewStyle;
+  avatar: ImageStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -226,5 +231,9 @@ const styles: Style = StyleSheet.create<Style>({
   title: {
     marginLeft: 10,
     marginVertical: 15,
+  },
+  avatar: {
+    aspectRatio: 1,
+    borderRadius: 999,
   },
 });
