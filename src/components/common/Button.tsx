@@ -51,7 +51,8 @@ const CustomButton = ({
           borderColor: mode === 'text' ? 'transparent' : currentColor,
         },
         icon && styles.icon,
-        iconDirection === 'right' ? styles.iconRight : styles.iconLeft,
+        icon &&
+          (iconDirection === 'right' ? styles.iconRight : styles.iconLeft),
         mode === 'text' && styles.text,
         style,
       ]}

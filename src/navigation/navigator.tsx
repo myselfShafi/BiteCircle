@@ -5,7 +5,7 @@ import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {ChatListData} from '../configs/types';
+import {ChatListData, User} from '../configs/types';
 import {useAppTheme} from '../context/Theme';
 import {
   Conversation,
@@ -28,8 +28,8 @@ import {ChatStack, HomeStack, ReelStack, SearchStack} from './stacks';
 export type StackParamList = {
   auth: undefined;
   forgotPwd: undefined;
-  verifyEmail: undefined;
-  uploadAvatar: undefined;
+  verifyEmail: {data: Pick<User, 'fullName' | 'email'>};
+  uploadAvatar: {data: User};
   app: undefined;
   conversation: {
     data: ChatListData; // temp passing whole static data. Pass user id to fetch chat

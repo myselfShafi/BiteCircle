@@ -10,7 +10,7 @@ import {
   InputBox,
 } from '../../../components';
 import {textConfig} from '../../../configs';
-import {authLogin, authSignup} from '../../../store/features/authSlice';
+import {authLogin} from '../../../store/features/authSlice';
 import {useAppDispatch} from '../../../store/hooks';
 import {storeSession} from '../../../utils/encryptStorage';
 import useCustomFetch from '../../../utils/hooks/useCustomFetch';
@@ -37,7 +37,7 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
       data: {email: value.email, passwordHash: value.password},
     });
     if (result?.data.success) {
-      let userData = result.data.data.user;
+      let userData = result.data.data;
       if (!userData.isVerifiedEmail) {
         // temp store data
         const resendOtp = await fetchData({
@@ -46,14 +46,12 @@ const Login = ({navigation}: Omit<AuthProps, 'route'>): JSX.Element => {
           data: {email: value.email, action: 'VERIFY-EMAIL'},
         });
         if (resendOtp?.data.success) {
-          dispatch(
-            authSignup({
+          navigation.push('verifyEmail', {
+            data: {
               fullName: userData.fullName,
               email: userData.email,
-              userName: userData.userName,
-            }),
-            navigation.push('verifyEmail'),
-          );
+            },
+          });
         }
       } else {
         await storeSession('tokens', {

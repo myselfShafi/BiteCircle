@@ -24,7 +24,7 @@ interface Media {
   url: string;
   publicId: string;
 }
-interface User {
+export interface User {
   __v: number;
   _id: string;
   avatar: Media;

@@ -25,8 +25,11 @@ export type uploadAvatarProps = NativeStackScreenProps<
   'uploadAvatar'
 >;
 
-const UploadAvatar = ({navigation}: uploadAvatarProps) => {
+const UploadAvatar = ({navigation, route}: uploadAvatarProps) => {
   const theme = useTheme();
+  const {
+    data: {userName},
+  } = route.params;
   const [coverImage, setCoverImage] = useState<string | undefined | null>(null);
   const [avatar, setAvatar] = useState<string | undefined | null>(null);
 
@@ -56,7 +59,7 @@ const UploadAvatar = ({navigation}: uploadAvatarProps) => {
               title={'You can change this later from your profile.'}
               enterTouchDelay={0}>
               <Surface elevation={0} style={styles.username}>
-                <BoldText>@user_name</BoldText>
+                <BoldText>@{userName || 'new_user2018'}</BoldText>
               </Surface>
             </Tooltip>
           </View>

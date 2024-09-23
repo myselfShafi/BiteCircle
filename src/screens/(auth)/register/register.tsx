@@ -10,8 +10,7 @@ import {
   InputBox,
 } from '../../../components';
 import {textConfig} from '../../../configs';
-import {RegisterInput} from '../../../configs/types';
-import {authSignup} from '../../../store/features/authSlice';
+import {RegisterInput, User} from '../../../configs/types';
 import {useAppDispatch} from '../../../store/hooks';
 import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 import {RegisterSchema} from '../../../utils/validationSchema';
@@ -42,15 +41,13 @@ const Register = ({goLogin, navigation}: SignupProps): JSX.Element => {
       },
     });
     if (result?.data.success) {
-      let userData = result.data.data;
-      dispatch(
-        authSignup({
+      let userData: User = result.data.data;
+      navigation.push('verifyEmail', {
+        data: {
           fullName: userData.fullName,
           email: userData.email,
-          userName: userData.userName,
-        }),
-        navigation.push('verifyEmail'),
-      );
+        },
+      });
     }
   };
 

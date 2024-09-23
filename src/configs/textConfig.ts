@@ -59,7 +59,7 @@ interface textConfigType {
   submit: string;
   verifyOtp: string;
   resendOtp: string;
-  resent: string;
+  otpResent: string;
   continue: string;
   skip: string;
   emptyState: EmptyStateType;
@@ -115,7 +115,8 @@ export const textConfig: textConfigType = {
   submit: 'Submit',
   verifyOtp: 'Verify OTP',
   resendOtp: "Didn't recieve the email yet? Send Again",
-  resent: 'Verification code sent successfully',
+  otpResent:
+    '🎉 New OTP Sent! 🎉 \n📧 Please check your email for the latest code',
   continue: 'Continue',
   skip: 'Skip For Now ..',
   emptyState: {
