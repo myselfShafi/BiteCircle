@@ -25,6 +25,7 @@ interface textConfigType {
   setPwdSubTitle: string;
   verifyEmailTitle: string;
   verifyEmailSubTitle: string;
+  verified: string;
   goLogin: string;
   forgotPwd: string;
   search_placeholder: string;
@@ -78,6 +79,7 @@ export const textConfig: textConfigType = {
   setPwdSubTitle: 'Must be atleast 8-character long',
   verifyEmailTitle: 'Verify Email',
   verifyEmailSubTitle: 'Please check inbox to verify your email.',
+  verified: 'Verified . . ',
   goLogin: 'Already have an account? Log In',
   forgotPwd: 'Forgot Password?',
   tagline:

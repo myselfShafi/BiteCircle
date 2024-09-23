@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import {textConfig} from '../../configs';
 import InputBox from '../inputBlock';
 import CustomButton from './Button';
@@ -15,11 +16,15 @@ import CustomButton from './Button';
 type OtpInputProps = {
   handleSubmit: (otp: string) => void;
   buttonText?: string;
+  loading?: boolean;
+  success?: boolean;
 };
 
 const OtpInput = ({
   handleSubmit,
   buttonText = textConfig.submit,
+  loading,
+  success = false,
 }: OtpInputProps) => {
   const [code, setCode] = useState<string[]>(['', '', '', '']);
   const [error, setError] = useState<boolean>(false);
@@ -85,6 +90,7 @@ const OtpInput = ({
             maxLength={index === 0 ? code.length : 1}
             contentStyle={styles.input}
             errorStyle={styles.error}
+            disabled={loading || success}
             value={field}
             errorText={error ? '!' : ''}
             onChangeText={(text: string) => handleChange(text, index)}
@@ -94,11 +100,20 @@ const OtpInput = ({
           />
         ))}
       </View>
-
       <CustomButton
         variant="titleMedium"
         size="large"
         style={styles.button}
+        loading={loading}
+        disabled={loading}
+        icon={
+          success ? (
+            <IonIcon name={'checkmark-done-circle-outline'} size={25} />
+          ) : (
+            <></>
+          )
+        }
+        iconDirection={'right'}
         onPress={validateSubmit}>
         {buttonText}
       </CustomButton>

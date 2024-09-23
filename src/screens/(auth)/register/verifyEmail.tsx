@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {ScrollView, StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {
@@ -25,6 +25,7 @@ export type verifyEmailProps = NativeStackScreenProps<
 const VerifyEmail = ({navigation}: verifyEmailProps) => {
   const theme = useTheme();
   const {loading, error, handleError, fetchData} = useCustomFetch();
+  const [success, setSuccess] = useState<boolean>(false);
   const {data: storeData}: {data: AuthInitialState['data']} = useAppSelector(
     state => state.auth,
   );
@@ -44,7 +45,10 @@ const VerifyEmail = ({navigation}: verifyEmailProps) => {
       },
     });
     if (verified?.data.success) {
-      navigation.push('uploadAvatar');
+      setSuccess(true);
+      setTimeout(() => {
+        navigation.push('uploadAvatar');
+      }, 2000);
     }
   };
   return (
@@ -68,16 +72,21 @@ const VerifyEmail = ({navigation}: verifyEmailProps) => {
           } ${storeData?.email || 'your account email'} `}
         />
         <OtpInput
-          buttonText={textConfig.verifyEmailTitle}
+          buttonText={
+            success ? textConfig.verified : textConfig.verifyEmailTitle
+          }
+          success={success}
           handleSubmit={handleSubmit}
-        />
-        <CustomButton
-          mode="text"
-          children={textConfig.resendOtp}
           loading={loading}
-          disabled={loading}
-          size="small"
         />
+        {!success && (
+          <CustomButton
+            mode="text"
+            children={textConfig.resendOtp}
+            disabled={loading}
+            size="small"
+          />
+        )}
       </ScrollView>
       <CustomSnackbar
         variant="error"
