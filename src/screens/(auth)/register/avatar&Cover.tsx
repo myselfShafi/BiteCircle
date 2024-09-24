@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Image,
   ImageStyle,
@@ -8,11 +8,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {Asset} from 'react-native-image-picker';
 import {Avatar, Surface, Tooltip, useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   BoldText,
   CustomButton,
+  CustomSnackbar,
   MainView,
   MediaUpload,
 } from '../../../components';
@@ -21,6 +23,8 @@ import {StackParamList} from '../../../navigation/navigator';
 import {authLogin} from '../../../store/features/authSlice';
 import {useAppDispatch} from '../../../store/hooks';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
+import {retrieveSession} from '../../../utils/encryptStorage';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 
 export type uploadAvatarProps = NativeStackScreenProps<
   StackParamList,
@@ -30,18 +34,57 @@ export type uploadAvatarProps = NativeStackScreenProps<
 const UploadAvatar = ({route}: uploadAvatarProps) => {
   const theme = useTheme();
   const {data} = route.params;
+
   const dispatch = useAppDispatch();
-  const [coverImage, setCoverImage] = useState<string | undefined | null>(null);
-  const [avatar, setAvatar] = useState<string | undefined | null>(null);
+  const {fetchData, handleError, error, loading} = useCustomFetch();
+  const [coverImage, setCoverImage] = useState<Asset | null>(null);
+  const [avatar, setAvatar] = useState<Asset | null>(null);
 
   const handleSkip = () => dispatch(authLogin(data));
 
   let avatarSrc = avatar
-    ? {uri: avatar}
+    ? {uri: avatar?.uri}
     : require('../../../assets/avatar.webp');
   let coverImageSrc = coverImage
-    ? {uri: coverImage}
+    ? {uri: coverImage?.uri}
     : require('../../../assets/cover.webp');
+
+  const fetch = useCallback(
+    async (url: string, fieldName: string, media: Asset) => {
+      let token = await retrieveSession();
+      let formdata = new FormData();
+      formdata.append(fieldName, {
+        uri: media.uri,
+        type: media.type,
+        name: media.fileName,
+      });
+      return await fetchData({
+        method: 'POST',
+        url,
+        data: formdata,
+        headers: {
+          Authorization: `Bearer ${token?.password.accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    },
+    [fetchData],
+  );
+
+  const handleSubmit = async () => {
+    let result;
+    if (avatar) {
+      result = await fetch('/api/users/edit-avatar', 'avatar', avatar);
+    }
+    if (coverImage) {
+      result = await fetch(
+        '/api/users/edit-coverImage',
+        'coverImage',
+        coverImage,
+      );
+    }
+    if (result?.data.success) dispatch(authLogin(result.data.data.user));
+  };
 
   return (
     <MainView>
@@ -64,7 +107,10 @@ const UploadAvatar = ({route}: uploadAvatarProps) => {
           </View>
           <View style={styles.wrapper}>
             <BoldText variant="bodyLarge" children={'Upload Your Avatar'} />
-            <MediaUpload style={styles.center} setUpload={setAvatar}>
+            <MediaUpload
+              disabled={loading}
+              style={styles.center}
+              setUpload={setAvatar}>
               <Avatar.Image size={SCREEN_HEIGHT / 5} source={avatarSrc} />
             </MediaUpload>
           </View>
@@ -74,6 +120,7 @@ const UploadAvatar = ({route}: uploadAvatarProps) => {
               children={'Upload Your Cover Image'}
             />
             <MediaUpload
+              disabled={loading}
               style={[
                 styles.coverWrapper,
                 styles.center,
@@ -96,14 +143,28 @@ const UploadAvatar = ({route}: uploadAvatarProps) => {
             color={theme.colors.primary}
             variant="bodyMedium"
             size="small"
+            disabled={loading}
             onPress={handleSkip}>
             {textConfig.skip}
           </CustomButton>
-          <CustomButton variant="bodyMedium" size="small" style={styles.button}>
+          <CustomButton
+            variant="bodyMedium"
+            size="small"
+            loading={loading}
+            disabled={loading}
+            style={styles.button}
+            onPress={handleSubmit}>
             {textConfig.continue}
           </CustomButton>
         </View>
       </SafeAreaView>
+      <CustomSnackbar
+        variant="error"
+        visible={error.status}
+        onDismiss={handleError}
+        onIconPress={handleError}
+        children={error.message}
+      />
     </MainView>
   );
 };
@@ -135,6 +196,7 @@ const styles: Style = StyleSheet.create<Style>({
   },
   button: {
     borderRadius: 20,
+    minWidth: 100,
   },
   action: {
     flexDirection: 'row',

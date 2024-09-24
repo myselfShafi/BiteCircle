@@ -89,13 +89,13 @@ const useCustomFetch = () => {
         if (axios.isCancel(error)) {
           console.info('axios request cancelled ::: ', error.message);
         } else {
+          console.error('axios fetch error ::: ', error?.message);
           setError({
             status: true,
-            message:
-              error.response.data.message ||
-              'Something went wrong! Please try later',
+            message: error.response
+              ? error?.response.data.message
+              : 'Something went wrong! Please try later',
           });
-          console.error('axios fetch error ::: ', error.response.data);
         }
       } finally {
         setLoading(false);

@@ -32,7 +32,6 @@ const MediaUpload = memo(
     ...props
   }: MediaUploadProps) => {
     const [modal, setModal] = useState<boolean>(false);
-    console.log('triggered', children);
 
     const handleUploadMode = useCallback(
       async (mode: 'camera' | 'gallery') => {
@@ -42,7 +41,7 @@ const MediaUpload = memo(
               ? await launchCamera(options)
               : await launchImageLibrary(options);
           if (result.assets) {
-            setUpload(result.assets[0]?.uri);
+            setUpload(result.assets[0]);
             setModal(false);
           }
         } catch (error) {
