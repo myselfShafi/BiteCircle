@@ -3,18 +3,38 @@ import React, {Fragment} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {TextInput, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {BoldText, CustomButton, InputBox} from '../../../components';
+import {
+  BoldText,
+  CustomButton,
+  CustomSnackbar,
+  InputBox,
+} from '../../../components';
 import {textConfig} from '../../../configs';
 import {EmailInput} from '../../../configs/types';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 import {EmailSchema} from '../../../utils/validationSchema';
 
-const ForgotPassword = ({addProgress}: {addProgress: () => void}) => {
+const ForgotPassword = ({
+  addProgress,
+  setEmail,
+}: {
+  addProgress: () => void;
+  setEmail: (email: string) => void;
+}) => {
+  const {loading, error, handleError, fetchData} = useCustomFetch();
   const theme = useTheme();
 
-  const handleEmail = (values: EmailInput) => {
-    console.log({values});
-    addProgress();
+  const handleEmail = async (values: EmailInput) => {
+    const sendOtp = await fetchData({
+      method: 'POST',
+      url: 'api/otp/send-emailOtp',
+      data: {email: values.email, action: 'PASS-RESET'},
+    });
+    if (sendOtp?.data.success) {
+      setEmail(values.email);
+      addProgress();
+    }
   };
 
   return (
@@ -41,6 +61,7 @@ const ForgotPassword = ({addProgress}: {addProgress: () => void}) => {
               onBlur={handleBlur('email')}
               value={values.email}
               errorText={errors.email}
+              disabled={loading}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -56,12 +77,21 @@ const ForgotPassword = ({addProgress}: {addProgress: () => void}) => {
               variant="titleMedium"
               size="large"
               style={styles.button}
+              loading={loading}
+              disabled={loading}
               onPress={() => handleSubmit()}>
               {textConfig.submit}
             </CustomButton>
           </>
         )}
       </Formik>
+      <CustomSnackbar
+        variant="error"
+        visible={error.status}
+        onDismiss={handleError}
+        onIconPress={handleError}
+        children={error.message}
+      />
     </Fragment>
   );
 };

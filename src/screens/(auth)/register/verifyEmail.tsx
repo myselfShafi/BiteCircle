@@ -2,12 +2,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useState} from 'react';
 import {ScrollView, StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {
-  BoldText,
-  CustomButton,
-  CustomSnackbar,
-  OtpInput,
-} from '../../../components';
+import {BoldText, OtpInput} from '../../../components';
 import {textConfig} from '../../../configs';
 import {StackParamList} from '../../../navigation/navigator';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
@@ -27,10 +22,9 @@ const VerifyEmail = ({navigation, route}: verifyEmailProps) => {
   const {
     data: {email, fullName},
   } = route.params;
-  const {loading, error, handleError, fetchData} = useCustomFetch();
+
+  const {loading, fetchData} = useCustomFetch();
   const [success, setSuccess] = useState<boolean>(false);
-  const [resent, setResent] = useState<boolean>(false);
-  const [count, setCount] = useState<number>(60);
 
   const handleBack = useCallback(() => {
     navigation.goBack();
@@ -58,28 +52,6 @@ const VerifyEmail = ({navigation, route}: verifyEmailProps) => {
     [fetchData, email, navigation],
   );
 
-  const HandleResend = useCallback(async () => {
-    const resendOtp = await fetchData({
-      method: 'POST',
-      url: 'api/otp/send-emailOtp',
-      data: {email, action: 'VERIFY-EMAIL'},
-    });
-    if (resendOtp?.data.success) {
-      setResent(true);
-      let counter = setInterval(() => {
-        setCount(prevCount => {
-          if (prevCount <= 0) {
-            clearInterval(counter);
-            setResent(false);
-            return 0;
-          } else {
-            return prevCount - 1;
-          }
-        });
-      }, 1000);
-    }
-  }, [fetchData, email]);
-
   return (
     <LogoWrapper handleBack={handleBack}>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -104,40 +76,12 @@ const VerifyEmail = ({navigation, route}: verifyEmailProps) => {
           buttonText={
             success ? textConfig.verified : textConfig.verifyEmailTitle
           }
-          success={success}
           handleSubmit={handleSubmit}
           loading={loading}
+          success={success}
+          data={{email, action: 'VERIFY-EMAIL'}}
         />
-        {!success &&
-          (resent ? (
-            <>
-              <BoldText
-                variant="bodyLarge"
-                children={count}
-                style={[styles.title, {color: theme.colors.tertiary}]}
-              />
-              <BoldText
-                children={textConfig.otpResent}
-                style={[styles.title, {color: theme.colors.tertiary}]}
-              />
-            </>
-          ) : (
-            <CustomButton
-              mode="text"
-              children={textConfig.resendOtp}
-              disabled={loading}
-              size="small"
-              onPress={HandleResend}
-            />
-          ))}
       </ScrollView>
-      <CustomSnackbar
-        variant="error"
-        visible={error.status}
-        onDismiss={handleError}
-        onIconPress={handleError}
-        children={error.message}
-      />
     </LogoWrapper>
   );
 };

@@ -3,23 +3,39 @@ import React, {Fragment, useState} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {TextInput, useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {BoldText, CustomButton, InputBox} from '../../../components';
+import {
+  BoldText,
+  CustomButton,
+  CustomSnackbar,
+  InputBox,
+} from '../../../components';
 import {textConfig} from '../../../configs';
 import {ResetPasswordInput} from '../../../configs/types';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
+import {resetSession, retrieveSession} from '../../../utils/encryptStorage';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 import {resetPasswordSchema} from '../../../utils/validationSchema';
 
 const ResetPassword = ({addProgress}: {addProgress: () => void}) => {
   const theme = useTheme();
+  const {fetchData, loading, error, handleError} = useCustomFetch();
   const [showPwd, setShowPwd] = useState<boolean>(false);
 
   const togglePwd = () => {
     setShowPwd(prev => !prev);
   };
 
-  const handleSubmission = (values: ResetPasswordInput) => {
-    console.log({values});
-    addProgress();
+  const handleSubmission = async (values: ResetPasswordInput) => {
+    let token = await retrieveSession();
+    const result = await fetchData({
+      method: 'POST',
+      url: '/api/reset-pass',
+      data: {newPassword: values.newPassword},
+      headers: {Authorization: `Bearer ${token?.password.accessToken}`},
+    });
+    if (result?.data.success) {
+      await resetSession().then(() => addProgress());
+    }
   };
 
   return (
@@ -48,6 +64,7 @@ const ResetPassword = ({addProgress}: {addProgress: () => void}) => {
               onChangeText={handleChange('newPassword')}
               onBlur={handleBlur('newPassword')}
               errorText={errors.newPassword}
+              disabled={loading}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -87,6 +104,7 @@ const ResetPassword = ({addProgress}: {addProgress: () => void}) => {
               onChangeText={handleChange('cnfNewPassword')}
               onBlur={handleBlur('cnfNewPassword')}
               errorText={errors.cnfNewPassword}
+              disabled={loading}
               left={
                 <TextInput.Icon
                   icon={({size, color}) => (
@@ -121,12 +139,21 @@ const ResetPassword = ({addProgress}: {addProgress: () => void}) => {
               variant="titleMedium"
               size="large"
               style={styles.button}
+              disabled={loading}
+              loading={loading}
               onPress={() => handleSubmit()}>
               {textConfig.submit}
             </CustomButton>
           </>
         )}
       </Formik>
+      <CustomSnackbar
+        variant="error"
+        visible={error.status}
+        onDismiss={handleError}
+        onIconPress={handleError}
+        children={error.message}
+      />
     </Fragment>
   );
 };

@@ -14,6 +14,7 @@ import {useStatusBar} from '../../utils/hooks';
 import LogoWrapper from './layout/logoWrapper';
 import ForgotPassword from './password/forgotPassword';
 import ResetPassword from './password/resetPassword';
+import ResetSuccess from './password/resetSuccess';
 import VerifyOTP from './password/verifyOTP';
 
 export type PwdScreenProps = NativeStackScreenProps<
@@ -25,7 +26,8 @@ const UpdatePassword = ({navigation}: PwdScreenProps) => {
   const theme = useTheme();
   useStatusBar('transparent', 'light-content', true);
 
-  const [progress, setProgress] = useState(1);
+  const [progress, setProgress] = useState<number>(1);
+  const [email, setEmail] = useState<string>('');
 
   const slide = useSharedValue<number>(1);
   const options = {duration: 1000};
@@ -55,7 +57,7 @@ const UpdatePassword = ({navigation}: PwdScreenProps) => {
   }, []);
 
   return (
-    <LogoWrapper handleBack={handleBack}>
+    <LogoWrapper handleBack={handleBack} hideNav={progress === 4}>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         {progress === 1 && (
           <Animated.View style={[AnimatePanel1]}>
@@ -66,6 +68,7 @@ const UpdatePassword = ({navigation}: PwdScreenProps) => {
                   runOnJS(setProgress)(2);
                 });
               }}
+              setEmail={setEmail}
             />
           </Animated.View>
         )}
@@ -78,6 +81,7 @@ const UpdatePassword = ({navigation}: PwdScreenProps) => {
                   runOnJS(setProgress)(3);
                 });
               }}
+              email={email}
             />
           </Animated.View>
         )}
@@ -93,18 +97,25 @@ const UpdatePassword = ({navigation}: PwdScreenProps) => {
             />
           </Animated.View>
         )}
+        {progress === 4 && (
+          <Animated.View>
+            <ResetSuccess navigation={navigation} />
+          </Animated.View>
+        )}
       </ScrollView>
-      <View style={styles.progress}>
-        {[1, 2, 3].map(level => (
-          <View key={level} style={styles.barWidth}>
-            <ProgressBar
-              progress={progress >= level ? 1 : 0}
-              color={theme.colors.primary}
-              style={styles.bar}
-            />
-          </View>
-        ))}
-      </View>
+      {progress !== 4 && (
+        <View style={styles.progress}>
+          {[1, 2, 3].map(level => (
+            <View key={level} style={styles.barWidth}>
+              <ProgressBar
+                progress={progress >= level ? 1 : 0}
+                color={theme.colors.primary}
+                style={styles.bar}
+              />
+            </View>
+          ))}
+        </View>
+      )}
     </LogoWrapper>
   );
 };

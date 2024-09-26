@@ -1,4 +1,11 @@
-import React, {Fragment, RefObject, useEffect, useRef, useState} from 'react';
+import React, {
+  Fragment,
+  RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   NativeSyntheticEvent,
   StyleSheet,
@@ -8,26 +15,37 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {useTheme} from 'react-native-paper';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {textConfig} from '../../configs';
+import useCustomFetch from '../../utils/hooks/useCustomFetch';
 import InputBox from '../inputBlock';
+import BoldText from './BoldText';
 import CustomButton from './Button';
+import CustomSnackbar from './Snackbar';
 
 type OtpInputProps = {
   handleSubmit: (otp: string) => void;
   buttonText?: string;
   loading?: boolean;
   success?: boolean;
+  data: {email: string; action: 'VERIFY-EMAIL' | 'PASS-RESET'};
 };
 
 const OtpInput = ({
   handleSubmit,
   buttonText = textConfig.submit,
   loading,
-  success = false,
+  success,
+  data,
 }: OtpInputProps) => {
+  const theme = useTheme();
+
+  const {error, handleError, fetchData} = useCustomFetch();
+  const [resent, setResent] = useState<boolean>(false);
+  const [count, setCount] = useState<number>(60);
   const [code, setCode] = useState<string[]>(['', '', '', '']);
-  const [error, setError] = useState<boolean>(false);
+  const [err, setErr] = useState<boolean>(false);
 
   const inputRefs: RefObject<TextInput>[] = [
     useRef<TextInput>(null),
@@ -41,7 +59,7 @@ const OtpInput = ({
   }, []);
 
   const handleChange = (text: string, idx: number) => {
-    setError(false);
+    setErr(false);
     if (text.length > 1) {
       const newCodes = text.split('');
       setCode(newCodes);
@@ -69,13 +87,36 @@ const OtpInput = ({
 
   const validateSubmit = () => {
     if (code.some(field => field.trim() === '')) {
-      setError(true);
+      setErr(true);
       return;
     }
-    setError(false);
+    setErr(false);
     let otp = code.join('');
     handleSubmit(otp);
   };
+
+  const HandleResend = useCallback(async () => {
+    const resendOtp = await fetchData({
+      method: 'POST',
+      url: 'api/otp/send-emailOtp',
+      data,
+    });
+    if (resendOtp?.data.success) {
+      setResent(true);
+      let counter = setInterval(() => {
+        setCount(prevCount => {
+          if (prevCount <= 0) {
+            clearInterval(counter);
+            setResent(false);
+            return 0;
+          } else {
+            return prevCount - 1;
+          }
+        });
+      }, 1000);
+      setCount(60);
+    }
+  }, [fetchData]);
 
   return (
     <Fragment>
@@ -92,7 +133,7 @@ const OtpInput = ({
             errorStyle={styles.error}
             disabled={loading || success}
             value={field}
-            errorText={error ? '!' : ''}
+            errorText={err ? '!' : ''}
             onChangeText={(text: string) => handleChange(text, index)}
             onKeyPress={(e: NativeSyntheticEvent<TextInputKeyPressEventData>) =>
               handleKeyPress(e, index)
@@ -117,6 +158,36 @@ const OtpInput = ({
         onPress={validateSubmit}>
         {buttonText}
       </CustomButton>
+      {!success &&
+        (resent ? (
+          <>
+            <BoldText
+              variant="bodyLarge"
+              children={count}
+              style={[styles.title, {color: theme.colors.tertiary}]}
+            />
+            <BoldText
+              children={textConfig.otpResent}
+              style={[styles.title, {color: theme.colors.tertiary}]}
+            />
+          </>
+        ) : (
+          <CustomButton
+            mode="text"
+            children={textConfig.resendOtp}
+            disabled={loading}
+            size="small"
+            onPress={HandleResend}
+          />
+        ))}
+
+      <CustomSnackbar
+        variant="error"
+        visible={error.status}
+        onDismiss={handleError}
+        onIconPress={handleError}
+        children={error.message}
+      />
     </Fragment>
   );
 };
@@ -128,6 +199,7 @@ interface Style {
   wrapper: ViewStyle;
   input: TextStyle;
   error: ViewStyle;
+  title: TextStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -146,5 +218,9 @@ const styles: Style = StyleSheet.create<Style>({
   },
   error: {
     alignSelf: 'center',
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: 20,
   },
 });

@@ -1,29 +1,39 @@
-import React, {Fragment, RefObject, useEffect, useRef} from 'react';
-import {StyleSheet, TextInput, TextStyle, ViewStyle} from 'react-native';
+import React, {Fragment, useCallback, useState} from 'react';
+import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {BoldText, CustomButton, OtpInput} from '../../../components';
+import {BoldText, OtpInput} from '../../../components';
 import {textConfig} from '../../../configs';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
+import {storeSession} from '../../../utils/encryptStorage';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 
-let email = 'test@gmail.com';
-
-const VerifyOTP = ({addProgress}: {addProgress: () => void}) => {
+const VerifyOTP = ({
+  addProgress,
+  email = 'your account email',
+}: {
+  addProgress: () => void;
+  email: string;
+}) => {
   const theme = useTheme();
+  const {loading, fetchData} = useCustomFetch();
+  const [success, setSuccess] = useState<boolean>(false);
 
-  const inputRefs: RefObject<TextInput>[] = [
-    useRef<TextInput>(null),
-    useRef<TextInput>(null),
-    useRef<TextInput>(null),
-    useRef<TextInput>(null),
-  ];
-
-  useEffect(() => {
-    inputRefs[0].current?.focus();
+  const handleSubmit = useCallback(async (otp: string) => {
+    const verifiedUser = await fetchData({
+      method: 'POST',
+      url: '/api/otp/verify-pwdOtp',
+      data: {email, clientOtp: otp},
+    });
+    if (verifiedUser?.data.success) {
+      setSuccess(true);
+      await storeSession('tokens', {
+        accessToken: verifiedUser?.data.data.accessToken,
+      });
+      setTimeout(() => {
+        addProgress();
+      }, 2000);
+    }
   }, []);
-
-  const handleSubmit = () => {
-    addProgress();
-  };
 
   return (
     <Fragment>
@@ -35,8 +45,13 @@ const VerifyOTP = ({addProgress}: {addProgress: () => void}) => {
         style={[styles.title, {color: theme.colors.onBackground}]}
         children={`${textConfig.resetPwdSubTitle} ${email}`}
       />
-      <OtpInput handleSubmit={handleSubmit} buttonText={textConfig.verifyOtp} />
-      <CustomButton mode="text" children={textConfig.resendOtp} size="small" />
+      <OtpInput
+        handleSubmit={handleSubmit}
+        buttonText={success ? textConfig.verified : textConfig.verifyOtp}
+        loading={loading}
+        success={success}
+        data={{email, action: 'PASS-RESET'}}
+      />
     </Fragment>
   );
 };

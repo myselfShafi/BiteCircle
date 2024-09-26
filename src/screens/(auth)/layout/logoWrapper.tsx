@@ -10,33 +10,37 @@ import {useTheme} from 'react-native-paper';
 import {IconBtn, MainView} from '../../../components';
 import {SCREEN_WIDTH} from '../../../utils/constants';
 
-type LogoWrapperProps = ViewProps & {handleBack: () => void};
+type LogoWrapperProps = ViewProps & {handleBack: () => void; hideNav: boolean};
 
-const LogoWrapper = memo(({handleBack, children}: LogoWrapperProps) => {
-  const theme = useTheme();
+const LogoWrapper = memo(
+  ({handleBack, hideNav, children}: LogoWrapperProps) => {
+    const theme = useTheme();
 
-  return (
-    <MainView>
-      <MainView
-        style={[
-          styles.logoWrapper,
-          {backgroundColor: theme.colors.onSecondaryContainer},
-        ]}>
-        <Image
-          source={require('../../../assets/bg_logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+    return (
+      <MainView>
+        <MainView
+          style={[
+            styles.logoWrapper,
+            {backgroundColor: theme.colors.onSecondaryContainer},
+          ]}>
+          <Image
+            source={require('../../../assets/bg_logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </MainView>
+        {!hideNav && (
+          <IconBtn
+            name={'return-up-back'}
+            onPress={handleBack}
+            style={styles.back}
+          />
+        )}
+        {children}
       </MainView>
-      <IconBtn
-        name={'return-up-back'}
-        onPress={handleBack}
-        style={styles.back}
-      />
-      {children}
-    </MainView>
-  );
-});
+    );
+  },
+);
 
 export default LogoWrapper;
 

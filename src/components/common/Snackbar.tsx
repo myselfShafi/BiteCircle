@@ -41,7 +41,7 @@ const CustomSnackbar = ({
         icon={props => (
           <Icon {...props} source={icon} color={theme.colors.onTertiary} />
         )}
-        duration={10000000000}
+        duration={5000}
         elevation={elevation}
         style={[styles.snackbar, {backgroundColor: backgroundColor()}, style]}
         wrapperStyle={[styles.content, wrapperStyle]}
