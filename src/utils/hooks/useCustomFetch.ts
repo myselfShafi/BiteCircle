@@ -6,12 +6,14 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import {useCallback, useEffect, useState} from 'react';
+import {retrieveSession} from '../encryptStorage';
 
 export interface fetchDataProps extends AxiosRequestConfig {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   data?: object;
   headers?: AxiosRequestConfig['headers'];
+  authorize?: boolean;
 }
 
 const useCustomFetch = () => {
@@ -68,18 +70,25 @@ const useCustomFetch = () => {
       url,
       data = {},
       headers = {'Content-Type': 'application/json'},
+      authorize = false,
       ...configs
     }: fetchDataProps) => {
       setLoading(true);
       handleError();
       controller.abort(); // aborts any existing controllers to create new instance below on func trigger
       controller = new AbortController();
+
+      const token = await retrieveSession();
+      let userAuthorize = {
+        Authorization: `Bearer ${token?.password.accessToken}`,
+      };
+
       try {
         const result: AxiosResponse = await axiosInstance<AxiosRequestConfig>({
           url,
           method,
           data,
-          headers,
+          headers: authorize ? {...headers, ...userAuthorize} : headers,
           signal: controller.signal,
           ...configs,
         });
@@ -89,7 +98,7 @@ const useCustomFetch = () => {
         if (axios.isCancel(error)) {
           console.info('axios request cancelled ::: ', error.message);
         } else {
-          console.error('axios fetch error ::: ', error?.message);
+          console.error('axios fetch error ::: ', error);
           setError({
             status: true,
             message: error.response

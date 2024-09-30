@@ -23,7 +23,6 @@ import {StackParamList} from '../../../navigation/navigator';
 import {authLogin} from '../../../store/features/authSlice';
 import {useAppDispatch} from '../../../store/hooks';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
-import {retrieveSession} from '../../../utils/encryptStorage';
 import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 
 export type uploadAvatarProps = NativeStackScreenProps<
@@ -51,7 +50,6 @@ const UploadAvatar = ({route}: uploadAvatarProps) => {
 
   const fetch = useCallback(
     async (url: string, fieldName: string, media: Asset) => {
-      let token = await retrieveSession();
       let formdata = new FormData();
       formdata.append(fieldName, {
         uri: media.uri,
@@ -62,10 +60,8 @@ const UploadAvatar = ({route}: uploadAvatarProps) => {
         method: 'POST',
         url,
         data: formdata,
-        headers: {
-          Authorization: `Bearer ${token?.password.accessToken}`,
-          'Content-Type': 'multipart/form-data',
-        },
+        authorize: true,
+        headers: {'Content-Type': 'multipart/form-data'},
       });
     },
     [fetchData],

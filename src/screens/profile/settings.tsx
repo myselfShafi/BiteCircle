@@ -10,7 +10,7 @@ import {useAppTheme} from '../../context/Theme';
 import {authLogout} from '../../store/features/authSlice';
 import {useAppDispatch} from '../../store/hooks';
 import {SCREEN_WIDTH} from '../../utils/constants';
-import {resetSession, retrieveSession} from '../../utils/encryptStorage';
+import {resetSession} from '../../utils/encryptStorage';
 import useCustomFetch from '../../utils/hooks/useCustomFetch';
 
 const ProfileSettings = memo(
@@ -28,11 +28,10 @@ const ProfileSettings = memo(
     const toggleLock = () => setFingerLock(prev => !prev);
 
     const handleLogout = async () => {
-      const token = await retrieveSession();
       const result = await fetchData({
         method: 'POST',
         url: 'api/users/logout',
-        headers: {Authorization: `Bearer ${token?.password.accessToken}`},
+        authorize: true,
       });
       if (result?.data.success) {
         await resetSession().then(() => {

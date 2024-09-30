@@ -72,6 +72,8 @@ interface textConfigType {
   create: string;
   description: string;
   hashtag: string;
+  creating: string;
+  successAddPost: string;
   emptyState: EmptyStateType;
   placeholders: placeholderType;
 }
@@ -138,6 +140,8 @@ export const textConfig: textConfigType = {
   create: 'Create Post',
   description: 'Description',
   hashtag: 'Hashtags',
+  creating: 'Publishing Post ..',
+  successAddPost: '✨ Post has been created successfully .. !',
   emptyState: {
     chatsHeader: 'No Conversations Yet!',
     chatsTitle: 'Looking a little lonely here. Reach out and talk to someone!',

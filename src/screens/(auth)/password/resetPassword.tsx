@@ -12,7 +12,7 @@ import {
 import {textConfig} from '../../../configs';
 import {ResetPasswordInput} from '../../../configs/types';
 import {SCREEN_HEIGHT} from '../../../utils/constants';
-import {resetSession, retrieveSession} from '../../../utils/encryptStorage';
+import {resetSession} from '../../../utils/encryptStorage';
 import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 import {resetPasswordSchema} from '../../../utils/validationSchema';
 
@@ -26,12 +26,11 @@ const ResetPassword = ({addProgress}: {addProgress: () => void}) => {
   };
 
   const handleSubmission = async (values: ResetPasswordInput) => {
-    let token = await retrieveSession();
     const result = await fetchData({
       method: 'POST',
       url: '/api/reset-pass',
       data: {newPassword: values.newPassword},
-      headers: {Authorization: `Bearer ${token?.password.accessToken}`},
+      authorize: true,
     });
     if (result?.data.success) {
       await resetSession().then(() => addProgress());

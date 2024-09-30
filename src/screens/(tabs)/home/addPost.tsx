@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React, {ReactNode, useCallback, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -23,6 +23,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {
   BoldText,
   CustomButton,
+  CustomSnackbar,
   IconBtn,
   InputBox,
   MainView,
@@ -30,90 +31,162 @@ import {
 } from '../../../components';
 import {textConfig} from '../../../configs';
 import {HomeStackParamList} from '../../../navigation/stacks/home';
+import useCustomFetch from '../../../utils/hooks/useCustomFetch';
 
 type AddPostProps = NativeStackScreenProps<HomeStackParamList, 'createPost'>;
 
-const AddPost = ({navigation}: AddPostProps) => {
+interface SectionTitleProps {
+  icon: string;
+  title: string;
+  hasError?: boolean;
+  children?: ReactNode;
+}
+
+const SectionTitle = ({icon, title, hasError, children}: SectionTitleProps) => {
   const theme = useTheme();
 
-  const [content, setContent] = useState<string>('');
+  return (
+    <View style={[styles.spacing, styles.title]}>
+      <Icon name={icon} size={18} color={theme.colors.onSurface} />
+      <BoldText variant="titleMedium" children={title} />
+      {children}
+      {hasError && (
+        <Icon name={'alert-circle'} size={15} color={theme.colors.error} />
+      )}
+    </View>
+  );
+};
+
+const AddPost = ({navigation}: AddPostProps) => {
+  const theme = useTheme();
+  const {fetchData, loading, handleError, error, data} = useCustomFetch();
+
+  const [caption, setCaption] = useState<string>('');
   const [images, setImages] = useState<Asset[]>([]);
   const [tag, setTag] = useState<string>('');
-  const [taglist, setTaglist] = useState<string[]>([]);
+  const [hashtags, setHashtags] = useState<string[]>([]);
+  let initialErr = {caption: false, images: false};
+  const [err, setErr] = useState(initialErr);
+  const [success, setSuccess] = useState<boolean>(false);
   const handleBack = () => navigation.goBack();
 
   const handleUpload = (imageData: Asset) => {
+    setErr(prev => ({...prev, images: false}));
     setImages(prev => [...prev, imageData]);
   };
 
-  const handleDelete = (file: Asset['fileName']) => {
-    setImages(prev => prev.filter(img => img.fileName !== file));
+  const handleDelete = (file: Asset['uri']) => {
+    setImages(prev => prev.filter(img => img.uri !== file));
   };
 
   const addTags = () => {
-    if (!taglist.includes(tag)) {
-      setTaglist(prev => [...prev, tag.toLowerCase()]);
+    if (!hashtags.includes(tag)) {
+      setHashtags(prev => [...prev, tag.toLowerCase()]);
       setTag('');
     }
   };
 
   const removeTags = (selectedTag: string) => {
-    setTaglist(prev => prev.filter(list => list !== selectedTag));
+    setHashtags(prev => prev.filter(list => list !== selectedTag));
   };
+
+  const handlePublish = useCallback(async () => {
+    setErr(initialErr);
+
+    if (!caption || caption === '') {
+      setErr(prev => ({...prev, caption: true}));
+      return;
+    }
+    if (images.length === 0) {
+      setErr(prev => ({...prev, images: true}));
+      return;
+    }
+    let formdata = new FormData();
+    formdata.append('caption', caption);
+    formdata.append('hastags', hashtags);
+    for (let i = 0; i < images.length; i++) {
+      formdata.append('postMedia', {
+        uri: images[i].uri,
+        type: images[i].type,
+        name: images[i].fileName,
+      });
+    }
+
+    const addPost = await fetchData({
+      method: 'POST',
+      url: '/api/posts/create-post',
+      authorize: true,
+      headers: {'Content-Type': 'multipart/form-data'},
+      data: formdata,
+    });
+    if (addPost?.data.success) {
+      setSuccess(true);
+      console.log('saved post !!!! add navigation later !!!!', addPost.data);
+    }
+  }, [caption, images, hashtags]);
 
   return (
     <MainView style={styles.container}>
       <View style={[styles.header, styles.spacing]}>
         <IconBtn name={'return-up-back'} onPress={handleBack} />
-        <BoldText variant="titleLarge" children={textConfig.create} />
+        <BoldText
+          variant="titleLarge"
+          children={loading ? textConfig.creating : textConfig.create}
+        />
         <CustomButton
           mode="text"
           color={theme.colors.primary}
           variant="titleMedium"
-          size="small">
+          size="small"
+          loading={loading}
+          onPress={handlePublish}>
           {textConfig.publish}
         </CustomButton>
       </View>
       <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
-        <View style={[styles.spacing, styles.title]}>
-          <Icon
-            name={'clipboard-outline'}
-            size={18}
-            color={theme.colors.onSurface}
-          />
-          <BoldText variant="titleMedium" children={textConfig.description} />
-        </View>
+        <SectionTitle
+          icon="clipboard-outline"
+          title={textConfig.description}
+          hasError={err.caption}
+        />
         <InputBox
           placeholder={textConfig.placeholders.postDesc}
           multiline
           numberOfLines={5}
-          value={content}
-          onChangeText={(text: string) => setContent(text)}
+          value={caption}
+          error={err.caption}
+          onChangeText={(text: string) => setCaption(text)}
+          onFocus={() => setErr(prev => ({...prev, caption: false}))}
           maxLength={300}
+          disabled={loading}
         />
         <Text
           variant="bodySmall"
           style={[
             styles.max,
-            content.length >= 300 && {color: theme.colors.error},
+            caption.length >= 300 && {color: theme.colors.error},
           ]}
-          children={`${content.length}/300`}
+          children={`${caption.length}/300`}
         />
-        <View style={[styles.spacing, styles.title]}>
-          <Icon
-            name={'images-outline'}
-            size={18}
-            color={theme.colors.onSurface}
-          />
-          <BoldText variant="titleMedium" children={textConfig.imgTitle} />
-          <Text variant="bodySmall" children={`(${images.length}/5)`} />
-        </View>
+        <SectionTitle
+          icon="images-outline"
+          title={textConfig.imgTitle}
+          hasError={err.images}
+          children={
+            <Text variant="bodySmall" children={`(${images.length}/5)`} />
+          }
+        />
         <BoldText
           style={styles.text}
           variant="labelMedium"
           children={textConfig.imgSubTitle}
         />
-        <Surface elevation={0} style={styles.surface}>
+        <Surface
+          elevation={0}
+          style={[
+            styles.surface,
+            err.images && {borderWidth: 2, borderColor: theme.colors.error},
+          ]}>
           <FlatList
             horizontal
             data={images}
@@ -126,7 +199,8 @@ const AddPost = ({navigation}: AddPostProps) => {
                   mode="outlined"
                   style={styles.delete}
                   bgColor={theme.colors.error}
-                  onPress={() => handleDelete(item.fileName)}
+                  onPress={() => handleDelete(item.uri)}
+                  disabled={loading}
                 />
               </View>
             )}
@@ -138,7 +212,7 @@ const AddPost = ({navigation}: AddPostProps) => {
             showsHorizontalScrollIndicator={false}
             ListFooterComponent={
               images.length >= 5 ? null : (
-                <MediaUpload setUpload={handleUpload}>
+                <MediaUpload setUpload={handleUpload} disabled={loading}>
                   <FAB icon="plus" variant="secondary" animated size="large" />
                 </MediaUpload>
               )
@@ -154,7 +228,7 @@ const AddPost = ({navigation}: AddPostProps) => {
           placeholder={textConfig.placeholders.postHashtag}
           value={tag}
           onChangeText={(text: string) => setTag(text)}
-          disabled={taglist.length >= 5}
+          disabled={loading || hashtags.length >= 5}
           right={
             <TextInput.Icon
               icon={({size}) => (
@@ -170,11 +244,23 @@ const AddPost = ({navigation}: AddPostProps) => {
           }
         />
         <View style={styles.tags}>
-          {taglist.map(list => (
-            <Chip key={list} children={list} onClose={() => removeTags(list)} />
+          {hashtags.map(list => (
+            <Chip
+              key={list}
+              children={list}
+              onClose={() => removeTags(list)}
+              disabled={loading}
+            />
           ))}
         </View>
       </ScrollView>
+      <CustomSnackbar
+        variant={success ? 'success' : 'error'}
+        visible={success || error.status}
+        onDismiss={success ? () => setSuccess(false) : handleError}
+        onIconPress={success ? undefined : handleError}
+        children={success ? textConfig.successAddPost : error.message}
+      />
     </MainView>
   );
 };
