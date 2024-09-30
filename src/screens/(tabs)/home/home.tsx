@@ -1,17 +1,27 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useState} from 'react';
-import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
+import {FlatList, Pressable, StyleSheet, View, ViewStyle} from 'react-native';
 import {Avatar} from 'react-native-paper';
-import {FoodCard, MainAppBar, MainView, Shimmer, Story} from '../components';
-import {StoryData} from '../configs/types';
-import {SamplePosts, sampleStory} from '../mockData';
-import {HomeStackParamList} from '../navigation/stacks/home';
+import {
+  FoodCard,
+  MainAppBar,
+  MainView,
+  Shimmer,
+  Story,
+} from '../../../components';
+import {StoryData} from '../../../configs/types';
+import {SamplePosts, sampleStory} from '../../../mockData';
+import {HomeStackParamList} from '../../../navigation/stacks/home';
+import CreateDrawer from './createDrawer';
 
-type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
+export type HomeProps = NativeStackScreenProps<HomeStackParamList, 'home'>;
 
 const Home = ({navigation}: HomeProps): JSX.Element => {
-  const [storyFetch, setStoryFetch] = useState(false);
-  const [cardFetch, setCardFetch] = useState(false);
+  const [storyFetch, setStoryFetch] = useState<boolean>(false);
+  const [cardFetch, setCardFetch] = useState<boolean>(false);
+  const [showCreate, setShowCreate] = useState<boolean>(false);
+
+  const handleCreate = () => setShowCreate(true);
 
   const story = useCallback(
     ({item}: {item: StoryData}) => <Story data={item} />,
@@ -53,7 +63,11 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
             <FlatList
               horizontal
               data={sampleStory}
-              ListHeaderComponent={<Avatar.Icon size={55} icon="plus" />}
+              ListHeaderComponent={
+                <Pressable onPress={handleCreate}>
+                  <Avatar.Icon size={55} icon="plus" />
+                </Pressable>
+              }
               ListHeaderComponentStyle={styles.reelContainer}
               renderItem={story}
               keyExtractor={item => item?.id.toString()}
@@ -69,6 +83,11 @@ const Home = ({navigation}: HomeProps): JSX.Element => {
             />
           </View>
         }
+      />
+      <CreateDrawer
+        navigation={navigation}
+        visible={showCreate}
+        onDismiss={() => setShowCreate(false)}
       />
     </MainView>
   );

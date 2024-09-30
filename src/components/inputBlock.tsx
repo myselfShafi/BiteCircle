@@ -22,7 +22,7 @@ type InputBoxProps = TextInputProps & {
 
 const InputBox = forwardRef<TextInput, InputBoxProps>(
   (
-    {style, errorStyle, wrapperStyle, errorText = '', ...props},
+    {style, errorStyle, wrapperStyle, multiline, errorText = '', ...props},
     ref,
   ): JSX.Element => {
     const theme = useTheme();
@@ -35,9 +35,11 @@ const InputBox = forwardRef<TextInput, InputBoxProps>(
           underlineStyle={styles.underline}
           style={[
             styles.container,
+            multiline && styles.multiline,
             style,
             {backgroundColor: theme.colors.surfaceVariant},
           ]}
+          multiline={multiline}
           ref={ref}
           mode="outlined"
           outlineColor={hasError ? theme.colors.error : 'transparent'}
@@ -63,6 +65,7 @@ interface Style {
   underline: ViewStyle;
   container: ViewStyle;
   helperText: TextStyle;
+  multiline: ViewStyle;
 }
 
 const styles: Style = StyleSheet.create<Style>({
@@ -72,5 +75,8 @@ const styles: Style = StyleSheet.create<Style>({
   },
   helperText: {
     fontWeight: 900,
+  },
+  multiline: {
+    paddingVertical: 10,
   },
 });

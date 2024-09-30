@@ -25,9 +25,8 @@ const IconBtn = forwardRef(
         )}
         size={iconSize}
         style={[
-          style,
           styles.icon,
-
+          style,
           {backgroundColor: bgColor ?? theme.colors.surface},
         ]}
         {...props}

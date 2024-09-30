@@ -10,6 +10,8 @@ interface placeholderType {
   password: string;
   newPassword: string;
   cnfNewPassword: string;
+  postDesc: string;
+  postHashtag: string;
 }
 
 interface textConfigType {
@@ -64,6 +66,12 @@ interface textConfigType {
   otpResent: string;
   continue: string;
   skip: string;
+  publish: string;
+  imgTitle: string;
+  imgSubTitle: string;
+  create: string;
+  description: string;
+  hashtag: string;
   emptyState: EmptyStateType;
   placeholders: placeholderType;
 }
@@ -124,6 +132,12 @@ export const textConfig: textConfigType = {
     '🎉 New OTP Sent! 🎉 \n📧 Please check your email for the latest code',
   continue: 'Continue',
   skip: 'Skip For Now ..',
+  publish: 'Publish',
+  imgTitle: 'Images',
+  imgSubTitle: 'You can choose upto 5 Images for each post.',
+  create: 'Create Post',
+  description: 'Description',
+  hashtag: 'Hashtags',
   emptyState: {
     chatsHeader: 'No Conversations Yet!',
     chatsTitle: 'Looking a little lonely here. Reach out and talk to someone!',
@@ -135,6 +149,8 @@ export const textConfig: textConfigType = {
     password: 'Password',
     newPassword: 'New Password',
     cnfNewPassword: 'Confirm New Password',
+    postDesc: "What's on your mind!",
+    postHashtag: 'Add a relatable tag!',
   },
 };
 

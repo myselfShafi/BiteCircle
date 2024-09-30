@@ -1,7 +1,6 @@
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
   plugins: [
-    'react-native-reanimated/plugin', // this plugin has to be listed last.
     [
       'module:react-native-dotenv',
       {
@@ -9,5 +8,6 @@ module.exports = {
         path: '.env',
       },
     ],
+    'react-native-reanimated/plugin', // this plugin has to be listed last.
   ],
 };
